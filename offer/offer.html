@@ -8,77 +8,44 @@
 <meta name="robots" content="noindex">
 
 <!-- =========================================================================
-     BRAINY BRANDS — OFFER PAGE
+     BRAINY BRANDS — OFFER PAGE, "OFFER-LED" VARIANT
 
-     SELF-CONTAINED. Everything this page needs lives in offer/. It reads
-     nothing from the parent site and the parent reads nothing from here, so
-     this can be iterated on hard without touching index.html, landing.html
-     or vsl.html.
+     Same self-contained folder, same design system and offer.css as
+     index.html — only the hero weight and section order differ. Built to
+     test whether leading harder with the guarantee (and demoting the VSL to
+     one proof point among several, instead of the main event) converts
+     better than index.html's video-first structure.
 
-       offer/index.html
-       offer/css/offer.css
-       offer/assets/          logo, dale, video, poster, favicon
-       offer/assets/fonts/    vinyl-regular.woff2
-       offer/assets/testimonials/   <- YOUR UPWORK SCREENSHOTS GO HERE
+     WHAT'S DIFFERENT FROM index.html:
+       - Hero h1 is sized up further (.hero--lead) — no longer capped down
+         on desktop to leave room for a video directly beneath it, because
+         there isn't one anymore. It's the most dominant thing on the page,
+         first thing read on mobile.
+       - The VSL (#how) moved from position 2 down to after Dale and the
+         case studies — proof stacked on proof, video as one more data point
+         rather than the thing the whole top of the page exists to protect.
+       - The guarantee restatement band moved from position 3 (right under
+         the VSL) down to sit right before reviews/apply — a pre-conversion
+         reinforcement now that the hero itself already carries the
+         guarantee, rather than a second front-loaded repeat of it.
 
-     LIGHT THEME, built from scratch rather than inverted off the dark page.
-     Inverting a dark palette produces grey mud; these neutrals are mixed
-     from white down toward the brand blue, and both accents were re-picked
-     to hold contrast on white (the orange that worked on near-black is far
-     too light here).
+     STRUCTURE:
+       1  THE PROMISE — hero, ink, guarantee headline, sized up
+       2  DALE
+       3  CASE STUDIES
+       4  THE VSL — "the methods we use…", one proof point among others
+       5  OTHER ACCOUNTS
+       6  WHAT HAPPENS
+       7  THE GUARANTEE — restated, right before reviews/apply
+       8  REVIEWS
+       9  QUALIFY
+       10 APPLY — form, on black
+       11 FAQ
 
-     STRUCTURE, revision 2 — the guarantee, then immediately the proof of it:
-       1  GUARANTEE   on black, the loudest thing on the page
-       2  HOW WE MAKE IT HAPPEN — the VSL, moved up from the bottom
-       3  $12M + RESULTS — ad-spend CUT leads, revenue is the bonus line
-       4  WHAT HAPPENS when you work with us
-       5  GUARANTEE again, on black
-       6  DALE — new headshot, credibility figures
-       7  REVIEWS — your Upwork screenshots
-       8  QUALIFY
-       9  APPLY — urgency + the form, on black
-       10 FAQ
-
-     TYPEFACE CHANGED. Vinyl is out of the running text. Your objection was
-     right: it's a single-weight display face, so it can't do weight
-     contrast, it has no arrow glyph, and at heading sizes it reads more
-     record-sleeve than premium service. Display is now Archivo 800, the
-     face DESIGN.md already picked for this brand. Vinyl is still loaded and
-     available as .vinyl, and the logo lockup is still set in it, so the
-     brand link is intact.
-
-     CONTRAST. "Everything looks white" was fair. There are now three
-     grounds doing work — white, full black for the two moments that must
-     land, and a light band — instead of white plus one tint.
-
-     MOBILE. Every stacked layout is a deliberate phone shape, not a desktop
-     grid that happens to collapse. The results rows in particular reflow so
-     the cut figure stays the biggest thing on a 390px screen.
-
-     ASSETS NOW REAL: Dale's headshot, five case-study logos, six Upwork
-     review screenshots.
-
-     >>> TWO SOURCE FILES WERE MISLABELLED <<< In your case-study logo
-     folder, "TempTooth.png" is actually the Emerald mark, and
-     "Layer_68_2.avif" is the real Temptooth logo. I found this by rendering
-     them and mapped them correctly. Worth fixing at source.
-
-     >>> THREE DIFFERENT GUARANTEES ARE IN PLAY <<<
-       - FUNNEL-AND-SITEMAP.md (locked, Dale-confirmed): "25% ad spend
-         reduction in 30 days, or your money back, or we work for free until
-         we hit that target."
-       - go.brainyamz.com/offer-7 body: "15-25% waste reduction within 30
-         days".
-       - offer-7 FAQ: "we refund your entire management fee, no questions
-         asked" — a satisfaction guarantee, not a performance one.
-     This page uses the locked wording everywhere. The other two need
-     reconciling, in FUNNEL-AND-SITEMAP.md first.
-
-     I did not carry over offer-7's "$1,499 down to $497" pricing or its
-     "180+ Successful Amazon Brands" figure — neither is in the locked file.
-
-     >>> STILL DRAFTED, NOT APPROVED <<< Dale's section 6 copy. Facts are
-     documented; the sentences joining them are mine.
+     Everything else — copy, guarantee wording, qualify lists, FAQ, form
+     fields, pixel events — is unchanged from index.html. See offer/README.md
+     for the open decisions that apply to both pages (which guarantee
+     wording is locked, the Vinyl licence).
 
      SWAPS: offer/assets/testimonials/*.png · offer/assets/logo-{slug}.png
      for client logos · [[VSL_URL]] · [[PIXEL_ID]] · [[CALENDAR]]
@@ -135,18 +102,13 @@ fbq('track', 'PageView');
 <main id="top">
 
   <!-- ===== 1. THE PROMISE ================================================
-       Deliberately short. The whole job of this block is to name the reader,
-       state the guarantee, and get out of the way so the VSL is on screen
-       the moment the page opens.
-
-       NO BUTTON HERE, at your request. The masthead's "See if you qualify"
-       is the only CTA above the video, so nothing competes with pressing
-       play. The orange button returns directly under the VSL.
-
-       NO FADE into the band below either — the dark-blue-to-light-blue
-       gradient is gone and the two bands now meet on a clean edge.
+       Same copy as index.html, but the hero carries the whole opening now —
+       there's no VSL directly beneath it to protect, so the headline is
+       free to be as big as the page allows. hero--lead overrides the
+       desktop shrink that index.html's h1 needs (that shrink exists purely
+       to leave room for a video in the first screen — irrelevant here).
        ==================================================================== -->
-  <section class="band hero hero--ink">
+  <section class="band hero hero--ink hero--lead">
     <div class="shell shell--tight">
       <p class="audience">Amazon brand owners&hellip;</p>
       <h1 class="promise">
@@ -156,77 +118,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 2. THE VSL ====================================================
-       The main event. It sits directly under the promise on a hard colour
-       edge, with the band's top padding cut back so the player is inside
-       the first screen on a phone rather than one scroll down.
-
-       WHITE, NOT BLUE, at your request. The flat brand-blue band read as a
-       colour choice rather than a break — the ink-to-white edge above it is
-       already the harder transition, and the video's own dark frame does
-       the contrast job blue was doing.
-       ==================================================================== -->
-  <section class="band" id="how">
-    <div class="shell shell--tight center">
-      <h2>The methods we use to save our clients
-        <span class="bigstat">$12M</span> in ad spend last year</h2>
-
-      <!-- SWAP before launch: point data-src at [[VSL_URL]] on a real host. -->
-      <div class="vsl mt-5" id="vsl">
-        <video id="vslVideo"
-               data-src="assets/vsl-preview-DO-NOT-SHIP.mp4"
-               poster="assets/vsl-poster-real.jpg"
-               autoplay muted playsinline preload="metadata">
-          Your browser can't play this video.
-          <a href="#apply">Skip ahead and see if you qualify.</a>
-        </video>
-        <button class="vsl-unmute" type="button" id="vslUnmute">
-          <svg aria-hidden="true"><use href="#i-sound"/></svg>
-          <span>Tap for sound</span>
-        </button>
-        <div class="vsl-bar">
-          <button class="vsl-play" type="button" id="vslPlay" aria-label="Pause">
-            <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4l14 8-14 8z"/></svg>
-            <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-          </button>
-          <div class="vsl-progress" aria-hidden="true"><span id="vslBar"></span></div>
-          <span class="vsl-time" id="vslTime">0:00</span>
-        </div>
-      </div>
-
-      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify!</a>
-    </div>
-  </section>
-
-  <!-- ===== 3. THE GUARANTEE ==============================================
-       Moved up to sit directly under the VSL, at your request — the promise,
-       the proof, and the guarantee now stack back to back at the top of the
-       page, so neither the video nor this statement can be scrolled past
-       without seeing it. "if you qualify" stays out of the heading — it was
-       appearing so often it had stopped meaning anything. Qualification
-       lives on the buttons instead.
-
-       >>> ONE WORD CHANGED FROM YOUR COPY, deliberately <<<
-       You wrote: "If your ad spend IS reduced by 25% or more in 30 days,
-       we'll give you your money back or work for free until we get to that
-       target." That's inverted — as written it promises a refund when we
-       succeed, and offers to keep working free after already hitting the
-       target. It reads as a typo, so it's "isn't" here. If you actually
-       meant something else, say so, because this sentence is the offer.
-       ==================================================================== -->
-  <section class="band band--ink">
-    <div class="shell shell--tight center">
-      <p class="guarantee-statement">
-        All of this is backed by a <span class="hot">30-day satisfaction
-        guarantee</span>.
-        <span class="line2">If your ad spend isn't reduced by 25% or more in
-        30 days, we'll give you your money back, or work for free until we
-        get to that target.</span>
-      </p>
-    </div>
-  </section>
-
-  <!-- ===== 4. DALE ======================================================= -->
+  <!-- ===== 2. DALE ======================================================= -->
   <section class="band">
     <div class="shell">
       <div class="dale rv">
@@ -239,7 +131,7 @@ fbq('track', 'PageView');
             learning the ins and outs of Amazon &mdash; building my own brands
             to seven figures before I ever took on a client.</p>
           <p>I did it for myself first. Now I do it on <b>over 200 accounts</b>,
-            using the methodology I explain in the video above.
+            using the methodology I explain further down this page.
             <b>Spend drops and sales go up.</b></p>
 
           <p>I still scale my own brands alongside my clients'. Somewhere in
@@ -251,19 +143,12 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 5. CASE STUDIES ===============================================
-       The ad-spend CUT now leads every row and the revenue is demoted to a
-       supporting line, because the cut is the promise the page makes and
-       the revenue is the bonus.
-
+  <!-- ===== 3. CASE STUDIES ===============================================
        Figures locked in FUNNEL-AND-SITEMAP.md. Logos are the real files
        from your case-study folder — note that two of them were mislabelled
        at source: "TempTooth.png" is actually the Emerald mark, and
        "Layer_68_2.avif" is the real Temptooth logo. Mapped correctly here.
        ==================================================================== -->
-  <!-- White, not tinted: several of the supplied logos have a baked-in
-       white background rather than transparency, and on a tinted band they
-       render as visible white boxes. -->
   <section class="band">
     <div class="shell">
       <h2 class="rv">Case studies</h2>
@@ -313,10 +198,45 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 6. OTHER ACCOUNTS WE'VE WORKED ON ===========================
-       Moved to sit under the case studies: the named results land first,
-       then the strip reads as "and these too" rather than as an opening
-       claim with nothing behind it yet.
+  <!-- ===== 4. THE VSL =====================================================
+       Moved down from position 2, at your request: after Dale and the case
+       studies, the video is one more proof point stacked on the others, not
+       the main event the whole hero exists to protect. Heading copy is
+       unchanged — "the methods we use…$12M…" already said exactly this.
+       ==================================================================== -->
+  <section class="band" id="how">
+    <div class="shell shell--tight center">
+      <h2>The methods we use to save our clients
+        <span class="bigstat">$12M</span> in ad spend last year</h2>
+
+      <!-- SWAP before launch: point data-src at [[VSL_URL]] on a real host. -->
+      <div class="vsl mt-5" id="vsl">
+        <video id="vslVideo"
+               data-src="assets/vsl-preview-DO-NOT-SHIP.mp4"
+               poster="assets/vsl-poster-real.jpg"
+               autoplay muted playsinline preload="metadata">
+          Your browser can't play this video.
+          <a href="#apply">Skip ahead and see if you qualify.</a>
+        </video>
+        <button class="vsl-unmute" type="button" id="vslUnmute">
+          <svg aria-hidden="true"><use href="#i-sound"/></svg>
+          <span>Tap for sound</span>
+        </button>
+        <div class="vsl-bar">
+          <button class="vsl-play" type="button" id="vslPlay" aria-label="Pause">
+            <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4l14 8-14 8z"/></svg>
+            <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+          </button>
+          <div class="vsl-progress" aria-hidden="true"><span id="vslBar"></span></div>
+          <span class="vsl-time" id="vslTime">0:00</span>
+        </div>
+      </div>
+
+      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify!</a>
+    </div>
+  </section>
+
+  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
        ADD LOGOS HERE as you get them — the strip wraps and centres, so
        extra <li> items need no CSS change.
        ==================================================================== -->
@@ -333,15 +253,11 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 7. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
       <h2 class="rv">Here's what happens when you work with us</h2>
 
-      <!-- Outcomes, not process. The previous list named the five things we
-           do; nobody buys a "campaign optimization". These are the five
-           things that change for you, and Dale is named in them, because
-           working with him rather than an account manager is the offer. -->
       <ol class="deliverables deliverables--plain rv">
         <li>Your ad bill starts falling inside 30 days</li>
         <li>Your sales hold, or climb</li>
@@ -352,11 +268,26 @@ fbq('track', 'PageView');
     </div>
   </section>
 
+  <!-- ===== 7. THE GUARANTEE ===============================================
+       Moved down from position 3, at your request — the hero already
+       carries the guarantee up top, so this is a pre-conversion
+       reinforcement right before reviews/apply rather than a second
+       front-loaded repeat of it. Same wording as index.html.
+       ==================================================================== -->
+  <section class="band band--ink">
+    <div class="shell shell--tight center">
+      <p class="guarantee-statement">
+        All of this is backed by a <span class="hot">30-day satisfaction
+        guarantee</span>.
+        <span class="line2">If your ad spend isn't reduced by 25% or more in
+        30 days, we'll give you your money back, or work for free until we
+        get to that target.</span>
+      </p>
+    </div>
+  </section>
+
   <!-- ===== 8. REVIEWS ====================================================
-       Your Upwork screenshots. Each source file was a two-up pair, which
-       would have been unreadable scaled down to a phone, so each was split
-       into single cards — these six are the strongest, all Amazon/PPC
-       specific. Originals kept in assets/testimonials/originals/.
+       Same six as index.html. Originals kept in assets/testimonials/originals/.
        ==================================================================== -->
   <section class="band band--tint">
     <div class="shell">
@@ -488,14 +419,7 @@ fbq('track', 'PageView');
   </section>
 
   <!-- ===== 11. FAQ =======================================================
-       Five pulled from go.brainyamz.com/offer-7, edited only for length.
-
-       PAOLO — one I deliberately did NOT carry over: offer-7's answer to
-       "what happens if I don't see the promised results" says "we refund
-       your entire management fee, no questions asked", which is a THIRD
-       version of the guarantee, different again from both the locked
-       wording and offer-7's own "15-25%" claim elsewhere on that page. The
-       answer below uses the locked wording instead. Worth reconciling.
+       Same eight as index.html, verbatim.
        ==================================================================== -->
   <section class="band band--tint">
     <div class="shell shell--tight">
@@ -665,14 +589,7 @@ fbq('track', 'PageView');
     });
   }
 
-  /* --- Sticky CTA: past the VIDEO, hidden while the form is on screen.
-
-     It used to key off the hero with a -45% root margin. Once the hero was
-     cut down to make room for the video, the hero no longer reached that
-     shrunk root at all, so the bar was up from the first frame — sitting
-     over the bottom edge of the player it is meant to follow. It now waits
-     for the whole video block to leave the viewport, which is also the
-     honest trigger: don't interrupt the pitch, ask after it. */
+  /* --- Sticky CTA: past the VIDEO, hidden while the form is on screen. */
   var cta = document.getElementById('stickyCta'),
       apply = document.getElementById('apply'),
       videoBlock = document.getElementById('how');

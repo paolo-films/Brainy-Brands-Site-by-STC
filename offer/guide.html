@@ -8,77 +8,27 @@
 <meta name="robots" content="noindex">
 
 <!-- =========================================================================
-     BRAINY BRANDS — OFFER PAGE
+     BRAINY BRANDS — OFFER PAGE, "GUIDE-LED" VARIANT
 
-     SELF-CONTAINED. Everything this page needs lives in offer/. It reads
-     nothing from the parent site and the parent reads nothing from here, so
-     this can be iterated on hard without touching index.html, landing.html
-     or vsl.html.
+     Same self-contained folder, same design system and offer.css, same
+     section order as index.html — only the hero copy and the VSL heading
+     change. Where index.html leads with the guarantee, this variant leads
+     with the VSL itself, framed as a free guide / lead magnet, matching how
+     it's been promoted in past ad creative.
 
-       offer/index.html
-       offer/css/offer.css
-       offer/assets/          logo, dale, video, poster, favicon
-       offer/assets/fonts/    vinyl-regular.woff2
-       offer/assets/testimonials/   <- YOUR UPWORK SCREENSHOTS GO HERE
-
-     LIGHT THEME, built from scratch rather than inverted off the dark page.
-     Inverting a dark palette produces grey mud; these neutrals are mixed
-     from white down toward the brand blue, and both accents were re-picked
-     to hold contrast on white (the orange that worked on near-black is far
-     too light here).
-
-     STRUCTURE, revision 2 — the guarantee, then immediately the proof of it:
-       1  GUARANTEE   on black, the loudest thing on the page
-       2  HOW WE MAKE IT HAPPEN — the VSL, moved up from the bottom
-       3  $12M + RESULTS — ad-spend CUT leads, revenue is the bonus line
-       4  WHAT HAPPENS when you work with us
-       5  GUARANTEE again, on black
-       6  DALE — new headshot, credibility figures
-       7  REVIEWS — your Upwork screenshots
-       8  QUALIFY
-       9  APPLY — urgency + the form, on black
-       10 FAQ
-
-     TYPEFACE CHANGED. Vinyl is out of the running text. Your objection was
-     right: it's a single-weight display face, so it can't do weight
-     contrast, it has no arrow glyph, and at heading sizes it reads more
-     record-sleeve than premium service. Display is now Archivo 800, the
-     face DESIGN.md already picked for this brand. Vinyl is still loaded and
-     available as .vinyl, and the logo lockup is still set in it, so the
-     brand link is intact.
-
-     CONTRAST. "Everything looks white" was fair. There are now three
-     grounds doing work — white, full black for the two moments that must
-     land, and a light band — instead of white plus one tint.
-
-     MOBILE. Every stacked layout is a deliberate phone shape, not a desktop
-     grid that happens to collapse. The results rows in particular reflow so
-     the cut figure stays the biggest thing on a 390px screen.
-
-     ASSETS NOW REAL: Dale's headshot, five case-study logos, six Upwork
-     review screenshots.
-
-     >>> TWO SOURCE FILES WERE MISLABELLED <<< In your case-study logo
-     folder, "TempTooth.png" is actually the Emerald mark, and
-     "Layer_68_2.avif" is the real Temptooth logo. I found this by rendering
-     them and mapped them correctly. Worth fixing at source.
-
-     >>> THREE DIFFERENT GUARANTEES ARE IN PLAY <<<
-       - FUNNEL-AND-SITEMAP.md (locked, Dale-confirmed): "25% ad spend
-         reduction in 30 days, or your money back, or we work for free until
-         we hit that target."
-       - go.brainyamz.com/offer-7 body: "15-25% waste reduction within 30
-         days".
-       - offer-7 FAQ: "we refund your entire management fee, no questions
-         asked" — a satisfaction guarantee, not a performance one.
-     This page uses the locked wording everywhere. The other two need
-     reconciling, in FUNNEL-AND-SITEMAP.md first.
-
-     I did not carry over offer-7's "$1,499 down to $497" pricing or its
-     "180+ Successful Amazon Brands" figure — neither is in the locked file.
-
-     >>> STILL DRAFTED, NOT APPROVED <<< Dale's section 6 copy. Facts are
-     documented; the sentences joining them are mine.
+     WHAT'S DIFFERENT FROM index.html:
+       - Hero headline: "The 3 settings quietly costing you thousands in ad
+         spend" (was the 25%-in-30-days guarantee figure).
+       - Hero subhead: "A free guide to instantly save you thousands on ad
+         spend" — PAOLO, flag if this doesn't match the actual ad copy
+         wording; I didn't have the original creative to pull from verbatim.
+       - VSL heading: reframed as "these are the methods used in the guide",
+         with the $12M stat kept but subordinated to that framing rather
+         than leading with it.
+     Everything else — section order, the guarantee restatement, case
+     studies, Dale, qualify, FAQ, form — is unchanged from index.html. See
+     offer/README.md for the open decisions that apply to every variant
+     (which guarantee wording is locked, the Vinyl licence).
 
      SWAPS: offer/assets/testimonials/*.png · offer/assets/logo-{slug}.png
      for client logos · [[VSL_URL]] · [[PIXEL_ID]] · [[CALENDAR]]
@@ -150,8 +100,8 @@ fbq('track', 'PageView');
     <div class="shell shell--tight">
       <p class="audience">Amazon brand owners&hellip;</p>
       <h1 class="promise">
-        <span class="fig">25% ad spend reduction in 30 days</span>
-        <span class="rest">or your money back, or we work for free until we hit that target.</span>
+        <span class="fig">The 3 settings quietly costing you thousands in ad spend</span>
+        <span class="rest">A free guide to instantly save you thousands on ad spend.</span>
       </h1>
     </div>
   </section>
@@ -168,8 +118,8 @@ fbq('track', 'PageView');
        ==================================================================== -->
   <section class="band" id="how">
     <div class="shell shell--tight center">
-      <h2>The methods we use to save our clients
-        <span class="bigstat">$12M</span> in ad spend last year</h2>
+      <h2>These are the methods used in the guide &mdash; the same ones that
+        saved our clients <span class="bigstat">$12M</span> in ad spend last year</h2>
 
       <!-- SWAP before launch: point data-src at [[VSL_URL]] on a real host. -->
       <div class="vsl mt-5" id="vsl">

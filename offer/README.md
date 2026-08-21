@@ -662,3 +662,100 @@ Zero contrast failures at 390×844 and 1440×900, in both masthead states,
 with all FAQs open. No horizontal overflow at either size. VSL still fully
 inside the first screen at both sizes (390: 493–755 of 844; 1440: 511–893 of
 900).
+
+---
+
+# Revision 10 — hero colour fix, two new variants, and a font bug
+
+## The hero colour bug
+
+The headline had gone quietly white and the sub-line dim. Cause: two rules
+at equal specificity, `.hero--ink .promise .fig` and `.hero--ink .promise
+.rest`, each declared **three separate times** across revisions 3, 5 and the
+original rebuild — cascade order means only the *last* one in the file
+wins, and the last `.fig` was revision 3's "headline is white" rule, still
+sitting there after the brief that white headline was written for had
+already been superseded. Fixed by deleting the two dead overrides rather
+than adding a third: `.fig` now resolves to the one surviving rule
+(`--amz-hot`, full orange), `.rest` to the one surviving rule (`--paper`,
+full opacity, no dimming). Verified: `getComputedStyle` on both spans
+confirms `oklch(0.772 0.174 64.6)` and `oklch(0.994 0.002 250)` respectively,
+alpha 1. Screenshotted at 390×844 and 1440×900 — see chat.
+
+## Two new variants
+
+Both are full clones of this page's structure and copy except where noted.
+Same folder, same `offer.css`, same JS — nothing here is a fork of the
+design system, just different assemblies of it.
+
+**`offer.html` — offer-led.** Hero headline sized up further
+(`.hero--lead`, appended at the end of `offer.css` so it wins the cascade
+over the existing desktop shrink, which only ever existed to leave room for
+a video directly under the hero — irrelevant here since the video moved).
+VSL relocated from position 2 to position 4, after Dale and the case
+studies: proof stacked on proof, not the thing the hero exists to protect.
+Guarantee restatement moved from position 3 down to position 7, immediately
+before reviews — a pre-conversion reinforcement now that the hero already
+carries the guarantee, not a second front-loaded copy of it. One copy edit
+forced by the reorder: Dale's line "the methodology I explain in the video
+above" no longer being true, changed to "further down this page."
+
+**`guide.html` — guide-led.** Same section order as this page, VSL stays
+directly under the hero. Only the hero copy and the VSL heading change:
+headline is now "The 3 settings quietly costing you thousands in ad
+spend" (three, not four — flag it if that's wrong), sub-line "A free guide
+to instantly save you thousands on ad spend." **I didn't have the original
+ad creative this was meant to match**, so that sub-line is a working draft,
+not a transcription — say the word if it needs to match specific past copy
+verbatim. VSL heading reframed as "These are the methods used in the guide
+— the same ones that saved our clients $12M in ad spend last year," keeping
+the stat but subordinating it to the guide framing.
+
+## A real bug this surfaced: Archivo was never loaded
+
+While verifying the VSL-in-first-screen constraint on `guide.html` — its
+headline is longer than the guarantee figure it replaces, so it wraps to
+one more line — I found that **Archivo, the display typeface every
+revision since #2 has described as the deliberate choice**, was never
+actually linked anywhere. `--font-display` names it first in the stack, but
+only Vinyl (self-hosted) and Public Sans (Google Fonts) had a `<link>` —
+Archivo silently fell back to Helvetica Neue/Arial on any machine that
+doesn't happen to have it installed as a system font, on all three pages,
+since before this revision. Added the missing Google Fonts link
+(`family=Archivo:wght@800`, the only weight the CSS ever asks for) to all
+three HTML files, next to the existing Public Sans link.
+
+**I could not personally re-verify the fold measurement with the correct
+font.** This sandbox's outbound proxy resets the connection to
+`fonts.googleapis.com` specifically for headless Chromium (confirmed: curl
+with a browser user-agent fetches it fine, Playwright's Chromium gets
+`ERR_CONNECTION_RESET` every time, with or without HTTP/2 — a genuine
+proxy/environment limitation, not a code problem, and per this environment's
+own guidance a case to report rather than route around further). Everything
+font-independent — contrast, horizontal overflow — is still solidly
+verified below, on the fallback font, across all three pages. The one thing
+I can't personally close the loop on: **check `guide.html` on a real
+desktop browser** that the VSL is still visible without scrolling. The
+extra wrapped line in the new headline is exactly the kind of change that
+could eat the ~7px of headroom this page had left at 1440×900 even before
+today (hero 0–363, video 511–893 of 900, per revision 9's own numbers) —
+worth a real-browser eyeball before this ships, not something I'm willing to
+claim clean on a fallback font in a sandbox.
+
+## Verified
+
+All three pages (`index.html`, `offer.html`, `guide.html`), 390×844 and
+1440×900, every FAQ forced open: zero contrast failures beyond the one
+known false positive below, zero horizontal overflow.
+
+**One flagged "failure" on every page, confirmed harmless.** The
+ancestor-chain contrast checker used for this pass (converts OKLCH → sRGB
+in JS same as prior revisions, walks up the DOM for the nearest opaque
+background) flags the masthead's "See if you qualify" button at 1.00:1 on
+every page, at both sizes. That's a limitation of the checker, not a page
+bug: the hero's ink background reaches the sticky header via a negative
+`margin-top` layout trick (documented in revision 8), not a DOM ancestor
+relationship, so a pure ancestor-walk can't see it and falls back to
+assuming white-on-white. Verified the real thing directly by sampling
+actual rendered pixels from a screenshot instead of walking computed
+styles: **16.3:1 at 390px, 15.6:1 at 1440px** — both comfortably pass.
