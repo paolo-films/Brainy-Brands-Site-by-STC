@@ -1,0 +1,607 @@
+# Brainy Brands — Offer page
+
+Self-contained. Everything this page needs is in this folder; it reads
+nothing from the parent site and the parent reads nothing from here. Iterate
+on it freely without touching `index.html`, `landing.html` or `vsl.html`.
+
+```
+offer/
+  index.html
+  css/offer.css
+  assets/            logo, dale.jpg, video, poster, favicon
+  assets/fonts/      vinyl-regular.woff2
+  assets/testimonials/   <- your Upwork screenshots
+```
+
+Serve the whole site from the repo root and open `/offer/`:
+
+```bash
+python3 .claude-serve.py    # then http://localhost:8080/offer/
+```
+
+## What you need to drop in
+
+| Where | What | Happens if missing |
+|---|---|---|
+| `assets/testimonials/testimonial-1..6.png` | Upwork review screenshots | Labelled grey slot, never a broken image |
+| `assets/logo-{temptooth,zestt,patriotcrew,magicbrand,midtown,emerald}.png` | Amazon client logos | Falls back to the brand name in type |
+| `[[VSL_URL]]` in `index.html` | Real CDN video URL | Plays the local review copy |
+| `[[PIXEL_ID]]`, `[[CALENDAR]]` | Meta pixel, calendar link | Pixel no-ops; form shows the confirm panel |
+
+## Two things that need a decision, not a design pass
+
+**1. Two guarantees are live at once.** `go.brainyamz.com/offer-7` currently
+says *"15–25% waste reduction within 30 days"* with a *30-day satisfaction
+guarantee, full refund of management fee*. `FUNNEL-AND-SITEMAP.md` — the
+locked source of truth, confirmed by Dale — says *"25% ad spend reduction in
+30 days, or your money back, or we work for free until we hit that target."*
+Those are different promises. This page uses the locked wording. Pick one and
+change it in `FUNNEL-AND-SITEMAP.md` first, then everywhere.
+
+**2. The Vinyl licence.** The `.otf` supplied carries no trademark, foundry,
+designer or licence metadata, and its readme says it came from a free-font
+aggregator. Vinyl is a commercial T-26 face distributed through Adobe Fonts.
+Free-font sites routinely repackage commercial faces without a licence, and a
+desktop licence wouldn't cover webfont embedding anyway. If you have Creative
+Cloud, make an Adobe Fonts web project and swap the `@font-face` block for
+their `<link>` — nothing else on the page changes. Worth settling before this
+is public.
+
+Also, from the brand pack: `BrainyBrands_PrimaryLogo*.svg` sets the wordmark
+as live `<text>` in Vinyl instead of outlined paths, so it renders in a
+fallback font anywhere Vinyl isn't installed. The PNG is used here for that
+reason. Ask for an outlined SVG.
+
+## Not carried over from offer-7, deliberately
+
+- The *"When You Sign Up For The PPC Growth Engine Today, You're Going To
+  Get:"* block. You flagged it as repeating what's above; it restates the
+  same deliverables a second time at greater length. Section 3 says it once.
+- *"What I can and can't guarantee"* — removed as asked.
+- `$1,499 down to $497` pricing and the `180+ Successful Amazon Brands`
+  figure. Neither is in the locked file, so neither is on the page.
+
+## Verified
+
+111 text nodes, zero contrast failures. Every token was solved against the
+**darkest** ground it actually sits on, not the lightest — the first pass
+passed on white and failed at 4.29 on the tinted bands, which is where most
+of the small type lives. No radius, no horizontal overflow at 390 or 1280.
+Form blocks blank and 5-of-6, fires `Lead` once, writes `source: "offer"`.
+Vinyl confirmed loading and measurably distinct from its fallbacks.
+
+---
+
+# Revision 2
+
+## Typeface changed: Vinyl is out of the running text
+
+You said you didn't like it in use, and the objection holds up technically:
+Vinyl is a **single-weight** display face, so it can't do weight contrast —
+which is most of what makes a page feel expensive. It also has **no arrow
+glyph** (the `→` in the case metrics was falling back mid-string), and at
+heading sizes it reads more record-sleeve than premium service.
+
+Display is now **Archivo 800**, the face `DESIGN.md` already selected and
+justified for this brand. Vinyl is still loaded and available as `.vinyl` for
+accents, and the logo lockup is still set in it, so the brand link is intact.
+
+## Contrast
+
+"Everything looks white" was fair — v1 was white plus one tint. There are now
+three grounds doing work: **white** (majority), **full black** for the two
+moments that must land (the guarantee at the top, the urgency + form at the
+bottom), and a light band. On black the accent goes back to full Amazon
+orange; it only had to be darkened for the white sections.
+
+## The results section now leads with the cut
+
+The ad-spend reduction is the promise the page makes, so it's the headline
+figure on every row and revenue is demoted to a supporting line: *"And
+revenue went $90K → $120K/mo."* Previously they were peers, which buried the
+thing the offer is actually about. Emerald Plastics added as a fifth row.
+
+## Assets, all real now
+
+| | |
+|---|---|
+| Headshot | `assets/dale headshot.png` — replaces the VSL frame crop |
+| Case-study logos | five, trimmed of transparent margin and normalised to a common height |
+| Reviews | six, cropped from your screenshots |
+
+**Two of your logo files are mislabelled at source.** In the case-study
+folder, `TempTooth.png` is actually the **Emerald** mark, and
+`Layer_68_2.avif` is the real **Temptooth** logo. I found this by rendering
+them and mapped them correctly here, but it's worth fixing in the folder.
+
+**The review screenshots were two-up pairs.** At 1640px wide they'd have been
+unreadable scaled to a phone, so each was split down the middle into single
+cards and the best six selected — all Amazon/PPC specific, all complete
+sentences. Originals are preserved in `assets/testimonials/originals/`.
+
+**One logo is missing transparency.** `logo-temp-tooth.png` has a baked-in
+white background (100% opaque vs ~20-25% for the others), which is why the
+results section sits on white rather than the tinted grey — on a tint it
+rendered as a visible white box. A transparent PNG would free that up.
+
+## Copy changes you asked for
+
+- "Restructured in a year" → **"in months, or a year"**
+- Added **"You want results in 30 days"** to the qualify list
+- Dale's method line is now *"I started doing it manually, with the
+  methodology I explain in the video above. Spend dropped and sales went up."*
+- Added the **$12M** header over the results
+- Added urgency: limited accounts, serious brands only, and the no-show rule
+- Added a **six-question FAQ** pulled from offer-7
+
+## A third guarantee turned up
+
+offer-7's FAQ answers "what if I don't see results" with *"we refund your
+entire management fee, no questions asked"* — a **satisfaction** guarantee,
+different again from both the locked performance guarantee and offer-7's own
+"15–25%" body claim. That's three versions in circulation. This page uses the
+locked wording in all three places it appears. Reconcile in
+`FUNNEL-AND-SITEMAP.md` first.
+
+## Two bugs caught by the sweep, not by eye
+
+1. **The form was invisible.** Moving the apply section onto black left the
+   labels inheriting `--ink` on `--ink` — 1:1 contrast. They were in the DOM
+   the whole time. Fields are now white-on-black.
+2. **The headshot ignored its aspect ratio.** The `<img>` carries
+   width/height attributes for layout stability, and without `height: auto`
+   those win over `aspect-ratio` — the square source rendered 272×512 instead
+   of the intended 4:5 crop.
+
+## Verified
+
+128 text nodes, **zero contrast failures**, at 390px with every FAQ open. No
+horizontal overflow at 390 or 1280. All five logos, all six reviews and the
+headshot confirmed loading. Form blocks blank and 5-of-6, fires `Lead` once.
+
+---
+
+# Revision 3
+
+## Hero
+
+Down to two things: the guarantee and one button. Removed the grey qualifier
+line and the three Upwork stat bullets.
+
+**On colour** — the orange headline with blue accents elsewhere was reading
+as "Amazon brand colours", which is the generic look you flagged. The
+headline is now **white**, and scale carries it. Orange survives in exactly
+one place: the button. So the only coloured thing on the screen is the thing
+you're meant to press. Restraint is most of what reads as premium; two brand
+colours competing is what reads as a template.
+
+**On spacing** — it was off because five children were stacked into one
+vertical rhythm with no hierarchy between them. With two, the interval can be
+deliberate rather than averaged.
+
+**The qualifier**: gone from the hero, and I'll stop raising it. It hasn't
+left the page — `FUNNEL-AND-SITEMAP.md` calls it non-optional wherever the
+number appears, so the full terms still sit with the guarantee restatement
+and in the FAQ, and the button itself says "See if you qualify".
+
+## New: "Some accounts we've worked on"
+
+Logo strip directly under the hero, greyscaled at 55% so it reads as
+provenance rather than decoration, full opacity on hover.
+
+## Deliverables
+
+Titles only, no descriptions:
+
+```
+01  Deep-dive account audit
+02  Campaign optimization
+03  Daily bid management
+04  Transparent reporting
+05  Risk-free partnership
+```
+
+Set at display weight so the list itself is the design. The paragraphs under
+each were restating what the section heading already said.
+
+## Guarantee restatement
+
+Now reads **"And if you qualify, all of it is backed by this"**.
+
+## Dale
+
+Cut the junior-manager sentence and the audits-it/manages-it sentence
+entirely. Now: $2M of his own money learning Amazon → did it for himself
+first → now does it on 200+ accounts. The rank is left to speak for itself in
+the stat row.
+
+**Portrait is square everywhere**, not a 4:5 crop. On mobile it sits *beside*
+the heading at ~104px rather than stacking full-width above it — a full-bleed
+portrait was eating the whole first screen of the section. Copy and stats run
+full width underneath, which is the desktop shape you said you liked,
+compressed.
+
+One bug that came with that layout: `display: contents` promotes the
+paragraphs to grid items, so the grid row-gap and the `p + p` margin were
+both applying and opening ~50px holes between lines. Zeroed the margins and
+let the gap own the spacing.
+
+## Audit framing
+
+The CTA stays "See if you qualify", but the surrounding copy now sells the
+**free audit** and what it gives you: *"twenty minutes with Dale, live in your
+account, showing you exactly where the money's going and what the next steps
+are. Whether or not you work with us, you leave knowing what to fix."*
+
+## Verified
+
+118 nodes on mobile, 117 on desktop, **zero contrast failures** on both, with
+every FAQ forced open. No horizontal overflow at 390 or 1280. Portrait
+confirmed square at both sizes (104×104 / 380×380). All five strip logos
+loading.
+
+---
+
+# Revision 4 — your FAQ copy + the v2 reviews
+
+## Reviews swapped
+
+The six in `assets/testimonials/` are now from `testimonialsv2` — the full,
+uncut reviews rather than the cropped two-up cards. Picked for PPC and
+results specificity:
+
+1. **Amazon Full Scope A to Z** — "proficient with Amazon advertising and *increased our sales significantly*… A++"
+2. **Amazon PPC expert** — starting out with PPC *or* scaling with a larger daily budget; monthly updates, clear KPIs
+3. **Amazon Expert Consultation** — very responsive, detail-oriented, sells scientific instruments
+4. **Amazon Consulting** — "expert in the Amazon e-commerce space… starting another contract with him soon"
+5. **30 minute consultation** — "will definitely rehire Dale"
+6. **30 minute consultation** — "you'll breathe easier"
+
+Old crops archived in `assets/testimonials/originals-v1/`.
+
+**Three of them carried Upwork's "less" toggle** at the end of the last line
+— the leftover from an expanded more/less link. Removed by finding the last
+contiguous ink run on the final text row and checking it was narrow (29px)
+and preceded by a real word gap. The three that ended in actual words
+(4–11px runs, no gap) were correctly left alone.
+
+**Sizing.** These are paragraphs of body text in ~770px-wide screenshots, so
+at the old three-up they landed at 335px — a 44% downscale putting the review
+text at roughly 7px. Now two-up at ~67%. On a phone even one column is a 45%
+downscale, so each review links to the full-size image with a "Tap to read
+full size" strip. The gist (green job title, orange stars, "5.0", a block of
+type) still reads as a genuine Upwork review at thumbnail size; the tap is
+there for anyone who wants to read it.
+
+## FAQ replaced with your copy
+
+All eight, verbatim. The agency-comparison answer keeps its three bullets.
+
+## >>> ONE THING TO CHECK BEFORE THIS GOES LIVE <<<
+
+Your "What's the guarantee?" answer says:
+
+> Cut your ad spend by 25% in the first 30 days without losing sales —
+> **scaling to 50% by day 60–90.**
+
+That reintroduces the 50% escalation. `FUNNEL-AND-SITEMAP.md` records it as
+deliberately dropped:
+
+> The 50%-by-day-60–90 escalation was dropped on Aug 8, 2026 (Paolo's call)
+> — carrying two numbers meant the bigger one always led visually even when
+> it didn't lead grammatically, which is the exposure this rule exists to
+> prevent.
+
+It was also on the DO-NOT-INCLUDE list in the original build brief ("Any 50%
+figure, pending Dale's confirmation").
+
+**The page now states the guarantee two different ways:**
+
+| Where | What it says |
+|---|---|
+| Hero + guarantee panel | 25% in 30 days, or money back, or we work free |
+| FAQ | 25% in 30 days **without losing sales**, scaling to **50% by day 60–90** |
+
+Both are on screen, about one scroll apart. I've used your copy as written
+rather than silently harmonising it, because which version is correct is a
+commercial and legal call, not an editorial one. Two clean fixes:
+
+- **Keep the escalation** → update `FUNNEL-AND-SITEMAP.md` and the hero /
+  guarantee panel to match, so the page says one thing; or
+- **Drop it** → trim the FAQ answer to the locked wording.
+
+"Without losing sales" is also a new performance claim that isn't in the
+locked sentence — worth a deliberate yes/no rather than arriving by accident.
+
+## Verified
+
+124 nodes desktop, 131 mobile, **zero contrast failures** on both with all
+eight FAQs open. No horizontal overflow at 390 or 1280. All six reviews
+loading. Tap-to-enlarge confirmed showing on mobile only.
+
+---
+
+# Revision 5
+
+## Changes
+
+| | |
+|---|---|
+| Hero button | "See if you qualify with a free audit"; grey line under it removed |
+| Hero remedy line | Was 0.42em (read as fine print), now 0.56em — the "or your money back" clause *is* the promise, not a footnote |
+| Above the VSL | "Here's how we saved **$12M** in ad spend" + "The free guide to exactly what we did for our clients" |
+| Case studies | Now headed "Case studies" / "These are the results we've gotten for our clients" |
+| Guarantee panel | "This is guaranteed" — "if you qualify" dropped from the heading; the "offered after the audit…" paragraph removed |
+| Qualify lists | Rewritten, see below |
+| Apply section | "Book your free audit"; the limited-accounts / serious / no-show bullet list removed; the form no longer implies you must qualify to submit |
+| CTAs | Four now read "See if you qualify with a free audit"; the form button is "Book my free audit" |
+
+## The FAQ contradiction is resolved
+
+Your call: one promise, 50% as an observation. The answer now ends *"Clients
+commonly go on to see 50% by day 60–90, but 25% in 30 days is the number we
+guarantee."* All three guarantee statements on the page agree on the 25%, and
+50% appears once, explicitly marked as not the guarantee.
+
+## >>> ONE WORD CHANGED FROM YOUR COPY <<<
+
+You wrote:
+
+> If your ad spend **is** reduced by 25% or more in 30 days, we'll give you
+> your money back or work for free until we get to that target.
+
+That's inverted — as written it promises a refund when we **succeed**, and
+offers to keep working free after already hitting the target. It reads as a
+typo so I've set it to **isn't**. If you meant something else, say so,
+because that sentence is the offer.
+
+Separately: you called it a "30-day **satisfaction** guarantee" but defined it
+by a performance threshold (25%). Those are different instruments. I used your
+wording, but "satisfaction" invites a different claim than "we missed the
+number" — worth a deliberate choice.
+
+## Qualify lists
+
+**For you if:** serious about growing the brand *or* cutting what it costs to
+· wants results in 30 days · $100K+/month revenue and $10K+/month ad spend ·
+**would rather hand the ads off entirely and get their time back**.
+
+That last one used to be a *dis*qualifier. You're right that it's backwards —
+taking it off their hands is the product.
+
+**Isn't for you if:** under $5,000/month on ads · wants the cheapest option ·
+wants guaranteed sales (nobody can promise that) · not open to restructuring.
+
+Note the **$5K–$10K band is deliberately neither**: the qualifier says $10K+,
+the disqualifier says under $5K. That matches your steer about not turning
+people off before the form.
+
+## Another contrast bug the sweep caught
+
+I set `$12M` in the video header to the full-strength orange, on the
+assumption that header sat on the black band. It doesn't — it's on white, and
+that orange measured **2.1:1** there. Reverted to the white-ground orange
+(6.8:1). Light orange on white looks fine at a glance, which is exactly why it
+needs measuring.
+
+## Verified
+
+116 nodes, **zero contrast failures** at 390px with all eight FAQs open. No
+overflow. Hero CTA at 382px against an 844px fold. Rules list confirmed gone;
+all CTA labels confirmed updated.
+
+---
+
+# Revision 6
+
+**Guarantee statement set big.** Moved out of inline styles into
+`.guarantee-statement` and sized to `clamp(1.5rem, 1.05rem + 2.3vw, 3.05rem)`
+— 46px on desktop, up from a 2.3rem cap. It's the largest block of type on
+the page after the hero, which is right: this sentence is the offer.
+
+The "This is guaranteed" heading above it steps down to ~21px in the muted
+tone. That inverts the usual heading/body hierarchy on purpose — a two-word
+lead-in shouldn't be louder than the thing it introduces, and previously it
+was.
+
+**CTA label** is now "Book a free audit to see if you qualify!" on all four
+link CTAs (hero, video section, guarantee, sticky bar). Left alone: the
+header nav button ("See if you qualify" — the long label wraps badly in that
+small box) and the form's submit button ("Book my free audit" — it's the
+action itself, not a link to it). Say the word if you want those matched too.
+
+Also took the opportunity to delete the last inline `style=` attribute in that
+section.
+
+## Verified
+
+116 nodes, zero contrast failures at 1280. Statement measures 17.7:1 white on
+the ink ground; the orange "30-day satisfaction guarantee" span measures
+8.4:1. No overflow.
+
+**Not visually confirmed this pass.** The preview pane dropped to blank frames
+again after the reload — a pane fault, not a page fault: every JS measurement
+returned correct values throughout (section background, font size, contrast,
+button labels, box geometry). Worth an eyeball on the guarantee section in a
+real browser.
+
+---
+
+# Revision 7
+
+## Gradient top
+
+The masthead and hero now share a dark ground that dissolves into the page
+white. Logo and ghost button ship in two versions and cross-fade: white while
+the masthead rides the dark, black once it sticks and turns solid.
+
+**Two wrong attempts, recorded because they're easy to repeat:**
+
+1. A wrapper `<div>` around header + hero. It had to open before `<header>`
+   and close inside `<main>`, which straddles the element — invalid, and the
+   parser caught it. Now it's a pseudo-element on the hero extending up
+   `-4.5rem`, which is the masthead's own min-height, so they stay locked
+   without JS.
+2. One gradient running ink → white across the whole hero. The fade passed
+   straight through the sub-headline and the button, so both sat on mid-grey.
+   Measured: the button occupied **75–83%** of the block while the fade began
+   at **66%**. The fade is now a separate strip pinned to the bottom, entirely
+   below the content — the button clears it by 57px on desktop.
+
+That second fix has a side benefit: the hero carries a real `background-color`
+again instead of a transparent element over a gradient, so the contrast
+checker can read it. A gradient behind transparent text is invisible to
+automated checks, which is a bad place to hide.
+
+## Section breaks
+
+- **After the logo strip** → the video sits on a full **brand-blue** band. A
+  colour change is the strongest break available, and black-next-to-black
+  would have flattened the hinge that follows.
+- **Between Dale and the case studies** → a short ink band carrying the
+  hinge: *"The results below came out of that same methodology — whether the
+  job was cutting spend or scaling the brand."* It makes the case studies read
+  as evidence for the guide rather than a separate brag.
+
+## Copy
+
+| | |
+|---|---|
+| Above the VSL | "The methods that saved our clients **$12M** in ad spend last year" |
+| Removed | "The free guide to exactly what we did… nothing held back." |
+| Case studies | Heading only, sub-line dropped (the hinge above now does that work) |
+| Top of hero | **"For Amazon brand owners"** — names the audience, since this is specifically Amazon ad spend |
+
+## "Here's what happens when you work with us" → outcomes
+
+Was a list of what we do. Nobody buys a "campaign optimization". Now it's what
+changes for you, with Dale named, because working with him rather than an
+account manager is the offer:
+
+```
+01  Your ad bill starts falling inside 30 days
+02  Your sales hold, or climb
+03  You stop touching bids — Dale sets them, daily
+04  You know exactly what changed, and what it returned
+05  You can walk away any month, for any reason
+```
+
+## Guarantee section
+
+Grey "This is guaranteed" heading and the button both removed. The second
+sentence now starts on its own line. The statement is the only thing in the
+section.
+
+## Dale moved
+
+Now sits directly under the VSL, before the case studies.
+
+## Verified
+
+117 nodes desktop / 124 mobile, **zero contrast failures** on both with all
+FAQs open. No overflow at 390 or 1280. Hero button above the fold at 426px on
+mobile and clear of the fade at both sizes. Logo cross-fade confirmed: white
+at rest, black when stuck.
+
+---
+
+# Revision 8 — the video is the page
+
+Your note: the dark-blue-to-light-blue transition read as a gradient rather
+than as a break; drop the hero button; make the VSL and the guarantee the two
+unmissable things; move the logo strip below the case studies and rename it.
+
+## The hero → VSL boundary is now a hard edge
+
+The fade is gone. `.hero--ink::after` and both of its overrides are deleted —
+nothing dissolves into anything.
+
+The seam under the masthead is gone too, and that needed a different fix. The
+ink used to be carried up behind the sticky header by a `::before` with its
+own radial gradient. Two gradients can't be made to meet: the join showed as a
+faint horizontal line right below the logo. The hero is now pulled up under
+the header with `margin-top: calc(-4.5rem - 1px)` and given the same distance
+back as padding, so it is **one element with one background** running from the
+very top of the page.
+
+The `-1px` is the masthead's always-present bottom border, which is part of
+its box. Without it the hero started at y=1 and left a hairline.
+
+## No button in the hero
+
+Removed. Above the video the only CTA is the masthead's "See if you qualify",
+so nothing competes with pressing play. The orange button returns immediately
+under the VSL, and the guarantee band and form are unchanged.
+
+## The player is inside the first screen, measured
+
+Mobile (375×812): hero 0–330, **player 493–747**. Fully visible.
+Desktop (1440×900): hero 0–363, **player 511–893**. Fully visible.
+
+Before this revision the desktop player ran 762–1271 against a 900px window —
+you saw a headline and a sliver. Getting it up took a `@media (min-width:
+760px)` block that spends the desktop's extra *width* rather than its height:
+display type down one step, both blocks giving back padding, and the player
+capped by `max-height: 35vh` with `width: auto`.
+
+Capping height rather than width matters. At 16/9 any width cap still resolves
+to a height the window may not have; capping the height and letting
+`aspect-ratio` derive the width is the only version that holds at every window
+size. Cost: on a 1440px desktop the player is 562px wide rather than
+full-column. On brand blue with nothing else on screen, it still reads as the
+subject.
+
+## Sticky CTA bar — a bug this revision created and fixed
+
+The bar keyed off the hero with `rootMargin: '-45% 0px 0px 0px'`. Once the
+hero was cut down to make room for the video, the hero no longer reached that
+shrunk root at all, so `past` was true from the first frame and the bar was up
+at load — sitting over the bottom edge of the player it is meant to follow.
+
+It now observes `#how` (the whole video block) at `threshold: 0`, so it
+appears once the video has left the screen. That is also the more honest
+trigger: don't interrupt the pitch, ask after it.
+
+Renamed the observer's variable to `videoBlock`. It was `video`, which already
+belonged to the `<video>` element declared earlier in the same scope — `var`
+would have clobbered the player's own reference.
+
+## Logo strip moved and renamed
+
+Now sits **below the case studies**, headed "Other accounts we've worked on".
+The named results land first, so the strip reads as "and these too" rather
+than as an opening claim with nothing behind it yet. Add `<li>` items as you
+get logos — the strip wraps and centres, no CSS change needed.
+
+## Dale's stats are prose
+
+The four-stat grid is gone; the numbers are in the third paragraph, and he
+still scales his own brands. `.creds` and the section-hinge CSS are deleted.
+
+One edit you didn't ask for: the draft said "over 200 accounts" in paragraph 2
+and "200+ accounts" in paragraph 3. Same fact twice, three lines apart. Kept
+it in paragraph 2 and cut it from paragraph 3.
+
+## Section order
+
+```
+1  The promise (ink)          7  The guarantee (ink)
+2  The VSL (blue)             8  Reviews
+3  Dale                       9  Qualify
+4  Case studies              10  Apply (ink, form)
+5  Other accounts            11  FAQ
+6  What happens
+```
+
+## Verified
+
+Zero contrast failures at 375×812 and 1440×900, in both masthead states, with
+every FAQ open. No horizontal overflow at either size. Player fully in the
+fold at both. No console errors other than the expected `[[PIXEL_ID]]`
+placeholder warning.
+
+Note on the check itself: the canvas-based colour reader used in earlier
+revisions silently returns black for `oklch()` values in this browser, which
+produced 76 phantom failures. The sweep now converts OKLCH → sRGB in JS. The
+earlier passes were still sound — they were run before that regression — but
+any future check should use the JS conversion.
