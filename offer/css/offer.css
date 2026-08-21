@@ -953,10 +953,52 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    biggest, most dominant thing on the page instead, mobile included. This
    block is declared last on purpose: same specificity as the rules above,
    later wins, and it only ever matches a page that opts in with .hero--lead.
+
+   REVISION 11: sized up again — you asked for "a lot bigger", not just
+   bigger than index.html. .audience scales with it so the whole hero block
+   grows together rather than the headline outgrowing its own lead-in line.
    ========================================================================== */
 
-.hero--lead h1 { font-size: clamp(2.75rem, 1.9rem + 4.2vw, 4.75rem); }
+.hero--lead h1 { font-size: clamp(3.4rem, 2.2rem + 5.8vw, 6.25rem); }
+.hero--lead .audience { font-size: clamp(1.75rem, 1.3rem + 2.2vw, 3rem); }
 
 @media (min-width: 760px) {
-  .hero--lead h1 { font-size: clamp(2.75rem, 1.9rem + 4.2vw, 4.75rem); }
+  .hero--lead h1 { font-size: clamp(3.4rem, 2.2rem + 5.8vw, 6.25rem); }
+  .hero--lead .audience { font-size: clamp(1.75rem, 1.3rem + 2.2vw, 3rem); }
+}
+
+/* --- Gold guarantee restatement, under the VSL --------------------------
+   The one place on the page the guarantee figure repeats in a different
+   colour on purpose — everywhere else the accent is --amz/--amz-hot orange,
+   this one moment is gold, because it's a restatement, not the original
+   claim. New token, not a reuse of an existing one, so the two never get
+   confused when both are on screen (the VSL heading's $12M sits just above
+   it in --amz-deep orange). */
+:root { --gold: oklch(0.55 0.15 85); }
+
+.gold-statement {
+  margin-top: var(--s4);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-size: clamp(1.4rem, 1.05rem + 1.6vw, 2.1rem);
+  color: var(--gold);
+}
+
+/* ==========================================================================
+   GUIDE-LED VARIANT (guide.html) — the video lives in the hero itself
+
+   Merges what used to be two separate bands (the ink hero, then a white
+   #how section holding the VSL) into one: the video now sits directly
+   under the headline, still on the ink ground. Capped by height on desktop
+   only, same principle the old #how treatment used — a full-width 860px
+   16:9 video runs past 480px tall and dwarfs the headline above it. Scoped
+   to .hero--ink .vsl rather than reusing #how's id, deliberately: an id
+   selector would outrank .hero--ink's own padding rule (the one that merges
+   the hero with the sticky masthead) and silently break that seam again. */
+
+@media (min-width: 760px) {
+  .hero--ink .vsl video { max-height: 46vh; width: auto; max-width: 100%; margin-inline: auto; }
+  .hero--ink .vsl { width: fit-content; max-width: 100%; margin-inline: auto; }
 }

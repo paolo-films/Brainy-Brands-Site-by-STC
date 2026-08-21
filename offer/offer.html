@@ -12,39 +12,36 @@
 
      Same self-contained folder, same design system and offer.css as
      index.html — only the hero weight and section order differ. Built to
-     test whether leading harder with the guarantee (and demoting the VSL to
-     one proof point among several, instead of the main event) converts
-     better than index.html's video-first structure.
+     test whether leading harder with the guarantee converts better than
+     index.html's video-first structure.
 
-     WHAT'S DIFFERENT FROM index.html:
-       - Hero h1 is sized up further (.hero--lead) — no longer capped down
-         on desktop to leave room for a video directly beneath it, because
-         there isn't one anymore. It's the most dominant thing on the page,
-         first thing read on mobile.
-       - The VSL (#how) moved from position 2 down to after Dale and the
-         case studies — proof stacked on proof, video as one more data point
-         rather than the thing the whole top of the page exists to protect.
-       - The guarantee restatement band moved from position 3 (right under
-         the VSL) down to sit right before reviews/apply — a pre-conversion
-         reinforcement now that the hero itself already carries the
-         guarantee, rather than a second front-loaded repeat of it.
-
-     STRUCTURE:
-       1  THE PROMISE — hero, ink, guarantee headline, sized up
-       2  DALE
-       3  CASE STUDIES
-       4  THE VSL — "the methods we use…", one proof point among others
-       5  OTHER ACCOUNTS
-       6  WHAT HAPPENS
-       7  THE GUARANTEE — restated, right before reviews/apply
-       8  REVIEWS
-       9  QUALIFY
-       10 APPLY — form, on black
-       11 FAQ
+     REVISION 11 changes, at your request:
+       - Hero sized up again (.hero--lead bumped further) so it's the most
+         dominant thing on the page, the first thing read on mobile — no
+         longer just "bigger than index.html", now clearly the loudest
+         element on screen.
+       - A second CTA added directly in the hero ("Book a free audit to see
+         if you qualify"), on top of the masthead's short one — more buttons
+         above the fold, not just the one ghost button.
+       - Section order changed again: Dale → case studies → other accounts
+         → what happens → THE GUARANTEE → THE VSL → reviews → qualify →
+         apply → FAQ. The VSL is now the last proof point before the ask,
+         framed as reinforcement for the offer just stated, not evidence
+         gathered on the way to it. A gold restatement of the guarantee
+         figure ("25% or more ad spend reduction in 30 days") sits right
+         under the video, in --gold, distinct from the orange used
+         everywhere else — this is the one moment the page repeats the
+         number in a different colour, on purpose.
+       - Every "!" dropped from CTA button copy — you flagged it as reading
+         unprofessional. "Book a free audit to see if you qualify!" is now
+         "Book a free audit to see if you qualify" everywhere on the page.
+       - Sticky CTA now keys off the HERO instead of the VSL block (the
+         video sits near the bottom now, so watching for it would mean the
+         reminder bar barely has any page left to appear on).
 
      Everything else — copy, guarantee wording, qualify lists, FAQ, form
      fields, pixel events — is unchanged from index.html. See offer/README.md
-     for the open decisions that apply to both pages (which guarantee
+     for the open decisions that apply to every variant (which guarantee
      wording is locked, the Vinyl licence).
 
      SWAPS: offer/assets/testimonials/*.png · offer/assets/logo-{slug}.png
@@ -102,19 +99,19 @@ fbq('track', 'PageView');
 <main id="top">
 
   <!-- ===== 1. THE PROMISE ================================================
-       Same copy as index.html, but the hero carries the whole opening now —
-       there's no VSL directly beneath it to protect, so the headline is
-       free to be as big as the page allows. hero--lead overrides the
-       desktop shrink that index.html's h1 needs (that shrink exists purely
-       to leave room for a video in the first screen — irrelevant here).
+       Sized up further this revision — hero--lead now pushes noticeably
+       past index.html's already-bigger treatment, and a second CTA lives
+       here too, so the top of the page carries both the promise and a way
+       to act on it immediately, not just the masthead's small ghost button.
        ==================================================================== -->
-  <section class="band hero hero--ink hero--lead">
+  <section class="band hero hero--ink hero--lead" id="hero">
     <div class="shell shell--tight">
       <p class="audience">Amazon brand owners&hellip;</p>
       <h1 class="promise">
         <span class="fig">25% ad spend reduction in 30 days</span>
         <span class="rest">or your money back, or we work for free until we hit that target.</span>
       </h1>
+      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify</a>
     </div>
   </section>
 
@@ -126,7 +123,8 @@ fbq('track', 'PageView');
           <img src="assets/dale headshot.png" alt="Dale Lin, founder of Brainy Brands" width="512" height="512">
         </figure>
         <div class="dale-copy">
-          <h2>I'm Dale, and I run your ads myself</h2>
+          <h2>I'm Dale, the founder of Brainy Brands</h2>
+          <p class="lede mt-3">I run ads myself.</p>
           <p class="mt-4">I've spent <b>$2M of my own money</b> in ad spend
             learning the ins and outs of Amazon &mdash; building my own brands
             to seven figures before I ever took on a client.</p>
@@ -198,11 +196,62 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 4. THE VSL =====================================================
-       Moved down from position 2, at your request: after Dale and the case
-       studies, the video is one more proof point stacked on the others, not
-       the main event the whole hero exists to protect. Heading copy is
-       unchanged — "the methods we use…$12M…" already said exactly this.
+  <!-- ===== 4. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+       ADD LOGOS HERE as you get them — the strip wraps and centres, so
+       extra <li> items need no CSS change.
+       ==================================================================== -->
+  <section class="band band--sm">
+    <div class="shell">
+      <p class="striplabel">Other accounts we've worked on</p>
+      <ul class="logostrip">
+        <li><img src="assets/casestudylogos/logo-temp-tooth.png" alt="Temptooth"></li>
+        <li><img src="assets/casestudylogos/logo-zestt-organics.png" alt="Zestt Organics"></li>
+        <li><img src="assets/casestudylogos/logo-patriot-crew.png" alt="Patriot Crew"></li>
+        <li><img src="assets/casestudylogos/logo-magic-brand.png" alt="The Magic Brand"></li>
+        <li><img src="assets/casestudylogos/logo-emerald-plastics.png" alt="Emerald Plastics"></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 5. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <section class="band band--tint">
+    <div class="shell shell--tight">
+      <h2 class="rv">Here's what happens when you work with us</h2>
+
+      <ol class="deliverables deliverables--plain rv">
+        <li>Your ad bill starts falling inside 30 days</li>
+        <li>Your sales hold, or climb</li>
+        <li>You stop touching bids &mdash; Dale sets them, daily</li>
+        <li>You know exactly what changed, and what it returned</li>
+        <li>You can walk away any month, for any reason</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 6. THE GUARANTEE ===============================================
+       Moved up this revision, now right before the VSL rather than right
+       after it — the video comes last, reinforcing the guarantee that was
+       just stated rather than being evidence gathered on the way to it.
+       ==================================================================== -->
+  <section class="band band--ink">
+    <div class="shell shell--tight center">
+      <p class="guarantee-statement">
+        All of this is backed by a <span class="hot">30-day satisfaction
+        guarantee</span>.
+        <span class="line2">If your ad spend isn't reduced by 25% or more in
+        30 days, we'll give you your money back, or work for free until we
+        get to that target.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== 7. THE VSL =====================================================
+       Now the LAST proof point before reviews/apply, at your request — the
+       guarantee lands first, then the video backs it up, then the gold
+       restatement of the figure right under it closes the loop before the
+       ask. --gold is a new token, distinct from --amz/--amz-hot: this is
+       the one place on the page the guarantee number repeats in a
+       different colour, on purpose.
        ==================================================================== -->
   <section class="band" id="how">
     <div class="shell shell--tight center">
@@ -232,57 +281,9 @@ fbq('track', 'PageView');
         </div>
       </div>
 
-      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify!</a>
-    </div>
-  </section>
+      <p class="gold-statement">25% or more ad spend reduction in 30 days.</p>
 
-  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
-       ADD LOGOS HERE as you get them — the strip wraps and centres, so
-       extra <li> items need no CSS change.
-       ==================================================================== -->
-  <section class="band band--sm">
-    <div class="shell">
-      <p class="striplabel">Other accounts we've worked on</p>
-      <ul class="logostrip">
-        <li><img src="assets/casestudylogos/logo-temp-tooth.png" alt="Temptooth"></li>
-        <li><img src="assets/casestudylogos/logo-zestt-organics.png" alt="Zestt Organics"></li>
-        <li><img src="assets/casestudylogos/logo-patriot-crew.png" alt="Patriot Crew"></li>
-        <li><img src="assets/casestudylogos/logo-magic-brand.png" alt="The Magic Brand"></li>
-        <li><img src="assets/casestudylogos/logo-emerald-plastics.png" alt="Emerald Plastics"></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
-  <section class="band band--tint">
-    <div class="shell shell--tight">
-      <h2 class="rv">Here's what happens when you work with us</h2>
-
-      <ol class="deliverables deliverables--plain rv">
-        <li>Your ad bill starts falling inside 30 days</li>
-        <li>Your sales hold, or climb</li>
-        <li>You stop touching bids &mdash; Dale sets them, daily</li>
-        <li>You know exactly what changed, and what it returned</li>
-        <li>You can walk away any month, for any reason</li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- ===== 7. THE GUARANTEE ===============================================
-       Moved down from position 3, at your request — the hero already
-       carries the guarantee up top, so this is a pre-conversion
-       reinforcement right before reviews/apply rather than a second
-       front-loaded repeat of it. Same wording as index.html.
-       ==================================================================== -->
-  <section class="band band--ink">
-    <div class="shell shell--tight center">
-      <p class="guarantee-statement">
-        All of this is backed by a <span class="hot">30-day satisfaction
-        guarantee</span>.
-        <span class="line2">If your ad spend isn't reduced by 25% or more in
-        30 days, we'll give you your money back, or work for free until we
-        get to that target.</span>
-      </p>
+      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify</a>
     </div>
   </section>
 
@@ -506,7 +507,7 @@ fbq('track', 'PageView');
 </footer>
 
 <div class="sticky-cta" id="stickyCta">
-  <a class="btn" href="#apply">Book a free audit to see if you qualify!</a>
+  <a class="btn" href="#apply">Book a free audit to see if you qualify</a>
 </div>
 
 <script>
@@ -589,18 +590,21 @@ fbq('track', 'PageView');
     });
   }
 
-  /* --- Sticky CTA: past the VIDEO, hidden while the form is on screen. */
+  /* --- Sticky CTA: past the HERO, hidden while the form is on screen.
+     Keyed off the hero rather than the VSL block this revision — the video
+     moved down near the bottom of the page, so watching for it would leave
+     almost no page for the reminder bar to actually appear on. */
   var cta = document.getElementById('stickyCta'),
       apply = document.getElementById('apply'),
-      videoBlock = document.getElementById('how');
-  if ('IntersectionObserver' in window && cta && apply && videoBlock) {
+      hero = document.getElementById('hero');
+  if ('IntersectionObserver' in window && cta && apply && hero) {
     var past = false, on = false;
     var paint = function () {
       if (past && !on) { cta.setAttribute('data-show', ''); }
       else { cta.removeAttribute('data-show'); }
     };
     new IntersectionObserver(function (e) { past = !e[0].isIntersecting; paint(); },
-      { threshold: 0 }).observe(videoBlock);
+      { threshold: 0 }).observe(hero);
     new IntersectionObserver(function (e) { on = e[0].isIntersecting; paint(); },
       { threshold: 0 }).observe(apply);
   }

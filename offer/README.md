@@ -759,3 +759,153 @@ relationship, so a pure ancestor-walk can't see it and falls back to
 assuming white-on-white. Verified the real thing directly by sampling
 actual rendered pixels from a screenshot instead of walking computed
 styles: **16.3:1 at 390px, 15.6:1 at 1440px** — both comfortably pass.
+
+---
+
+# Revision 11 — bigger offer.html hero, gold restatement, guide.html rebuilt to funnel into the offer
+
+## Global, all three pages
+
+**Dale's intro split in two.** "I'm Dale, and I run your ads myself" is now
+a heading plus a separate line: `<h2>I'm Dale, the founder of Brainy
+Brands</h2>` followed by `<p class="lede">I run ads myself.</p>`. Same two
+facts, now two beats instead of one crowded sentence.
+
+**Every CTA lost its exclamation mark.** "Book a free audit to see if you
+qualify!" → "Book a free audit to see if you qualify" everywhere it
+appears (VSL button, sticky bar) on all three pages. You flagged the "!" as
+reading unprofessional — agreed, gone.
+
+## offer.html — bigger, reordered, and a new gold restatement
+
+**Hero sized up again**, past what revision 10 already did. `.hero--lead
+h1` went from `clamp(2.75rem, 1.9rem + 4.2vw, 4.75rem)` to `clamp(3.4rem,
+2.2rem + 5.8vw, 6.25rem)` — roughly 58px→96px instead of 47px→76px at the
+two ends — and `.audience` now scales up with it instead of staying fixed,
+so the whole hero block grows together. This is now unambiguously the
+loudest thing on the page, mobile included.
+
+**A second CTA lives in the hero itself** now: "Book a free audit to see if
+you qualify," directly under the guarantee, on top of the masthead's short
+ghost button. Two buttons above the fold instead of one.
+
+**Section order changed again**, at your dictation:
+
+```
+1  The promise (ink, bigger, +button)   7  The VSL — last, +gold line
+2  Dale                                  8  Reviews
+3  Case studies                          9  Qualify
+4  Other accounts                       10  Apply
+5  What happens                         11  FAQ
+6  The guarantee
+```
+
+The guarantee moved earlier (from right-before-reviews back up before the
+VSL), and the VSL moved to dead last among the proof sections — video as
+the final reinforcement of a guarantee already stated, not evidence
+gathered on the way to one.
+
+**New: a gold restatement under the video.** `25% or more ad spend
+reduction in 30 days.` sits right under the VSL, in a new `--gold` token —
+`oklch(0.55 0.15 85)`, verified at **4.88:1 on white**, comfortably clearing
+normal-text contrast, not just the large-text minimum its own size would
+technically allow. Deliberately a new token rather than reusing `--amz` or
+`--amz-hot`: this is the one place on the page the guarantee figure repeats
+in a different colour on purpose, and it needs to read as visually distinct
+from the `$12M` sitting in orange one line above it, not a shade of the
+same thing.
+
+**Sticky CTA re-keyed.** It used to appear once the VSL block scrolled out
+of view. With the VSL now near the bottom of an 11-section page, that would
+mean the reminder bar barely had any page left to appear on — it now
+appears once the **hero** scrolls away instead, same as it would on any
+long page.
+
+## guide.html — rebuilt so the guide actually funnels into the offer
+
+Your framing: "it's the free guide, but it needs to flow into the offer."
+That took more than a copy edit.
+
+**The video moved into the hero itself**, on the ink ground ("in the
+blue"), replacing the separate white `#how` section it used to live in.
+Hero is now: audience line → headline → sub-line → video, all on one
+band. Copy changes:
+
+| | Was | Now |
+|---|---|---|
+| Headline | "…quietly costing…" | "…**currently** costing…" |
+| Sub-line | "A free guide to instantly save you thousands on ad spend." | "These are the same methods we used to save our clients $12M in ad spend last year." |
+
+**A CSS trap avoided on purpose.** The video's desktop sizing used to be
+keyed off `#how` as an id selector. Reusing that id on the merged hero
+would have let it silently outrank `.hero--ink`'s own padding rule (the one
+that merges the hero with the sticky masthead, fought for across revisions
+7–8) — id beats class regardless of source order. Scoped the new rule to
+`.hero--ink .vsl` instead: a class selector, composes with `.hero--ink`
+normally, no specificity fight. Video capped at `max-height: 46vh` on
+desktop only, same principle as before, new number since the hero is now
+carrying more content than the old `#how` section ever did alone.
+
+**New section right after the hero** — the "second mention, in another
+section" you asked for. Reuses the *old* VSL heading verbatim ("These are
+the methods used in the guide — the same ones that saved our clients $12M
+in ad spend last year") now relocated here, plus one new sentence that does
+the actual work of positioning Dale as the solution: *"Knowing them is one
+thing. Having someone run them on your account, every single day, is
+another — that's what Dale does."* This is the section that turns "here's
+free information" into "here's who executes it."
+
+**Section order, reasoned out from there:**
+
+```
+1  Hero (headline + subline + VIDEO, ink)   7  The guarantee — reframed, moved here
+2  These are the methods (bridge → Dale)    8  Reviews
+3  Dale                                     9  Qualify
+4  Case studies                            10  Apply
+5  Other accounts                          11  FAQ
+6  What happens
+```
+
+Guarantee moved from position 3 (right under the old VSL) down to right
+before reviews/apply — after Dale and the case studies have actually made
+the case for him, not before you know who's making the offer.
+
+**>>> ONE THING KEPT DELIBERATELY DIFFERENT FROM YOUR WORDING <<<** You said
+the close should read "something like: So here's our offer: 25% off your
+ad spend in the first 30 days, or your money back, or we work for free."
+I used your **framing** — the "So here's our offer:" lead-in is new, and is
+exactly that pivot — but kept the guarantee **clause itself** in the exact
+locked wording from `FUNNEL-AND-SITEMAP.md` ("25% ad spend reduction in 30
+days, or your money back, or we work for free until we hit that target")
+rather than your looser paraphrase ("25% off your ad spend," "in the first
+30 days"). Three different guarantee wordings have already circulated
+across earlier revisions and gotten flagged and reconciled one at a time —
+I didn't want to add a fourth by accident here. Say the word if you want
+your exact phrasing instead; it's a one-line change.
+
+**Dale's methodology line adjusted for the new order.** "using the
+methodology I explain in the video above" no longer holds (the video is now
+above Dale, but the bridge section's "that's what Dale does" already made
+the connection) — changed to "using the same methods the guide walks
+through."
+
+## A note on scope
+
+"More buttons at the top" and the bigger hero were both said in the context
+of offer.html specifically ("the one mainly talking about the offer") — I
+scoped both to that page only, not index.html or guide.html. The
+exclamation-mark fix and the Dale copy change are the two things I treated
+as global, since both were phrased as general observations ("it kind of
+just makes it look not as professional") rather than page-specific asks.
+Flag it if you wanted the bigger hero or the extra button on the other two
+pages as well.
+
+## Verified
+
+All three pages, 390×844 and 1440×900, every FAQ forced open: zero contrast
+failures beyond the one confirmed-harmless masthead false positive
+(documented in revision 10), zero horizontal overflow. Gold token contrast
+verified separately at 4.88:1 on white. Screenshotted full-page at both
+sizes for offer.html and guide.html — section order, hero size, video
+placement and the reframed guarantee all confirmed visually, not just by
+the automated sweep.

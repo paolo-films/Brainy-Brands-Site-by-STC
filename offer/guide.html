@@ -10,25 +10,39 @@
 <!-- =========================================================================
      BRAINY BRANDS — OFFER PAGE, "GUIDE-LED" VARIANT
 
-     Same self-contained folder, same design system and offer.css, same
-     section order as index.html — only the hero copy and the VSL heading
-     change. Where index.html leads with the guarantee, this variant leads
-     with the VSL itself, framed as a free guide / lead magnet, matching how
-     it's been promoted in past ad creative.
+     Same self-contained folder, same design system as index.html. This
+     variant leads with the video itself as a free guide / lead magnet, then
+     has to earn its way into the paid offer rather than opening with it.
 
-     WHAT'S DIFFERENT FROM index.html:
-       - Hero headline: "The 3 settings quietly costing you thousands in ad
-         spend" (was the 25%-in-30-days guarantee figure).
-       - Hero subhead: "A free guide to instantly save you thousands on ad
-         spend" — PAOLO, flag if this doesn't match the actual ad copy
-         wording; I didn't have the original creative to pull from verbatim.
-       - VSL heading: reframed as "these are the methods used in the guide",
-         with the $12M stat kept but subordinated to that framing rather
-         than leading with it.
-     Everything else — section order, the guarantee restatement, case
-     studies, Dale, qualify, FAQ, form — is unchanged from index.html. See
-     offer/README.md for the open decisions that apply to every variant
-     (which guarantee wording is locked, the Vinyl licence).
+     REVISION 11 restructure, at your request — "the guide needs to flow
+     into the offer":
+       - The video is now embedded directly IN the hero, on the ink ground
+         ("in the blue"), not in a separate section below it. Hero copy:
+         "Amazon brand owners…" / "The 3 settings currently costing you
+         thousands in ad spend" / "These are the same methods we used to
+         save our clients $12M in ad spend last year." — then the video.
+       - A new section right after the hero repeats that same $12M/methods
+         claim as its own heading (the "second mention, in another
+         section" you asked for), then pivots: knowing the methods and
+         having someone run them for you are two different things — that's
+         Dale. This is the bridge into the rest of the page.
+       - Dale, case studies, other accounts and what-happens follow in that
+         order, building the case for him as the one who executes what the
+         guide describes.
+       - THE GUARANTEE moved from position 3 down to right before
+         reviews/apply, reframed as the explicit pivot from free content to
+         paid offer: "So here's our offer: 25% ad spend reduction in 30
+         days, or your money back, or we work for free until we hit that
+         target." You said it "something like" this in looser wording —
+         I kept the locked FUNNEL-AND-SITEMAP.md phrasing for the actual
+         guarantee clause and only changed the lead-in, so this doesn't
+         become a fourth version of the guarantee in circulation. Flag it
+         if you wanted your exact paraphrase instead.
+
+     Everything else — Dale's bio, case studies, qualify, FAQ, form fields,
+     pixel events — is unchanged from index.html. See offer/README.md for
+     the open decisions that apply to every variant (which guarantee
+     wording is locked, the Vinyl licence).
 
      SWAPS: offer/assets/testimonials/*.png · offer/assets/logo-{slug}.png
      for client logos · [[VSL_URL]] · [[PIXEL_ID]] · [[CALENDAR]]
@@ -84,42 +98,19 @@ fbq('track', 'PageView');
 
 <main id="top">
 
-  <!-- ===== 1. THE PROMISE ================================================
-       Deliberately short. The whole job of this block is to name the reader,
-       state the guarantee, and get out of the way so the VSL is on screen
-       the moment the page opens.
-
-       NO BUTTON HERE, at your request. The masthead's "See if you qualify"
-       is the only CTA above the video, so nothing competes with pressing
-       play. The orange button returns directly under the VSL.
-
-       NO FADE into the band below either — the dark-blue-to-light-blue
-       gradient is gone and the two bands now meet on a clean edge.
+  <!-- ===== 1. THE PROMISE + THE VSL, MERGED ==============================
+       The video now lives directly in the hero, on the ink ground, at your
+       request — no longer a separate white section below it. The sub-line
+       carries the $12M/methods claim first; the video backs it up
+       immediately underneath.
        ==================================================================== -->
-  <section class="band hero hero--ink">
+  <section class="band hero hero--ink" id="hero">
     <div class="shell shell--tight">
       <p class="audience">Amazon brand owners&hellip;</p>
       <h1 class="promise">
-        <span class="fig">The 3 settings quietly costing you thousands in ad spend</span>
-        <span class="rest">A free guide to instantly save you thousands on ad spend.</span>
+        <span class="fig">The 3 settings currently costing you thousands in ad spend</span>
+        <span class="rest">These are the same methods we used to save our clients $12M in ad spend last year.</span>
       </h1>
-    </div>
-  </section>
-
-  <!-- ===== 2. THE VSL ====================================================
-       The main event. It sits directly under the promise on a hard colour
-       edge, with the band's top padding cut back so the player is inside
-       the first screen on a phone rather than one scroll down.
-
-       WHITE, NOT BLUE, at your request. The flat brand-blue band read as a
-       colour choice rather than a break — the ink-to-white edge above it is
-       already the harder transition, and the video's own dark frame does
-       the contrast job blue was doing.
-       ==================================================================== -->
-  <section class="band" id="how">
-    <div class="shell shell--tight center">
-      <h2>These are the methods used in the guide &mdash; the same ones that
-        saved our clients <span class="bigstat">$12M</span> in ad spend last year</h2>
 
       <!-- SWAP before launch: point data-src at [[VSL_URL]] on a real host. -->
       <div class="vsl mt-5" id="vsl">
@@ -143,40 +134,27 @@ fbq('track', 'PageView');
           <span class="vsl-time" id="vslTime">0:00</span>
         </div>
       </div>
-
-      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify!</a>
     </div>
   </section>
 
-  <!-- ===== 3. THE GUARANTEE ==============================================
-       Moved up to sit directly under the VSL, at your request — the promise,
-       the proof, and the guarantee now stack back to back at the top of the
-       page, so neither the video nor this statement can be scrolled past
-       without seeing it. "if you qualify" stays out of the heading — it was
-       appearing so often it had stopped meaning anything. Qualification
-       lives on the buttons instead.
-
-       >>> ONE WORD CHANGED FROM YOUR COPY, deliberately <<<
-       You wrote: "If your ad spend IS reduced by 25% or more in 30 days,
-       we'll give you your money back or work for free until we get to that
-       target." That's inverted — as written it promises a refund when we
-       succeed, and offers to keep working free after already hitting the
-       target. It reads as a typo, so it's "isn't" here. If you actually
-       meant something else, say so, because this sentence is the offer.
+  <!-- ===== 2. THESE ARE THE METHODS — bridge into Dale ===================
+       The second mention of the same claim, in its own section further down
+       the page, as you asked for. Then the pivot: knowing the methods and
+       having someone run them for you every day are two different things.
+       That's the setup for Dale, who introduces himself directly below.
        ==================================================================== -->
-  <section class="band band--ink">
+  <section class="band">
     <div class="shell shell--tight center">
-      <p class="guarantee-statement">
-        All of this is backed by a <span class="hot">30-day satisfaction
-        guarantee</span>.
-        <span class="line2">If your ad spend isn't reduced by 25% or more in
-        30 days, we'll give you your money back, or work for free until we
-        get to that target.</span>
-      </p>
+      <h2 class="rv">These are the methods used in the guide &mdash; the same
+        ones that saved our clients <span class="bigstat">$12M</span> in ad
+        spend last year</h2>
+      <p class="mt-4 rv">Knowing them is one thing. Having someone run them on
+        your account, every single day, is another &mdash; that's what Dale
+        does.</p>
     </div>
   </section>
 
-  <!-- ===== 4. DALE ======================================================= -->
+  <!-- ===== 3. DALE ======================================================= -->
   <section class="band">
     <div class="shell">
       <div class="dale rv">
@@ -184,12 +162,13 @@ fbq('track', 'PageView');
           <img src="assets/dale headshot.png" alt="Dale Lin, founder of Brainy Brands" width="512" height="512">
         </figure>
         <div class="dale-copy">
-          <h2>I'm Dale, and I run your ads myself</h2>
+          <h2>I'm Dale, the founder of Brainy Brands</h2>
+          <p class="lede mt-3">I run ads myself.</p>
           <p class="mt-4">I've spent <b>$2M of my own money</b> in ad spend
             learning the ins and outs of Amazon &mdash; building my own brands
             to seven figures before I ever took on a client.</p>
           <p>I did it for myself first. Now I do it on <b>over 200 accounts</b>,
-            using the methodology I explain in the video above.
+            using the same methods the guide walks through.
             <b>Spend drops and sales go up.</b></p>
 
           <p>I still scale my own brands alongside my clients'. Somewhere in
@@ -201,7 +180,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 5. CASE STUDIES ===============================================
+  <!-- ===== 4. CASE STUDIES ===============================================
        The ad-spend CUT now leads every row and the revenue is demoted to a
        supporting line, because the cut is the promise the page makes and
        the revenue is the bonus.
@@ -263,10 +242,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 6. OTHER ACCOUNTS WE'VE WORKED ON ===========================
-       Moved to sit under the case studies: the named results land first,
-       then the strip reads as "and these too" rather than as an opening
-       claim with nothing behind it yet.
+  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
        ADD LOGOS HERE as you get them — the strip wraps and centres, so
        extra <li> items need no CSS change.
        ==================================================================== -->
@@ -283,15 +259,11 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 7. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
       <h2 class="rv">Here's what happens when you work with us</h2>
 
-      <!-- Outcomes, not process. The previous list named the five things we
-           do; nobody buys a "campaign optimization". These are the five
-           things that change for you, and Dale is named in them, because
-           working with him rather than an account manager is the offer. -->
       <ol class="deliverables deliverables--plain rv">
         <li>Your ad bill starts falling inside 30 days</li>
         <li>Your sales hold, or climb</li>
@@ -299,6 +271,25 @@ fbq('track', 'PageView');
         <li>You know exactly what changed, and what it returned</li>
         <li>You can walk away any month, for any reason</li>
       </ol>
+    </div>
+  </section>
+
+  <!-- ===== 7. THE GUARANTEE — the pivot from guide to offer ==============
+       Moved from position 3 down to right before reviews/apply, and
+       reframed as the explicit hand-off from free content to paid offer.
+       Lead-in is new; the guarantee clause itself keeps the exact locked
+       wording from FUNNEL-AND-SITEMAP.md rather than your looser paraphrase,
+       so this doesn't become a fourth version of the guarantee in
+       circulation. Flag it if you want your exact words instead.
+       ==================================================================== -->
+  <section class="band band--ink">
+    <div class="shell shell--tight center">
+      <p class="guarantee-statement">
+        So here's our offer: <span class="hot">25% ad spend reduction in 30
+        days</span>.
+        <span class="line2">Or your money back, or we work for free until we
+        hit that target.</span>
+      </p>
     </div>
   </section>
 
@@ -439,13 +430,6 @@ fbq('track', 'PageView');
 
   <!-- ===== 11. FAQ =======================================================
        Five pulled from go.brainyamz.com/offer-7, edited only for length.
-
-       PAOLO — one I deliberately did NOT carry over: offer-7's answer to
-       "what happens if I don't see the promised results" says "we refund
-       your entire management fee, no questions asked", which is a THIRD
-       version of the guarantee, different again from both the locked
-       wording and offer-7's own "15-25%" claim elsewhere on that page. The
-       answer below uses the locked wording instead. Worth reconciling.
        ==================================================================== -->
   <section class="band band--tint">
     <div class="shell shell--tight">
@@ -532,7 +516,7 @@ fbq('track', 'PageView');
 </footer>
 
 <div class="sticky-cta" id="stickyCta">
-  <a class="btn" href="#apply">Book a free audit to see if you qualify!</a>
+  <a class="btn" href="#apply">Book a free audit to see if you qualify</a>
 </div>
 
 <script>
@@ -615,25 +599,19 @@ fbq('track', 'PageView');
     });
   }
 
-  /* --- Sticky CTA: past the VIDEO, hidden while the form is on screen.
-
-     It used to key off the hero with a -45% root margin. Once the hero was
-     cut down to make room for the video, the hero no longer reached that
-     shrunk root at all, so the bar was up from the first frame — sitting
-     over the bottom edge of the player it is meant to follow. It now waits
-     for the whole video block to leave the viewport, which is also the
-     honest trigger: don't interrupt the pitch, ask after it. */
+  /* --- Sticky CTA: past the HERO (which now holds the video too), hidden
+     while the form is on screen. */
   var cta = document.getElementById('stickyCta'),
       apply = document.getElementById('apply'),
-      videoBlock = document.getElementById('how');
-  if ('IntersectionObserver' in window && cta && apply && videoBlock) {
+      hero = document.getElementById('hero');
+  if ('IntersectionObserver' in window && cta && apply && hero) {
     var past = false, on = false;
     var paint = function () {
       if (past && !on) { cta.setAttribute('data-show', ''); }
       else { cta.removeAttribute('data-show'); }
     };
     new IntersectionObserver(function (e) { past = !e[0].isIntersecting; paint(); },
-      { threshold: 0 }).observe(videoBlock);
+      { threshold: 0 }).observe(hero);
     new IntersectionObserver(function (e) { on = e[0].isIntersecting; paint(); },
       { threshold: 0 }).observe(apply);
   }
