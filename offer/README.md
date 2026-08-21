@@ -605,3 +605,60 @@ revisions silently returns black for `oklch()` values in this browser, which
 produced 76 phantom failures. The sweep now converts OKLCH → sRGB in JS. The
 earlier passes were still sound — they were run before that regression — but
 any future check should use the JS conversion.
+
+---
+
+# Revision 9 — no blue, guarantee moves up
+
+Your note: drop the light blue; put the guarantee directly under the VSL, so
+the top of the page reads promise → the methods we use → guarantee, and
+both the video and the guarantee are impossible to miss no matter what.
+
+## The VSL band is now plain white
+
+`band--blue` is gone — the section is just `<section class="band" id="how">`,
+which means it inherits the page's default paper background. The flat brand-
+blue read as a colour choice rather than a break; the hard ink-to-white edge
+above it already does that job, and the video's own dark frame supplies the
+contrast blue used to provide.
+
+This also meant every `.band--blue` override in the CSS was dead weight —
+`.bigstat` colour, `.btn` colour, `.vsl` border colour, all removed. None of
+it was replaced with anything: the default `.btn` (orange) and `.bigstat`
+(`--amz-deep`) both already pass contrast on white — there's a comment in the
+CSS from revision 7 noting this exact fact, written for exactly this
+eventuality. `#how h2 { max-width: 22ch }` is the one rule that survived,
+just renamed off the class.
+
+## The guarantee moved from position 7 to position 3
+
+It now sits immediately after the VSL, before Dale. The top of the page is
+three stacked, alternating sections: **ink** (the promise) → **white** (the
+VSL) → **ink** (the guarantee) — each one a hard, unmissable edge against the
+one before it. That rhythm is the actual mechanism behind "no matter what,
+it's hard to miss" — you can't scroll past the video without landing square
+on the guarantee.
+
+## Heading tense
+
+"The methods that saved our clients" → "The methods we use to save our
+clients", per your wording — present tense, ongoing methodology, not a
+one-time result.
+
+## Section order
+
+```
+1  The promise (ink)          7  What happens (tint)
+2  The VSL (white)            8  Reviews
+3  The guarantee (ink)        9  Qualify
+4  Dale                      10  Apply (ink, form)
+5  Case studies              11  FAQ
+6  Other accounts
+```
+
+## Verified
+
+Zero contrast failures at 390×844 and 1440×900, in both masthead states,
+with all FAQs open. No horizontal overflow at either size. VSL still fully
+inside the first screen at both sizes (390: 493–755 of 844; 1440: 511–893 of
+900).

@@ -473,9 +473,6 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .band--ink .btn:hover { background: var(--amz); border-color: var(--amz); color: var(--paper); }
 .band--ink a { color: var(--brand-blue); }
 
-.band--blue { background: var(--brand-blue); }
-.band--blue h2, .band--blue h3 { color: var(--ink); }
-.band--blue .lede, .band--blue p { color: oklch(0.205 0.020 258 / 0.82); }
 
 /* --- Hero, rebuilt ---------------------------------------------------------
    Black. The guarantee is the single loudest thing on the page and it now
@@ -873,10 +870,13 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   .brandmark .on-light, .brandmark .on-dark, .masthead .btn--ghost { transition: none; }
 }
 
-/* --- The blue guide band ---------------------------------------------------
-   The video sits on the brand blue. It's the strongest break available
-   short of another black band, and black next to black would have flattened
-   the section that follows.
+/* --- The VSL band -----------------------------------------------------------
+   Plain white, not brand blue. The flat colour band read as a decorative
+   choice rather than a break; the ink-hero-to-white edge above it is
+   already the harder transition, and the video's own dark frame supplies
+   the contrast blue used to provide. The default .btn (orange) and .bigstat
+   (--amz-deep) both already pass contrast on white — see the note on
+   .bigstat above — so no colour overrides are needed here at all.
 
    Its top padding is cut well below the standard --band so the player
    clears the fold on a phone; the bottom keeps the full measure so the
@@ -885,11 +885,7 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 
 #how { padding-block: clamp(1.75rem, 1.2rem + 2.2vw, 3rem) var(--band); }
 
-.band--blue .bigstat { color: var(--ink); }
-.band--blue .vsl { border-color: oklch(0.205 0.020 258 / 0.22); }
-.band--blue .btn { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.band--blue .btn:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
-.band--blue h2 { max-width: 22ch; margin-inline: auto; }
+#how h2 { max-width: 22ch; margin-inline: auto; }
 
 /* --- Guarantee: second sentence on its own line ---------------------------- */
 
@@ -945,7 +941,7 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   .hero--ink h1 { font-size: clamp(2.35rem, 1.5rem + 2.3vw, 3.05rem); }
 
   #how { padding-block: clamp(1.1rem, 0.5rem + 1.2vw, 1.55rem) var(--band); }
-  .band--blue h2 { font-size: clamp(1.55rem, 1rem + 1.4vw, 2rem); }
+  #how h2 { font-size: clamp(1.55rem, 1rem + 1.4vw, 2rem); }
 
   /* Height-capped, not width-capped: 16/9 turns any width cap into a height
      the window may still not have. This says "no taller than 35% of the
