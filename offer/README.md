@@ -1189,3 +1189,61 @@ leftover `[[PIXEL_ID]]` instances. Midtown logo confirmed loading with real
 pixel dimensions rather than a broken-image fallback. No horizontal
 overflow introduced at 390 or 1440 on offer.html; guide.html uses the
 identical `.logostrip` markup and CSS so the same holds there.
+
+---
+
+# Revision 16 — 20 more client logos, pixel moved to the top of `<head>`
+
+## The strip is now 26 logos
+
+Dale confirmed usage rights on the `dales-old-client-logos` set, so all 20
+are in, on both offer.html and guide.html. Added after Midtown, all with
+`loading="lazy"` since they sit well below the fold.
+
+Xpand · HK Army · Envi by eheat · Berkey · TheraPet MD · Gutterglove ·
+Pacific Doorware · Hydroh · Bumpology · Riff Raff Baby · Peregrune ·
+Buddha Pants · Sanzo · MEND · Velocity Lacrosse · Over & Back · SynNutra ·
+Fuel Pro Nutrition · 69 Golf · Barsys
+
+## Nine of the twenty needed real work, not just a copy
+
+The source set was scraped from each brand's live site, so the files were
+whatever that site happened to serve — not a consistent logo pack. Checked
+every one against the strip's actual rendering conditions (tint band,
+`grayscale(1)`, `opacity: .55`) rather than trusting the filenames:
+
+| Problem | Files | Fix |
+|---|---|---|
+| Pure **white** mark on transparent — invisible on a light page | Barsys, Sanzo | Repainted to `#1E232B`. Sanzo is an SVG so that's a `fill="white"` → dark swap; Barsys is raster, so alpha was kept and RGB replaced |
+| Light mark on an opaque **black** box | HK Army, 69 Golf | Luminance → alpha, mark repainted dark. Box gone, mark now reads on white |
+| Coloured mark on an opaque **white** box | SynNutra, Peregrune, Gutterglove, Pacific Doorware, Over & Back | Alpha derived from distance-from-white, original colours kept |
+
+Barsys' source was literally named `Barsys-icon-white.png` — it was never
+going to work on this page as shipped. Four of the five white-box cases
+(Peregrune, Gutterglove, Pacific Doorware, Over & Back) looked "fine" in a
+file browser and only revealed themselves as boxes when checked for
+corner opacity, which is why every file got measured rather than eyeballed.
+
+All 20 were then trimmed to content and normalised to 120px tall, matching
+the six that were already there.
+
+**Barsys is icon-only** (a cocktail glass, no wordmark) because that's the
+only mark on their site. It reads as a small abstract shape next to 25
+wordmarks. Swap it if you have a lockup version.
+
+## Meta Pixel moved to the top of `<head>`
+
+Was sitting at position 12, after the favicon, both `preconnect`s, the
+Google Fonts stylesheet, the Vinyl preload and offer.css — so every one of
+those render-blocking requests resolved before the pixel fired. Now
+directly after the `<meta>` block and before the first `<link>`, on all
+three pages. Charset stays first, which is a spec requirement (must be in
+the first 1024 bytes), not a preference.
+
+## Verified
+
+26 logos on both pages, at 390 and 1440: all load (`naturalWidth > 0`
+after scrolling the strip into view — checked post-scroll, since
+`loading="lazy"` means an un-scrolled check reports every one of them as
+broken), zero horizontal overflow. Head order dumped and confirmed on all
+three pages.
