@@ -341,6 +341,10 @@ fbq('track', 'PageView');
        Urgency on black. Every line here is true and already documented —
        one person setting bids is a real cap on clients, and the no-show
        rule is a policy, not manufactured scarcity. Nothing invented.
+
+       Calendar embed is your GHL booking widget, live and visible directly
+       — no gating form in front of it. It handles qualify/disqualify
+       itself off whatever it asks; nothing extra built on this end.
        ==================================================================== -->
   <section class="band band--ink" id="apply">
     <div class="shell">
@@ -348,76 +352,15 @@ fbq('track', 'PageView');
         <header class="rv">
           <h2>Book your free audit</h2>
           <p class="lede mt-4">
-            Six questions, then twenty minutes with Dale, live in your
-            account. He'll show you <b>exactly where your money is going</b>
-            and what the next steps are.
+            Twenty minutes with Dale, live in your account. He'll show you
+            <b>exactly where your money is going</b> and what the next
+            steps are.
           </p>
           <p class="cta-note">You keep whatever he finds, either way.</p>
         </header>
 
-        <div class="rv">
-          <!-- EMANUEL — field names match vsl.html, NOT audit.html:
-               new: revenue, storefront_url | dropped: current_manager |
-               ad_spend tiers are different buckets from landing.html. -->
-          <form id="applyForm" class="gate" action="#" method="post" novalidate>
-            <div class="field">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" autocomplete="name" required>
-            </div>
-            <div class="field">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
-            </div>
-            <div class="field">
-              <label for="brand_name">Brand / store name</label>
-              <input type="text" id="brand_name" name="brand_name" autocomplete="organization" required>
-            </div>
-            <div class="field">
-              <label for="revenue">Monthly Amazon revenue</label>
-              <select id="revenue" name="revenue" required>
-                <option value="">Choose one</option>
-                <option value="under-50k">Under $50K</option>
-                <option value="50k-100k">$50K &ndash; $100K</option>
-                <option value="100k-250k">$100K &ndash; $250K</option>
-                <option value="250k-plus">$250K+</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="ad_spend">Monthly Amazon ad spend</label>
-              <select id="ad_spend" name="ad_spend" required>
-                <option value="">Choose one</option>
-                <option value="under-10k">Under $10K</option>
-                <option value="10k-20k">$10K &ndash; $20K</option>
-                <option value="20k-50k">$20K &ndash; $50K</option>
-                <option value="50k-plus">$50K+</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="storefront_url">Amazon storefront or ASIN link</label>
-              <input type="url" id="storefront_url" name="storefront_url" inputmode="url" placeholder="https://" required>
-            </div>
-
-            <p id="formError" class="form-error" hidden>Please fill in all six fields.</p>
-
-            <div class="mt-4">
-              <button class="btn btn--wide" type="submit">Book my free audit</button>
-            </div>
-            <p class="field-hint">
-              Used to prep before the call. Never sold or shared &mdash; see the
-              <a href="../privacy.html">privacy policy</a>.
-            </p>
-          </form>
-
-          <!-- Calendar embed: your GHL booking widget. It handles qualify/
-               disqualify itself off the answers above — nothing extra built
-               here, this just shows it once the form is in. -->
-          <div class="confirm" id="applyConfirm" hidden>
-            <h3>Got it.</h3>
-            <p>Pick a time below.</p>
-            <div class="confirm-calendar">
-              <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
-            </div>
-          </div>
+        <div class="rv confirm-calendar">
+          <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
         </div>
       </div>
     </div>
@@ -518,13 +461,6 @@ fbq('track', 'PageView');
 (function () {
   'use strict';
 
-  /* ROUTING — still your call. 'review' shows a confirmation and Dale sends
-     an invite; 'direct' jumps to the calendar. Defaulted to 'review'
-     because the $10K floor is stated in copy and NOT enforced by the form,
-     so 'direct' publishes the calendar to anyone who fills six fields. */
-  var ROUTING  = 'review';
-  var CALENDAR = '[[CALENDAR]]';
-
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if ('IntersectionObserver' in window && !reduced) {
@@ -613,52 +549,11 @@ fbq('track', 'PageView');
       { threshold: 0 }).observe(apply);
   }
 
-  /* --- Form. EMANUEL: client-side only, replace with a real POST to GHL. */
-  var form = document.getElementById('applyForm'),
-      confirm = document.getElementById('applyConfirm'),
-      error = document.getElementById('formError');
-  if (!form) { return; }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var data = new FormData(form);
-    var required = ['name', 'email', 'brand_name', 'revenue', 'ad_spend', 'storefront_url'];
-    var missing = required.filter(function (f) { return !String(data.get(f) || '').trim(); });
-
-    if (missing.length) {
-      error.hidden = false;
-      var first = form.elements[missing[0]];
-      if (first && first.focus) { first.focus(); }
-      return;
-    }
-    error.hidden = true;
-
-    try {
-      sessionStorage.setItem('bb_lead', JSON.stringify({
-        name: data.get('name'), email: data.get('email'),
-        brand_name: data.get('brand_name'), revenue: data.get('revenue'),
-        ad_spend: data.get('ad_spend'), storefront_url: data.get('storefront_url'),
-        source: 'offer'
-      }));
-    } catch (err) { /* private browsing */ }
-
-    if (typeof fbq === 'function') { fbq('track', 'Lead'); }
-
-    if (ROUTING === 'direct' && CALENDAR.indexOf('[[') !== 0) {
-      window.location.href = CALENDAR;
-      return;
-    }
-    form.hidden = true;
-    confirm.hidden = false;
-    confirm.setAttribute('tabindex', '-1');
-    confirm.focus();
-  });
 })();
 </script>
 
-<!-- GHL calendar embed script — resizes the confirm-panel iframe to fit its
-     content. Loaded once, unconditionally; the iframe itself only becomes
-     visible once the form's #applyConfirm panel is shown. -->
+<!-- GHL calendar embed script — resizes the widget iframe to fit its real
+     content instead of sitting at the CSS fallback height. -->
 <script src="https://link.msgsndr.com/js/form_embed.js" type="text/javascript"></script>
 
 </body>

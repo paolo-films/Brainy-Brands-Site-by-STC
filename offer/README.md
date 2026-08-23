@@ -964,3 +964,52 @@ it end to end.
 
 Contrast/overflow sweep re-run on both pages after the change: zero new
 failures, zero overflow, at 390×844 and 1440×900.
+
+---
+
+# Revision 13 — fixed it: calendar shows directly now, no form in front of it
+
+Revision 12 put the calendar behind a `hidden` attribute that only cleared
+once the 6-question form validated — so on a fresh page load there was
+nothing to see, which is exactly the bug you caught. That was backwards
+from what you actually asked for.
+
+**Fixed on both pages** by removing the form entirely — no more six
+fields, no more client-side validation, no more `#applyConfirm` gate. The
+apply section is now just the heading/lede on one side and your live
+calendar embed on the other, visible on load, every time.
+
+Cleaned up alongside it, since they only existed to serve the form that's
+gone:
+
+- `ROUTING`/`CALENDAR` JS variables and the whole submit handler (form
+  validation, the `sessionStorage` lead capture, the `Lead` pixel event on
+  submit, the direct-vs-review branching).
+- The "Six questions, then twenty minutes with Dale…" lede line, since
+  there's no longer a six-question form — now just "Twenty minutes with
+  Dale, live in your account…"
+- The `field-hint` privacy note, which was specifically about what happens
+  to the form's answers.
+
+`index.html` untouched — its own form/confirm flow is a separate,
+deliberate design (there for a different reason: this session never asked
+to change it) and still works exactly as before.
+
+**One thing to flag**: the site's own `PageView`-on-load and
+`ViewContent`-at-25%-of-VSL pixel events still fire as before, but the
+`Lead` event that used to fire on the removed form's submit is now gone
+with it — GHL's own booking flow presumably fires its own conversion event
+inside the widget, but that's on GHL's side, not something this page
+controls or can verify from here.
+
+## Verified
+
+Confirmed in the DOM on both pages: no `#applyForm` element exists,
+`#apply iframe` exists at the correct position in the two-column layout.
+Screenshotted the apply section on both — calendar box visible immediately
+on page load, no form to fill first. (The broken-image icon inside the box
+in these screenshots is this sandbox's known inability to reach
+`leadconnectorhq.com` for headless Chromium, documented in revision 12 —
+not a page bug.) Contrast/overflow sweep re-run on both pages, both sizes:
+zero new failures beyond the one confirmed-harmless masthead false
+positive, zero overflow.
