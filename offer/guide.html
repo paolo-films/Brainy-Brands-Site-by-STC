@@ -417,11 +417,15 @@ fbq('track', 'PageView');
             </p>
           </form>
 
+          <!-- Calendar embed: your GHL booking widget. It handles qualify/
+               disqualify itself off the answers above — nothing extra built
+               here, this just shows it once the form is in. -->
           <div class="confirm" id="applyConfirm" hidden>
             <h3>Got it.</h3>
-            <p>Dale reviews every account before booking, so the twenty
-              minutes go on your numbers rather than on questions you've
-              already answered. You'll hear back within one business day.</p>
+            <p>Pick a time below.</p>
+            <div class="confirm-calendar">
+              <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
+            </div>
           </div>
         </div>
       </div>
@@ -658,6 +662,11 @@ fbq('track', 'PageView');
   });
 })();
 </script>
+
+<!-- GHL calendar embed script — resizes the confirm-panel iframe to fit its
+     content. Loaded once, unconditionally; the iframe itself only becomes
+     visible once the form's #applyConfirm panel is shown. -->
+<script src="https://link.msgsndr.com/js/form_embed.js" type="text/javascript"></script>
 
 </body>
 </html>

@@ -399,6 +399,12 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .confirm h3 { color: var(--amz-deep); }
 .confirm p { margin-top: var(--s2); }
 
+/* GHL calendar embed — min-height is a fallback only, for the moment
+   before form_embed.js's own resize script runs; it owns the real height
+   after that. */
+.confirm-calendar { margin-top: var(--s4); }
+.confirm-calendar iframe { display: block; width: 100%; min-height: 700px; }
+
 .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 1rem + 3.5vw, 4rem); align-items: start; }
 
 /* --- Footer --------------------------------------------------------------- */

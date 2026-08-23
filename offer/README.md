@@ -909,3 +909,58 @@ verified separately at 4.88:1 on white. Screenshotted full-page at both
 sizes for offer.html and guide.html — section order, hero size, video
 placement and the reframed guarantee all confirmed visually, not just by
 the automated sweep.
+
+---
+
+# Revision 12 — your GHL calendar embedded on offer.html and guide.html
+
+## Where it went
+
+Both pages already had a `#applyConfirm` panel that appeared after the
+6-question form validated — previously just static text ("Dale reviews
+every account before booking… you'll hear back within one business day").
+That text assumed a manual, async review step. Your GHL booking widget
+handles qualify/disqualify itself off the same answers, so the panel now
+embeds the widget directly instead: form submits → `#applyConfirm` shows →
+your calendar (or its own disqualify message) renders in place of the old
+text. Nothing about the form itself changed — same six fields, same
+client-side validation, same `Lead` pixel event on submit.
+
+Added to both pages, not index.html — you asked for "the offer and the
+guide landing pages" specifically.
+
+```html
+<div class="confirm-calendar">
+  <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" …></iframe>
+</div>
+```
+plus `form_embed.js` loaded once near the end of `<body>` on each page —
+that script is what resizes the iframe to fit its actual content instead of
+sitting at a fixed height.
+
+## One CSS addition
+
+`.confirm-calendar iframe { min-height: 700px; }` — a fallback only, for the
+instant before `form_embed.js` runs and takes over sizing. Picked as a
+reasonable floor for a scheduling widget, not a real measurement of yours;
+adjust if the real thing renders shorter or taller than that before the
+resize script kicks in.
+
+## Verified, with one honest gap
+
+Confirmed in the DOM: the iframe exists in both `#applyConfirm` panels with
+the correct `src`, at the correct width (matches the `.confirm` box's own
+padded width), and the CSS fallback height applies correctly before any
+resize script runs.
+
+**Could not visually confirm the widget itself renders**, same root cause
+as the Archivo font issue in revision 10: this sandbox's proxy resets the
+connection to both `api.leadconnectorhq.com` and `link.msgsndr.com` for
+headless Chromium specifically (`ERR_CONNECTION_RESET`), while the markup
+and script tag are otherwise correct. This is an environment limitation,
+not a page bug — worth clicking through the actual form → calendar flow
+yourself on the live raw.githack link or your own machine before trusting
+it end to end.
+
+Contrast/overflow sweep re-run on both pages after the change: zero new
+failures, zero overflow, at 390×844 and 1440×900.
