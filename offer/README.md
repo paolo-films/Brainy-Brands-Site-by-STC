@@ -1247,3 +1247,73 @@ after scrolling the strip into view — checked post-scroll, since
 `loading="lazy"` means an un-scrolled check reports every one of them as
 broken), zero horizontal overflow. Head order dumped and confirmed on all
 three pages.
+
+---
+
+# Revision 17 — Meta click ID (fbclid) capture
+
+One block, added to `<head>` on all three pages directly after the Pixel.
+Vanilla JS, no dependencies, ~70 lines.
+
+1. Reads `?fbclid=` from the URL.
+2. Writes it to a first-party cookie, `stc_fbclid`, 90 days.
+3. Falls back to that cookie when the URL has no `fbclid` — covers the
+   visitor who clicks the ad today and books next week.
+4. Keeps the query string on internal navigation.
+
+## Where the click ID actually lands differs per page, because the forms differ
+
+**`index.html` has a real native `<form>`**, so it got exactly what was
+specced: `<input type="hidden" name="fbclid" id="fbclid">`, populated on
+load. It also now rides along in the `bb_lead` sessionStorage payload
+next to the other six fields.
+
+**`offer.html` and `guide.html` do not have a form on the page.** The
+booking form lives inside the GHL widget at
+`api.leadconnectorhq.com`, which is a different origin — a hidden input
+cannot be inserted into it from here, and no amount of JS on our side
+changes that. Same-origin policy, not a gap in the implementation.
+
+So on those two the click ID rides in on the **iframe URL** instead:
+
+```
+…/widget/booking/rMTistvxT1FAUAfDRPzE?fbclid=<value>
+```
+
+To make that work the iframe now ships with `data-src` and gets its real
+`src` set by the script, so the widget loads once, already carrying the
+param — rather than loading clean and then being reloaded to add it.
+
+> **This needs one thing done in GHL that cannot be done from this repo:**
+> a custom field on the booking widget that accepts an inbound `fbclid`
+> query param. Without it GHL receives the param and discards it, and the
+> click ID never reaches the contact record. If GHL's native Meta CAPI
+> integration is switched on it may already handle click IDs itself, in
+> which case this is belt-and-braces.
+
+A `<noscript>` fallback link to the booking page was added under each
+widget, since `data-src` means no iframe at all without JS.
+
+## Two things worth recording
+
+**The Vimeo embed closes with byte-identical markup to the GHL embed** —
+`</iframe>\n      </div>\n    </div>\n  </section>`. An edit anchored on
+that pattern hit the video player first. Caught by an assertion on match
+count rather than by the edit appearing to succeed; re-anchored on the
+GHL iframe's own `id`. Verified after: the Vimeo `src` is untouched and
+never receives an `fbclid`.
+
+**`SameSite=Lax`, not `Strict`.** The visitor arrives here as a cross-site
+navigation from `facebook.com`; `Strict` withholds the cookie on exactly
+that first hop, which is the only hop that matters. `Secure` is applied
+only on https so the cookie still works when serving locally over http.
+
+## Verified
+
+11 scenarios per page, in a real browser, with a fresh browser context per
+case: URL capture, cookie write, cookie fallback on a clean URL, GHL
+iframe param injection, Vimeo iframe left alone, internal-link query
+preservation, organic visitor (no param, no cookie) producing an empty
+value with no dangling `?fbclid=` on the widget, and no JS errors.
+`offer.html` and `guide.html` 11/11; `index.html` covers the hidden-input
+path instead of the iframe path.

@@ -66,6 +66,111 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=258230770694638&ev=PageView&noscript=1" alt=""></noscript>
 
+<!-- ===== META CLICK ID (fbclid) CAPTURE ==================================
+     Runs early, before the booking widget mounts, so the click ID is
+     resolved by the time anything needs it.
+
+       1. Read ?fbclid= from the URL.
+       2. Persist it to a first-party cookie (stc_fbclid, 90 days) so a
+          visitor who clicks the ad today and books next week still
+          carries it.
+       3. If the URL has no fbclid, fall back to that cookie.
+       4. Hand it to the form, and keep it on internal links.
+
+     No dependencies.
+     ==================================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  var COOKIE = 'stc_fbclid';
+  var MAX_AGE_DAYS = 90;
+
+  function readCookie(name) {
+    var parts = document.cookie ? document.cookie.split('; ') : [];
+    for (var i = 0; i < parts.length; i++) {
+      var eq = parts[i].indexOf('=');
+      if (eq > -1 && parts[i].slice(0, eq) === name) {
+        try { return decodeURIComponent(parts[i].slice(eq + 1)); }
+        catch (e) { return parts[i].slice(eq + 1); }
+      }
+    }
+    return '';
+  }
+
+  function writeCookie(name, value, days) {
+    var expires = new Date(Date.now() + days * 86400000).toUTCString();
+    /* Lax, not Strict: the visitor arrives here as a cross-site navigation
+       from facebook.com, and Strict would withhold the cookie on that first
+       hop. Secure only on https so this still works over local http. */
+    document.cookie = name + '=' + encodeURIComponent(value) +
+      '; expires=' + expires + '; path=/; SameSite=Lax' +
+      (location.protocol === 'https:' ? '; Secure' : '');
+  }
+
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(location.search);
+    try { return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : ''; }
+    catch (e) { return m ? m[1] : ''; }
+  }
+
+  /* URL wins over the cookie — a fresh click should overwrite an older one. */
+  var fromUrl = param('fbclid');
+  var fbclid  = fromUrl || readCookie(COOKIE);
+
+  if (fromUrl) {
+    try { writeCookie(COOKIE, fromUrl, MAX_AGE_DAYS); } catch (e) { /* blocked */ }
+  }
+
+  window.STC_FBCLID = fbclid;
+
+  function apply() {
+    /* --- 1. Native form, where one exists (index.html) ------------------ */
+    var input = document.getElementById('fbclid');
+    if (input) { input.value = fbclid; }
+
+    /* --- 2. GHL booking widget ------------------------------------------
+       The widget is a cross-origin iframe, so a hidden input inside it is
+       not reachable from here — same-origin policy. The click ID has to
+       ride in on the iframe URL instead, which is why the tag below ships
+       with data-src and gets its real src set here. GHL maps inbound query
+       params onto the matching custom field. */
+    var frames = document.querySelectorAll('iframe[data-src]');
+    for (var i = 0; i < frames.length; i++) {
+      var src = frames[i].getAttribute('data-src');
+      if (!src) { continue; }
+      if (fbclid) {
+        src += (src.indexOf('?') > -1 ? '&' : '?') + 'fbclid=' + encodeURIComponent(fbclid);
+      }
+      frames[i].src = src;
+    }
+
+    /* --- 3. Keep the query string on internal navigation -----------------
+       So the click ID survives if the booking flow ever moves to a second
+       page. Same-origin, non-anchor, non-download links only. */
+    var qs = location.search.replace(/^\?/, '');
+    if (!qs) { return; }
+    var links = document.getElementsByTagName('a');
+    for (var j = 0; j < links.length; j++) {
+      var a = links[j];
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#') { continue; }
+      if (/^(https?:)?\/\//i.test(href) && a.hostname !== location.hostname) { continue; }
+      if (/^(mailto:|tel:|javascript:)/i.test(href)) { continue; }
+      if (a.hasAttribute('download') || a.getAttribute('target') === '_blank') { continue; }
+      if (a.search) { continue; }               /* already carries its own params */
+      a.href = a.pathname + '?' + qs + a.hash;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+})();
+</script>
+
 <link rel="icon" href="assets/favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -359,7 +464,10 @@ fbq('track', 'PageView');
   <section class="band band--ink" id="apply">
     <div class="shell shell--tight">
       <div class="rv calendar-embed">
-        <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
+        <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
+        <noscript>
+          <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
+        </noscript>
       </div>
     </div>
   </section>
