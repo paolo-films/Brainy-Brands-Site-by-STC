@@ -26,7 +26,8 @@ python3 .claude-serve.py    # then http://localhost:8080/offer/
 | `assets/testimonials/testimonial-1..6.png` | Upwork review screenshots | Labelled grey slot, never a broken image |
 | `assets/logo-{temptooth,zestt,patriotcrew,magicbrand,midtown,emerald}.png` | Amazon client logos | Falls back to the brand name in type |
 | `[[VSL_URL]]` in `index.html` | Real CDN video URL | Plays the local review copy |
-| `[[PIXEL_ID]]`, `[[CALENDAR]]` | Meta pixel, calendar link | Pixel no-ops; form shows the confirm panel |
+| `[[CALENDAR]]` | Calendar link | Form shows the confirm panel |
+| ~~`[[PIXEL_ID]]`~~ | Meta pixel | **Done as of revision 15** — real ID (`258230770694638`) is live in all three pages |
 
 ## Two things that need a decision, not a design pass
 
@@ -1140,3 +1141,51 @@ Chromium, so **the Vimeo player and the GHL calendar cannot be seen
 rendering here** — their geometry and wiring are verified, their content
 isn't. Worth an eyeball on a real browser, particularly that the video
 actually plays and that you're happy without autoplay.
+
+---
+
+# Revision 15 — real Pixel ID, sixth logo added
+
+## Pixel is live
+
+`[[PIXEL_ID]]` → `258230770694638` in the `fbq('init', …)` call and the
+`<noscript>` fallback `<img>`, on all three pages. This was flagged in
+revision 1 and every revision since — first time it's actually been filled
+in. `PageView` fires on load, `ViewContent` at 25% of the VSL watched, same
+as before; nothing else about the tracking changed.
+
+Also corrected: I'd said offer.html/guide.html lost their `Lead` event when
+their form was removed in revision 13. You corrected that — the form is
+still there, it's just inside the GHL booking widget now rather than
+hand-rolled HTML. Whatever event GHL fires on a completed booking is
+outside this page's code and wasn't touched here.
+
+## Sixth logo added to the strip
+
+`assets/casestudylogos/Midtown.svg` was sitting in the folder, unused, since
+before this variant work even started — it's one of the six names the
+original brief asked for (`logo-{temptooth,zestt,patriotcrew,magicbrand,
+midtown,emerald}`), but only five ever made it into the `<ul class=
+"logostrip">` on either page. Added as a sixth `<li>`, same markup pattern
+as the rest, on both offer.html and guide.html (not index.html — wasn't
+asked for there).
+
+It's an SVG with an embedded raster pattern fill rather than a flat PNG,
+which is why it wasn't confirmed working by eye until now: loaded it
+directly and checked `naturalWidth`/`naturalHeight` came back non-zero
+(200×26) rather than trusting the file extension.
+
+**This is not the full set you're picturing.** You mentioned seeing "Dale's
+old client logos" on your desktop — I don't have any way to see your local
+Desktop from this session; Midtown was the one extra logo already sitting
+in this repo's `assets/casestudylogos/` folder, unused. If there are more
+brand logos you want in the strip, send me the image files directly (drag
+into chat) and I'll drop them in the same way.
+
+## Verified
+
+Pixel ID confirmed present at both live locations on all three pages, no
+leftover `[[PIXEL_ID]]` instances. Midtown logo confirmed loading with real
+pixel dimensions rather than a broken-image fallback. No horizontal
+overflow introduced at 390 or 1440 on offer.html; guide.html uses the
+identical `.logostrip` markup and CSS so the same holds there.
