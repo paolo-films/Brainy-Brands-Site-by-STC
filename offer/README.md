@@ -1013,3 +1013,130 @@ in these screenshots is this sandbox's known inability to reach
 not a page bug.) Contrast/overflow sweep re-run on both pages, both sizes:
 zero new failures beyond the one confirmed-harmless masthead false
 positive, zero overflow.
+
+---
+
+# Revision 14 — Vimeo player, reordered guide, standalone calendar
+
+## Both pages
+
+**The native `<video>` player is gone, replaced by your Vimeo embed.** The
+hand-rolled chrome went with it: unmute prompt, play/pause button, progress
+readout, and the ~45 lines of JS driving them. Two things worth knowing:
+
+- **Autoplay is no longer on.** The old player was `autoplay muted
+  playsinline` with a "Tap for sound" overlay — a deliberate VSL pattern
+  from revision 2. The embed URL you sent carries no autoplay params, so
+  the video now waits for a click. I used your URL exactly as given rather
+  than silently editing it; **add `&autoplay=1&muted=1` to the iframe
+  `src` on both pages if you want the old behaviour back.**
+- **The 25%-watched `ViewContent` pixel was rebuilt**, not dropped. It used
+  to hang off the `<video>` element's `timeupdate`. It now hangs off
+  Vimeo's Player API (`player.on('timeupdate', …)`, checking
+  `data.percent`), with `player.js` loaded *before* the inline script so
+  `window.Vimeo` exists when it runs. Deleting the video element would
+  otherwise have silently killed that event.
+
+`index.html` still uses the native player, so all the `.vsl-unmute` /
+`.vsl-bar` / `.vsl-play` CSS stays — it's inert on the two Vimeo pages, and
+removing it would break index.
+
+**The calendar is its own section now.** The "Book your free audit / twenty
+minutes with Dale, live in your account / you keep whatever he finds"
+header and the two-column split are both gone; the GHL widget stands alone
+on the ink band. It carries its own headings and its own qualify logic, so
+everything the page said around it was either duplicating that or arguing
+with it.
+
+**Qualify column headings lost their icons.** "This is for you if" and "It
+isn't for you if" are now plain text; the eight list items underneath keep
+their checks and crosses. Verified by count: 0 heading icons, 8 list icons.
+
+## offer.html
+
+**The VSL moved up to position 2**, directly under the hero and above
+Dale, retitled *"If you don't believe us, these are the methods we use to
+save our clients $12M in ad spend last year."*
+
+**The gold line and the button under the player are gone** — your call that
+there are already enough buttons pointing at the calendar (masthead, hero,
+sticky bar). The `--gold` token and `.gold-statement` rule went with them;
+nothing else referenced either, so revision 11's gold experiment is now
+fully reverted.
+
+Order: hero → **VSL** → Dale → case studies → other accounts → what
+happens → guarantee → reviews → qualify → **calendar** → FAQ.
+
+## guide.html
+
+**Hero headline sized up** to nearly match offer.html — same `.hero--lead`
+treatment via a new `.hero--lead-video` step-down, one size smaller purely
+because this hero also has to fit the player under it.
+
+**The hero sub-line is gone.** *"These are the same methods we used to save
+our clients $12M…"* sat under the headline and again one section later —
+that was the repetition you flagged. The opening screen is now the headline
+and the video, nothing else.
+
+**Section 3 inherited that sentence verbatim** as its heading, replacing
+*"These are the methods used in the guide — the same ones that saved our
+clients $12M…"*. The *"Knowing them is one thing…"* paragraph under it is
+deleted.
+
+**The offer moved up to position 2**, straight off the back of the video:
+watch, scroll once, land on the offer.
+
+**Dale moved up and onto the tint.** You called the gap above him awkward.
+A colour change is the hardest break available — it reads as a new chapter
+rather than more of the same page — and the band above now gives back its
+bottom padding (`.band--sm`) so he starts higher as well.
+
+Order: hero + video → **offer** → methods → **Dale (tint)** → case studies
+→ other accounts → what happens → reviews → qualify → **calendar** → FAQ.
+
+## Two bugs found while doing this
+
+**1. The Vimeo iframe collapsed to 2px tall on desktop.** Measured, not
+guessed: `vsl={"top":970,"bottom":972}` at 1440×900. The desktop rule
+capped the player with `max-height: 35vh; width: auto` inside a
+`width: fit-content` container — which works for `<video>`, because a video
+has an intrinsic aspect ratio to resolve `auto` against, and fails for an
+`<iframe>`, which doesn't: the two constraints resolve against each other
+into nothing. Rewritten to cap the *container's width* at the 16:9
+equivalent instead (35vh tall → `min(100%, 62.22vh)` wide; 46vh → 81.78vh
+in guide's hero). Same visual result, no dependence on intrinsic ratio, and
+the `<video>` rule is left intact for index.html.
+
+**2. A stray `</div>` in the qualify section**, inherited from the original
+index.html and copied into both variants — one extra closing tag left the
+`<main>` tree unbalanced. Browsers silently recover from it, which is why
+it survived thirteen revisions. Fixed in **all three** pages (index.html
+included; it's the same one-line defect and leaving it there made no
+sense). All three now parse balanced.
+
+**3. And one I caused myself, doing the Vimeo swap.** The regex that
+replaced the old player block used a non-greedy `.*?` before `</div>`,
+which stopped at the *first* closing div it found — the `.vsl-bar`
+closer nested inside — rather than the `.vsl` wrapper's own. That left an
+orphan `</div>` behind on both pages. Caught it by re-running the tag
+balance check after the edit rather than trusting the replacement, which
+is the only reason it isn't in this commit. Worth remembering: a
+non-greedy match against a closing tag is wrong whenever the block can
+contain nested instances of that tag.
+
+The balance checker is three lines of Python and has now caught two
+separate unbalanced-div bugs in one revision. Worth running against these
+files after any structural edit.
+
+## Verified
+
+Section order, hero sizes, VSL geometry, gold-statement removal and the
+qualify icon counts all confirmed by direct DOM measurement at 390×844 and
+1440×900 on both pages. Contrast/overflow sweep clean on both, both sizes.
+
+Same standing sandbox caveat as revisions 10 and 12: this environment's
+proxy blocks `player.vimeo.com` and `leadconnectorhq.com` for headless
+Chromium, so **the Vimeo player and the GHL calendar cannot be seen
+rendering here** — their geometry and wiring are verified, their content
+isn't. Worth an eyeball on a real browser, particularly that the video
+actually plays and that you're happy without autoplay.

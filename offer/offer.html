@@ -15,34 +15,34 @@
      test whether leading harder with the guarantee converts better than
      index.html's video-first structure.
 
-     REVISION 11 changes, at your request:
-       - Hero sized up again (.hero--lead bumped further) so it's the most
-         dominant thing on the page, the first thing read on mobile — no
-         longer just "bigger than index.html", now clearly the loudest
-         element on screen.
-       - A second CTA added directly in the hero ("Book a free audit to see
-         if you qualify"), on top of the masthead's short one — more buttons
-         above the fold, not just the one ghost button.
-       - Section order changed again: Dale → case studies → other accounts
-         → what happens → THE GUARANTEE → THE VSL → reviews → qualify →
-         apply → FAQ. The VSL is now the last proof point before the ask,
-         framed as reinforcement for the offer just stated, not evidence
-         gathered on the way to it. A gold restatement of the guarantee
-         figure ("25% or more ad spend reduction in 30 days") sits right
-         under the video, in --gold, distinct from the orange used
-         everywhere else — this is the one moment the page repeats the
-         number in a different colour, on purpose.
-       - Every "!" dropped from CTA button copy — you flagged it as reading
-         unprofessional. "Book a free audit to see if you qualify!" is now
-         "Book a free audit to see if you qualify" everywhere on the page.
-       - Sticky CTA now keys off the HERO instead of the VSL block (the
-         video sits near the bottom now, so watching for it would mean the
-         reminder bar barely has any page left to appear on).
+     REVISION 14 changes, at your request:
+       - THE VSL MOVED UP to position 2, directly under the hero and above
+         Dale, retitled "If you don't believe us, these are the methods we
+         use to save our clients $12M in ad spend last year."
+       - The gold "25% or more ad spend reduction in 30 days" line and the
+         CTA button that sat under the player are both GONE — your call
+         that there are already enough buttons pointing at the calendar.
+         The --gold token went with them; nothing else used it.
+       - THE CALENDAR IS ITS OWN SECTION now: the "Book your free audit /
+         twenty minutes with Dale" header, lede and two-column split are
+         all removed. The GHL widget stands alone.
+       - THE NATIVE <video> PLAYER IS GONE, replaced by your Vimeo embed.
+         The hand-rolled unmute / play-pause / progress chrome went with
+         it. NOTE: your embed URL carries no autoplay/muted params, so the
+         video no longer starts on its own the way the old player did —
+         add &autoplay=1&muted=1 to the iframe src if you want that back.
+         The 25%-watched ViewContent pixel was rebuilt on Vimeo's Player
+         API so swapping players didn't silently kill that event.
+       - Qualify column HEADINGS lost their check/cross icons; the list
+         items underneath keep theirs.
 
-     Everything else — copy, guarantee wording, qualify lists, FAQ, form
-     fields, pixel events — is unchanged from index.html. See offer/README.md
-     for the open decisions that apply to every variant (which guarantee
-     wording is locked, the Vinyl licence).
+     Carried over from revision 11: the outsized hero (.hero--lead) with
+     its own CTA button, and no "!" on any button label.
+
+     Everything else — copy, guarantee wording, qualify lists, FAQ — is
+     unchanged from index.html. See offer/README.md for the open decisions
+     that apply to every variant (which guarantee wording is locked, the
+     Vinyl licence).
 
      SWAPS: offer/assets/testimonials/*.png · offer/assets/logo-{slug}.png
      for client logos · [[VSL_URL]] · [[PIXEL_ID]] · [[CALENDAR]]
@@ -115,7 +115,40 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 2. DALE ======================================================= -->
+  <!-- ===== 2. THE VSL =====================================================
+       Moved up from position 7, at your request — it now sits directly
+       under the hero, before Dale introduces himself, so the claim in the
+       headline gets its evidence immediately rather than six sections
+       later.
+
+       The gold "25% or more ad spend reduction in 30 days" line and the
+       CTA button that used to sit under the player are both gone, also at
+       your request: there are enough buttons pointing at the calendar
+       already (masthead, hero, sticky bar), and the guarantee still gets
+       its own full ink band further down.
+       ==================================================================== -->
+  <section class="band" id="how">
+    <div class="shell shell--tight center">
+      <h2>If you don't believe us, these are the methods we use to save our
+        clients <span class="bigstat">$12M</span> in ad spend last year</h2>
+
+      <!-- Vimeo embed, replacing the hand-rolled <video> player. Vimeo's own
+           controls ship with it, so the custom unmute / play / progress
+           chrome that used to live here is gone along with the JS driving
+           it. NOTE: this URL carries no autoplay/muted params, so unlike
+           the old player it does not start on its own — add
+           &autoplay=1&muted=1 if you want that behaviour back. -->
+      <div class="vsl mt-5" id="vsl">
+        <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Brainy Brands VSL"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. DALE ======================================================= -->
   <section class="band">
     <div class="shell">
       <div class="dale rv">
@@ -141,7 +174,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 3. CASE STUDIES ===============================================
+  <!-- ===== 4. CASE STUDIES ===============================================
        Figures locked in FUNNEL-AND-SITEMAP.md. Logos are the real files
        from your case-study folder — note that two of them were mislabelled
        at source: "TempTooth.png" is actually the Emerald mark, and
@@ -196,7 +229,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 4. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
        ADD LOGOS HERE as you get them — the strip wraps and centres, so
        extra <li> items need no CSS change.
        ==================================================================== -->
@@ -213,7 +246,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 5. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
       <h2 class="rv">Here's what happens when you work with us</h2>
@@ -228,7 +261,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 6. THE GUARANTEE ===============================================
+  <!-- ===== 7. THE GUARANTEE ===============================================
        Moved up this revision, now right before the VSL rather than right
        after it — the video comes last, reinforcing the guarantee that was
        just stated rather than being evidence gathered on the way to it.
@@ -242,48 +275,6 @@ fbq('track', 'PageView');
         30 days, we'll give you your money back, or work for free until we
         get to that target.</span>
       </p>
-    </div>
-  </section>
-
-  <!-- ===== 7. THE VSL =====================================================
-       Now the LAST proof point before reviews/apply, at your request — the
-       guarantee lands first, then the video backs it up, then the gold
-       restatement of the figure right under it closes the loop before the
-       ask. --gold is a new token, distinct from --amz/--amz-hot: this is
-       the one place on the page the guarantee number repeats in a
-       different colour, on purpose.
-       ==================================================================== -->
-  <section class="band" id="how">
-    <div class="shell shell--tight center">
-      <h2>The methods we use to save our clients
-        <span class="bigstat">$12M</span> in ad spend last year</h2>
-
-      <!-- SWAP before launch: point data-src at [[VSL_URL]] on a real host. -->
-      <div class="vsl mt-5" id="vsl">
-        <video id="vslVideo"
-               data-src="assets/vsl-preview-DO-NOT-SHIP.mp4"
-               poster="assets/vsl-poster-real.jpg"
-               autoplay muted playsinline preload="metadata">
-          Your browser can't play this video.
-          <a href="#apply">Skip ahead and see if you qualify.</a>
-        </video>
-        <button class="vsl-unmute" type="button" id="vslUnmute">
-          <svg aria-hidden="true"><use href="#i-sound"/></svg>
-          <span>Tap for sound</span>
-        </button>
-        <div class="vsl-bar">
-          <button class="vsl-play" type="button" id="vslPlay" aria-label="Pause">
-            <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4l14 8-14 8z"/></svg>
-            <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-          </button>
-          <div class="vsl-progress" aria-hidden="true"><span id="vslBar"></span></div>
-          <span class="vsl-time" id="vslTime">0:00</span>
-        </div>
-      </div>
-
-      <p class="gold-statement">25% or more ad spend reduction in 30 days.</p>
-
-      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify</a>
     </div>
   </section>
 
@@ -315,7 +306,7 @@ fbq('track', 'PageView');
       <h2 class="rv">We only work with brands we can genuinely help</h2>
       <div class="qual rv">
         <div class="qual--go">
-          <h3><svg aria-hidden="true"><use href="#i-check"/></svg>This is for you if</h3>
+          <h3>This is for you if</h3>
           <ul>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>You're <b>serious about growing your brand</b> &mdash; or about cutting what it costs you to grow it</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>You want <b>results in 30 days</b></li>
@@ -324,7 +315,7 @@ fbq('track', 'PageView');
           </ul>
         </div>
         <div class="qual--no">
-          <h3><svg aria-hidden="true"><use href="#i-cross"/></svg>It isn't for you if</h3>
+          <h3>It isn't for you if</h3>
           <ul>
             <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're spending <b>under $5,000/month</b> on ads</li>
             <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>the cheapest option</b>, not the best outcome</li>
@@ -333,35 +324,20 @@ fbq('track', 'PageView');
           </ul>
         </div>
       </div>
-      </div>
     </div>
   </section>
 
-  <!-- ===== 10. APPLY ======================================================
-       Urgency on black. Every line here is true and already documented —
-       one person setting bids is a real cap on clients, and the no-show
-       rule is a policy, not manufactured scarcity. Nothing invented.
-
-       Calendar embed is your GHL booking widget, live and visible directly
-       — no gating form in front of it. It handles qualify/disqualify
-       itself off whatever it asks; nothing extra built on this end.
+  <!-- ===== 10. THE CALENDAR ===============================================
+       Standing on its own, at your request — the "Book your free audit /
+       twenty minutes with Dale" header and lede are gone, and with them the
+       two-column split. The widget carries its own headings and its own
+       qualify/disqualify logic, so anything this page said around it was
+       either duplicating that or arguing with it.
        ==================================================================== -->
   <section class="band band--ink" id="apply">
-    <div class="shell">
-      <div class="split">
-        <header class="rv">
-          <h2>Book your free audit</h2>
-          <p class="lede mt-4">
-            Twenty minutes with Dale, live in your account. He'll show you
-            <b>exactly where your money is going</b> and what the next
-            steps are.
-          </p>
-          <p class="cta-note">You keep whatever he finds, either way.</p>
-        </header>
-
-        <div class="rv confirm-calendar">
-          <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
-        </div>
+    <div class="shell shell--tight">
+      <div class="rv calendar-embed">
+        <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
       </div>
     </div>
   </section>
@@ -457,6 +433,11 @@ fbq('track', 'PageView');
   <a class="btn" href="#apply">Book a free audit to see if you qualify</a>
 </div>
 
+<!-- Vimeo Player API. Must load BEFORE the inline script below, which uses
+     window.Vimeo to re-attach the 25%-watched ViewContent pixel that the
+     removed <video> element used to fire. -->
+<script src="https://player.vimeo.com/api/player.js"></script>
+
 <script>
 (function () {
   'use strict';
@@ -483,47 +464,17 @@ fbq('track', 'PageView');
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* --- VSL: autoplay muted, unmute prompt, play/pause, progress READOUT.
-     No seek — no scrub bar, no click handler on the rule, native controls
-     off so arrow keys don't seek either. */
-  var vsl = document.getElementById('vsl'), video = document.getElementById('vslVideo');
-  if (video) {
-    var src = video.getAttribute('data-src');
-    if (src && src.indexOf('[[') !== 0) {
-      video.src = src;
-      var a = video.play();
-      if (a && a.catch) { a.catch(function () {}); }
-    }
-    var unmute = document.getElementById('vslUnmute'),
-        play   = document.getElementById('vslPlay'),
-        bar    = document.getElementById('vslBar'),
-        time   = document.getElementById('vslTime');
-
-    var fmt = function (s) {
-      if (!isFinite(s)) { return '0:00'; }
-      var m = Math.floor(s / 60), r = Math.floor(s % 60);
-      return m + ':' + (r < 10 ? '0' : '') + r;
-    };
-
-    unmute.addEventListener('click', function () {
-      video.muted = false;
-      vsl.setAttribute('data-sound', '');
-      if (video.paused) { video.play(); }
-    });
-    play.addEventListener('click', function () {
-      if (video.paused) { video.play(); } else { video.pause(); }
-    });
-    video.addEventListener('play',  function () { vsl.setAttribute('data-playing', ''); play.setAttribute('aria-label', 'Pause'); });
-    video.addEventListener('pause', function () { vsl.removeAttribute('data-playing'); play.setAttribute('aria-label', 'Play'); });
-
+  /* --- VSL: Vimeo embed. Vimeo's player ships its own controls, so all the
+     hand-rolled chrome (unmute prompt, play/pause, progress readout) and the
+     JS that drove it are gone. What we DO keep is the 25%-watched
+     ViewContent pixel, rebuilt on Vimeo's Player API — dropping the old
+     <video> element would otherwise have silently killed that event. */
+  var vslFrame = document.querySelector('#vsl iframe');
+  if (vslFrame && window.Vimeo && window.Vimeo.Player) {
+    var player = new window.Vimeo.Player(vslFrame);
     var quarter = false;
-    video.addEventListener('timeupdate', function () {
-      var d = video.duration;
-      if (!isFinite(d) || !d) { return; }
-      var pct = video.currentTime / d;
-      bar.style.width = (pct * 100) + '%';
-      time.textContent = fmt(video.currentTime) + ' / ' + fmt(d);
-      if (!quarter && pct >= 0.25) {
+    player.on('timeupdate', function (data) {
+      if (!quarter && data && data.percent >= 0.25) {
         quarter = true;
         if (typeof fbq === 'function') { fbq('track', 'ViewContent', { content_name: 'VSL' }); }
       }

@@ -349,6 +349,18 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 /* --- Video ---------------------------------------------------------------- */
 
 .vsl { position: relative; background: var(--ink); border: 1px solid var(--line); }
+
+/* Vimeo embed (offer.html, guide.html). The iframe is a replaced element, so
+   giving it aspect-ratio + width:100% makes it responsive without the old
+   padding-top hack, and lets the desktop rules below cap it by HEIGHT and
+   derive width from the ratio — the same trick the <video> used, and the
+   only version that holds at every window size. */
+.vsl iframe { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; }
+
+/* Everything from .vsl video down to .vsl-time below drives the hand-rolled
+   player that only index.html still uses. offer.html and guide.html moved to
+   the Vimeo embed above and no longer emit any of these elements — the rules
+   are inert there, and deleting them would break index.html. */
 .vsl video { width: 100%; aspect-ratio: 16 / 9; display: block; }
 /* Fallback content paints only when the browser can't decode the source, by
    which point it is dark-on-dark unless coloured literally rather than
@@ -399,11 +411,12 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .confirm h3 { color: var(--amz-deep); }
 .confirm p { margin-top: var(--s2); }
 
-/* GHL calendar embed — min-height is a fallback only, for the moment
-   before form_embed.js's own resize script runs; it owns the real height
-   after that. */
-.confirm-calendar { margin-top: var(--s4); }
-.confirm-calendar iframe { display: block; width: 100%; min-height: 700px; }
+/* GHL calendar embed — now a section of its own on offer.html and
+   guide.html rather than a column beside a header, so it carries no top
+   margin: the band's own padding is the spacing. min-height is a fallback
+   only, for the moment before form_embed.js's resize script runs; that
+   script owns the real height after that. */
+.calendar-embed iframe { display: block; width: 100%; min-height: 700px; }
 
 .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 1rem + 3.5vw, 4rem); align-items: start; }
 
@@ -942,54 +955,51 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   #how { padding-block: clamp(1.1rem, 0.5rem + 1.2vw, 1.55rem) var(--band); }
   #how h2 { font-size: clamp(1.55rem, 1rem + 1.4vw, 2rem); }
 
-  /* Height-capped, not width-capped: 16/9 turns any width cap into a height
-     the window may still not have. This says "no taller than 35% of the
-     window", and aspect-ratio derives the width from it. */
+  /* Still height-driven, not width-driven: the point is "no taller than 35%
+     of the window", because 16/9 turns any width cap into a height the
+     window may not have.
+
+     But it is expressed as a max-width on the CONTAINER now, because an
+     <iframe> has no intrinsic aspect ratio the way a <video> does — give an
+     iframe `width: auto` inside a shrink-to-fit parent and the two resolve
+     against each other into nothing (measured: the player collapsed to 2px
+     tall on desktop). 35vh of height at 16:9 is 62.22vh of width, so
+     capping the container there produces exactly the same result for the
+     iframe, and still leaves the <video> rule below free to cap by height
+     the way it always did. */
   #how .vsl { margin-top: clamp(1.1rem, 0.6rem + 1vw, 1.6rem); }
+  #how .vsl { max-width: min(100%, 62.22vh); margin-inline: auto; }
   #how .vsl video { max-height: 35vh; width: auto; max-width: 100%; margin-inline: auto; }
-  #how .vsl { width: fit-content; max-width: 100%; margin-inline: auto; }
 }
 
 /* ==========================================================================
-   OFFER-LED VARIANT (offer.html) — hero carries the whole opening
+   BIG HERO — offer.html, and now guide.html too
 
    The desktop shrink on .hero--ink h1 above exists only to leave room for a
-   video sitting directly beneath it. offer.html moved the VSL down the page,
-   so there's no video to protect here — the headline is free to be the
-   biggest, most dominant thing on the page instead, mobile included. This
-   block is declared last on purpose: same specificity as the rules above,
-   later wins, and it only ever matches a page that opts in with .hero--lead.
+   video sitting directly beneath it. This block opts back out of that: the
+   headline becomes the biggest, most dominant thing on the page, mobile
+   included. Declared last on purpose — same specificity as the rules above,
+   later wins — and it only ever matches a page that asks for it.
 
-   REVISION 11: sized up again — you asked for "a lot bigger", not just
-   bigger than index.html. .audience scales with it so the whole hero block
-   grows together rather than the headline outgrowing its own lead-in line.
+   .hero--lead-video is the step-down for guide.html, whose hero DOES still
+   carry a video under the headline. Same treatment, one size smaller, so
+   the two pages read as the same design rather than two different ones.
+   No --gold token or .gold-statement here any more: the restatement under
+   offer.html's player was removed, and nothing else ever used them.
    ========================================================================== */
 
 .hero--lead h1 { font-size: clamp(3.4rem, 2.2rem + 5.8vw, 6.25rem); }
 .hero--lead .audience { font-size: clamp(1.75rem, 1.3rem + 2.2vw, 3rem); }
 
+.hero--lead-video h1 { font-size: clamp(2.9rem, 2rem + 4.2vw, 4.9rem); }
+.hero--lead-video .audience { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); }
+
 @media (min-width: 760px) {
   .hero--lead h1 { font-size: clamp(3.4rem, 2.2rem + 5.8vw, 6.25rem); }
   .hero--lead .audience { font-size: clamp(1.75rem, 1.3rem + 2.2vw, 3rem); }
-}
 
-/* --- Gold guarantee restatement, under the VSL --------------------------
-   The one place on the page the guarantee figure repeats in a different
-   colour on purpose — everywhere else the accent is --amz/--amz-hot orange,
-   this one moment is gold, because it's a restatement, not the original
-   claim. New token, not a reuse of an existing one, so the two never get
-   confused when both are on screen (the VSL heading's $12M sits just above
-   it in --amz-deep orange). */
-:root { --gold: oklch(0.55 0.15 85); }
-
-.gold-statement {
-  margin-top: var(--s4);
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  font-size: clamp(1.4rem, 1.05rem + 1.6vw, 2.1rem);
-  color: var(--gold);
+  .hero--lead-video h1 { font-size: clamp(2.9rem, 2rem + 4.2vw, 4.9rem); }
+  .hero--lead-video .audience { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); }
 }
 
 /* ==========================================================================
@@ -1005,6 +1015,15 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    the hero with the sticky masthead) and silently break that seam again. */
 
 @media (min-width: 760px) {
-  .hero--ink .vsl video { max-height: 46vh; width: auto; max-width: 100%; margin-inline: auto; }
-  .hero--ink .vsl { width: fit-content; max-width: 100%; margin-inline: auto; }
+  /* Container-width form of a 38vh height cap, for the same reason as #how
+     above: an iframe can't be capped by height directly without collapsing,
+     and 38vh at 16:9 is 67.55vh wide.
+
+     38, not the 46 this used to be: with the headline sized up to
+     .hero--lead-video the player's bottom edge measured 953px against a
+     900px window, i.e. clipped. You asked for the opening screen to be the
+     headline and the video and nothing else, so the video gives back the
+     height the bigger headline took. Measured after: bottom at 881. */
+  .hero--ink .vsl { max-width: min(100%, 67.55vh); margin-inline: auto; }
+  .hero--ink .vsl video { max-height: 38vh; width: auto; max-width: 100%; margin-inline: auto; }
 }

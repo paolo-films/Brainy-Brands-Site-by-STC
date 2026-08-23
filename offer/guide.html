@@ -14,35 +14,39 @@
      variant leads with the video itself as a free guide / lead magnet, then
      has to earn its way into the paid offer rather than opening with it.
 
-     REVISION 11 restructure, at your request — "the guide needs to flow
-     into the offer":
-       - The video is now embedded directly IN the hero, on the ink ground
-         ("in the blue"), not in a separate section below it. Hero copy:
-         "Amazon brand owners…" / "The 3 settings currently costing you
-         thousands in ad spend" / "These are the same methods we used to
-         save our clients $12M in ad spend last year." — then the video.
-       - A new section right after the hero repeats that same $12M/methods
-         claim as its own heading (the "second mention, in another
-         section" you asked for), then pivots: knowing the methods and
-         having someone run them for you are two different things — that's
-         Dale. This is the bridge into the rest of the page.
-       - Dale, case studies, other accounts and what-happens follow in that
-         order, building the case for him as the one who executes what the
-         guide describes.
-       - THE GUARANTEE moved from position 3 down to right before
-         reviews/apply, reframed as the explicit pivot from free content to
-         paid offer: "So here's our offer: 25% ad spend reduction in 30
-         days, or your money back, or we work for free until we hit that
-         target." You said it "something like" this in looser wording —
-         I kept the locked FUNNEL-AND-SITEMAP.md phrasing for the actual
-         guarantee clause and only changed the lead-in, so this doesn't
-         become a fourth version of the guarantee in circulation. Flag it
-         if you wanted your exact paraphrase instead.
+     REVISION 14 changes, at your request:
+       - HERO HEADLINE SIZED UP to nearly match offer.html — same
+         .hero--lead treatment, one step down (.hero--lead-video) purely
+         because this hero also carries the player.
+       - THE HERO SUB-LINE IS GONE ("These are the same methods we used to
+         save our clients $12M…"). It said the same thing section 3 says,
+         one scroll apart — that was the repetition you flagged. The
+         opening screen is now just the headline and the video.
+       - THE OFFER MOVED UP to position 2, straight off the back of the
+         video: watch, then scroll once and land on the offer itself.
+       - Section 3 now carries the deleted sub-line's exact words as its
+         heading ("These are the same methods we use to save our clients
+         $12M in ad spend last year"), and the "Knowing them is one thing…"
+         paragraph under it is gone.
+       - DALE MOVED UP and onto the tint — you called the gap above him
+         awkward, and a colour change is the hardest break available. The
+         band above also gives back its bottom padding (.band--sm).
+       - THE CALENDAR IS ITS OWN SECTION: header, lede and two-column split
+         removed, GHL widget standing alone.
+       - THE NATIVE <video> PLAYER IS GONE, replaced by your Vimeo embed —
+         same swap and same caveat as offer.html: no autoplay/muted params
+         on the URL you sent, so it no longer starts on its own; the 25%
+         ViewContent pixel was rebuilt on Vimeo's Player API.
+       - Qualify column HEADINGS lost their check/cross icons; the list
+         items keep theirs.
 
-     Everything else — Dale's bio, case studies, qualify, FAQ, form fields,
-     pixel events — is unchanged from index.html. See offer/README.md for
-     the open decisions that apply to every variant (which guarantee
-     wording is locked, the Vinyl licence).
+     The guarantee clause still uses the exact locked FUNNEL-AND-SITEMAP.md
+     wording — only the "So here's our offer:" lead-in is mine — so this
+     doesn't add another version of the guarantee to the pile.
+
+     Everything else — Dale's bio, case studies, qualify, FAQ — is
+     unchanged from index.html. See offer/README.md for the open decisions
+     that apply to every variant.
 
      SWAPS: offer/assets/testimonials/*.png · offer/assets/logo-{slug}.png
      for client logos · [[VSL_URL]] · [[PIXEL_ID]] · [[CALENDAR]]
@@ -99,63 +103,81 @@ fbq('track', 'PageView');
 <main id="top">
 
   <!-- ===== 1. THE PROMISE + THE VSL, MERGED ==============================
-       The video now lives directly in the hero, on the ink ground, at your
-       request — no longer a separate white section below it. The sub-line
-       carries the $12M/methods claim first; the video backs it up
-       immediately underneath.
+       The video lives directly in the hero, on the ink ground. Nothing
+       else is up here at all now: the sub-line that used to sit under the
+       headline ("These are the same methods we used to save our clients
+       $12M…") is gone, because section 3 says exactly that and saying it
+       twice within one scroll was the repetition you flagged. The opening
+       screen is the headline and the player, full stop.
+
+       Headline is on .hero--lead now, the same big treatment offer.html
+       uses — sized down a step from that page only because this hero also
+       has to fit a video under it.
        ==================================================================== -->
-  <section class="band hero hero--ink" id="hero">
+  <section class="band hero hero--ink hero--lead hero--lead-video" id="hero">
     <div class="shell shell--tight">
       <p class="audience">Amazon brand owners&hellip;</p>
       <h1 class="promise">
         <span class="fig">The 3 settings currently costing you thousands in ad spend</span>
-        <span class="rest">These are the same methods we used to save our clients $12M in ad spend last year.</span>
       </h1>
 
-      <!-- SWAP before launch: point data-src at [[VSL_URL]] on a real host. -->
+      <!-- Vimeo embed, replacing the hand-rolled <video> player. Vimeo's own
+           controls ship with it, so the custom unmute / play / progress
+           chrome that used to live here is gone along with the JS driving
+           it. NOTE: this URL carries no autoplay/muted params, so unlike
+           the old player it does not start on its own — add
+           &autoplay=1&muted=1 if you want that behaviour back. -->
       <div class="vsl mt-5" id="vsl">
-        <video id="vslVideo"
-               data-src="assets/vsl-preview-DO-NOT-SHIP.mp4"
-               poster="assets/vsl-poster-real.jpg"
-               autoplay muted playsinline preload="metadata">
-          Your browser can't play this video.
-          <a href="#apply">Skip ahead and see if you qualify.</a>
-        </video>
-        <button class="vsl-unmute" type="button" id="vslUnmute">
-          <svg aria-hidden="true"><use href="#i-sound"/></svg>
-          <span>Tap for sound</span>
-        </button>
-        <div class="vsl-bar">
-          <button class="vsl-play" type="button" id="vslPlay" aria-label="Pause">
-            <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4l14 8-14 8z"/></svg>
-            <svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-          </button>
-          <div class="vsl-progress" aria-hidden="true"><span id="vslBar"></span></div>
-          <span class="vsl-time" id="vslTime">0:00</span>
-        </div>
+        <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Brainy Brands VSL"></iframe>
       </div>
     </div>
   </section>
 
-  <!-- ===== 2. THESE ARE THE METHODS — bridge into Dale ===================
-       The second mention of the same claim, in its own section further down
-       the page, as you asked for. Then the pivot: knowing the methods and
-       having someone run them for you every day are two different things.
-       That's the setup for Dale, who introduces himself directly below.
+  <!-- ===== 2. THE OFFER ==================================================
+       Moved up from position 7, at your request — straight off the back of
+       the video, so the first scroll after watching lands on the offer
+       itself. The guide earns attention; this is what it's for.
+
+       Lead-in is mine; the guarantee clause keeps the exact locked wording
+       from FUNNEL-AND-SITEMAP.md rather than a paraphrase, so this doesn't
+       become another version of the guarantee in circulation.
        ==================================================================== -->
-  <section class="band">
+  <section class="band band--ink">
     <div class="shell shell--tight center">
-      <h2 class="rv">These are the methods used in the guide &mdash; the same
-        ones that saved our clients <span class="bigstat">$12M</span> in ad
-        spend last year</h2>
-      <p class="mt-4 rv">Knowing them is one thing. Having someone run them on
-        your account, every single day, is another &mdash; that's what Dale
-        does.</p>
+      <p class="guarantee-statement">
+        So here's our offer: <span class="hot">25% ad spend reduction in 30
+        days</span>.
+        <span class="line2">Or your money back, or we work for free until we
+        hit that target.</span>
+      </p>
     </div>
   </section>
 
-  <!-- ===== 3. DALE ======================================================= -->
-  <section class="band">
+  <!-- ===== 3. THESE ARE THE METHODS ======================================
+       Now carries the line that used to sit in the hero, verbatim, at your
+       request — it says it once, here, instead of twice within one scroll.
+       The "Knowing them is one thing…" paragraph underneath is gone too;
+       Dale's own section makes that point better than a lead-in to it did.
+       ==================================================================== -->
+  <section class="band band--sm">
+    <div class="shell shell--tight center">
+      <h2 class="rv">These are the same methods we use to save our clients
+        <span class="bigstat">$12M</span> in ad spend last year</h2>
+    </div>
+  </section>
+
+  <!-- ===== 4. DALE =======================================================
+       On the tint, deliberately: you flagged the gap between the section
+       above and this one as awkward, and a colour change is the hardest
+       break available — it reads as a new chapter rather than more of the
+       same page. The band above gives back most of its bottom padding
+       (.band--sm) so Dale starts higher up as well.
+       ==================================================================== -->
+  <section class="band band--tint">
     <div class="shell">
       <div class="dale rv">
         <figure class="dale-photo">
@@ -180,7 +202,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 4. CASE STUDIES ===============================================
+  <!-- ===== 5. CASE STUDIES ===============================================
        The ad-spend CUT now leads every row and the revenue is demoted to a
        supporting line, because the cut is the promise the page makes and
        the revenue is the bonus.
@@ -242,7 +264,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+  <!-- ===== 6. OTHER ACCOUNTS WE'VE WORKED ON ===========================
        ADD LOGOS HERE as you get them — the strip wraps and centres, so
        extra <li> items need no CSS change.
        ==================================================================== -->
@@ -259,7 +281,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <!-- ===== 7. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
       <h2 class="rv">Here's what happens when you work with us</h2>
@@ -271,25 +293,6 @@ fbq('track', 'PageView');
         <li>You know exactly what changed, and what it returned</li>
         <li>You can walk away any month, for any reason</li>
       </ol>
-    </div>
-  </section>
-
-  <!-- ===== 7. THE GUARANTEE — the pivot from guide to offer ==============
-       Moved from position 3 down to right before reviews/apply, and
-       reframed as the explicit hand-off from free content to paid offer.
-       Lead-in is new; the guarantee clause itself keeps the exact locked
-       wording from FUNNEL-AND-SITEMAP.md rather than your looser paraphrase,
-       so this doesn't become a fourth version of the guarantee in
-       circulation. Flag it if you want your exact words instead.
-       ==================================================================== -->
-  <section class="band band--ink">
-    <div class="shell shell--tight center">
-      <p class="guarantee-statement">
-        So here's our offer: <span class="hot">25% ad spend reduction in 30
-        days</span>.
-        <span class="line2">Or your money back, or we work for free until we
-        hit that target.</span>
-      </p>
     </div>
   </section>
 
@@ -324,7 +327,7 @@ fbq('track', 'PageView');
       <h2 class="rv">We only work with brands we can genuinely help</h2>
       <div class="qual rv">
         <div class="qual--go">
-          <h3><svg aria-hidden="true"><use href="#i-check"/></svg>This is for you if</h3>
+          <h3>This is for you if</h3>
           <ul>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>You're <b>serious about growing your brand</b> &mdash; or about cutting what it costs you to grow it</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>You want <b>results in 30 days</b></li>
@@ -333,7 +336,7 @@ fbq('track', 'PageView');
           </ul>
         </div>
         <div class="qual--no">
-          <h3><svg aria-hidden="true"><use href="#i-cross"/></svg>It isn't for you if</h3>
+          <h3>It isn't for you if</h3>
           <ul>
             <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're spending <b>under $5,000/month</b> on ads</li>
             <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>the cheapest option</b>, not the best outcome</li>
@@ -342,31 +345,20 @@ fbq('track', 'PageView');
           </ul>
         </div>
       </div>
-      </div>
     </div>
   </section>
 
-  <!-- ===== 10. APPLY ======================================================
-       Urgency on black. Every line here is true and already documented —
-       one person setting bids is a real cap on clients, and the no-show
-       rule is a policy, not manufactured scarcity. Nothing invented.
+  <!-- ===== 10. THE CALENDAR ===============================================
+       Standing on its own, at your request — the "Book your free audit /
+       twenty minutes with Dale" header and lede are gone, and with them the
+       two-column split. The widget carries its own headings and its own
+       qualify/disqualify logic, so anything this page said around it was
+       either duplicating that or arguing with it.
        ==================================================================== -->
   <section class="band band--ink" id="apply">
-    <div class="shell">
-      <div class="split">
-        <header class="rv">
-          <h2>Book your free audit</h2>
-          <p class="lede mt-4">
-            Twenty minutes with Dale, live in your account. He'll show you
-            <b>exactly where your money is going</b> and what the next
-            steps are.
-          </p>
-          <p class="cta-note">You keep whatever he finds, either way.</p>
-        </header>
-
-        <div class="rv confirm-calendar">
-          <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
-        </div>
+    <div class="shell shell--tight">
+      <div class="rv calendar-embed">
+        <iframe src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
       </div>
     </div>
   </section>
@@ -462,6 +454,11 @@ fbq('track', 'PageView');
   <a class="btn" href="#apply">Book a free audit to see if you qualify</a>
 </div>
 
+<!-- Vimeo Player API. Must load BEFORE the inline script below, which uses
+     window.Vimeo to re-attach the 25%-watched ViewContent pixel that the
+     removed <video> element used to fire. -->
+<script src="https://player.vimeo.com/api/player.js"></script>
+
 <script>
 (function () {
   'use strict';
@@ -488,47 +485,17 @@ fbq('track', 'PageView');
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* --- VSL: autoplay muted, unmute prompt, play/pause, progress READOUT.
-     No seek — no scrub bar, no click handler on the rule, native controls
-     off so arrow keys don't seek either. */
-  var vsl = document.getElementById('vsl'), video = document.getElementById('vslVideo');
-  if (video) {
-    var src = video.getAttribute('data-src');
-    if (src && src.indexOf('[[') !== 0) {
-      video.src = src;
-      var a = video.play();
-      if (a && a.catch) { a.catch(function () {}); }
-    }
-    var unmute = document.getElementById('vslUnmute'),
-        play   = document.getElementById('vslPlay'),
-        bar    = document.getElementById('vslBar'),
-        time   = document.getElementById('vslTime');
-
-    var fmt = function (s) {
-      if (!isFinite(s)) { return '0:00'; }
-      var m = Math.floor(s / 60), r = Math.floor(s % 60);
-      return m + ':' + (r < 10 ? '0' : '') + r;
-    };
-
-    unmute.addEventListener('click', function () {
-      video.muted = false;
-      vsl.setAttribute('data-sound', '');
-      if (video.paused) { video.play(); }
-    });
-    play.addEventListener('click', function () {
-      if (video.paused) { video.play(); } else { video.pause(); }
-    });
-    video.addEventListener('play',  function () { vsl.setAttribute('data-playing', ''); play.setAttribute('aria-label', 'Pause'); });
-    video.addEventListener('pause', function () { vsl.removeAttribute('data-playing'); play.setAttribute('aria-label', 'Play'); });
-
+  /* --- VSL: Vimeo embed. Vimeo's player ships its own controls, so all the
+     hand-rolled chrome (unmute prompt, play/pause, progress readout) and the
+     JS that drove it are gone. What we DO keep is the 25%-watched
+     ViewContent pixel, rebuilt on Vimeo's Player API — dropping the old
+     <video> element would otherwise have silently killed that event. */
+  var vslFrame = document.querySelector('#vsl iframe');
+  if (vslFrame && window.Vimeo && window.Vimeo.Player) {
+    var player = new window.Vimeo.Player(vslFrame);
     var quarter = false;
-    video.addEventListener('timeupdate', function () {
-      var d = video.duration;
-      if (!isFinite(d) || !d) { return; }
-      var pct = video.currentTime / d;
-      bar.style.width = (pct * 100) + '%';
-      time.textContent = fmt(video.currentTime) + ' / ' + fmt(d);
-      if (!quarter && pct >= 0.25) {
+    player.on('timeupdate', function (data) {
+      if (!quarter && data && data.percent >= 0.25) {
         quarter = true;
         if (typeof fbq === 'function') { fbq('track', 'ViewContent', { content_name: 'VSL' }); }
       }
