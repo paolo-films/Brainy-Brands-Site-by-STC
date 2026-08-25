@@ -225,8 +225,17 @@ main a { text-decoration-color: var(--blue-300); text-underline-offset: 3px; }
   background:
     radial-gradient(closest-side, rgba(245, 184, 74, 0.18), transparent 70%),
     radial-gradient(closest-side, rgba(174, 213, 241, 0.55), transparent 70%);
+  background-size: 100% 100%, 130% 130%;
+  background-position: 50% 50%, 50% 45%;
+  background-repeat: no-repeat;
   filter: blur(10px);
   pointer-events: none;
+  animation: glow-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes glow-drift {
+  from { background-position: 50% 50%, 42% 38%; }
+  to   { background-position: 50% 50%, 58% 52%; }
 }
 
 .glow-field::after {
@@ -647,6 +656,22 @@ form { max-width: 34rem; }
   color: var(--blue-700);
   font-size: var(--size-sm);
   font-weight: 600;
+}
+
+/* Real gallery photography, styled like the placeholder tiles it replaces */
+.gallery-tile {
+  aspect-ratio: 1 / 1;
+  min-width: 0;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: transform 0.25s var(--ease-bounce), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+.gallery-tile:hover {
+  transform: translateY(-4px) scale(1.008);
+  box-shadow: var(--shadow-md);
+  border-color: var(--blue-300);
 }
 
 /* --- FAQ ------------------------------------------------------------------ */
