@@ -1317,3 +1317,59 @@ preservation, organic visitor (no param, no cookie) producing an empty
 value with no dangling `?fbclid=` on the widget, and no JS errors.
 `offer.html` and `guide.html` 11/11; `index.html` covers the hidden-input
 path instead of the iframe path.
+
+---
+
+# Revision 18 — August 25, 2026
+
+## Added the ClearShield Auto Glass Repair case study to both landing pages
+
+New entry in the case-studies list on `offer.html` and `guide.html`
+(index.html's case studies were never part of this variant work, so it's
+untouched):
+
+- `↓ 53%` TACoS, in the first full month
+- Revenue went `$41.8K → $91.6K`/mo — with ad spend flat
+
+That last clause matters and was called out explicitly by the client: unlike
+every other case study on the page, this one didn't come with a spend cut —
+spend held flat while revenue roughly doubled. The copy says "ad spend flat"
+rather than reusing the "ad spend, in two months" wording the other rows
+use, so it doesn't imply a reduction that didn't happen.
+
+Also added the logo to the "Other accounts we've worked on" strip, the same
+place every other case-study logo already appears a second time.
+
+## The logo had to be rebuilt, not copied
+
+The ClearShield mark was shared as an inline image in the chat, not as an
+uploaded file — there's nothing on disk for it the way there was for the
+client-logos zip. I checked `/root/.claude/uploads/` and the whole
+filesystem for anything recently written; nothing came back. There's no
+tool available to this session that pulls the raw bytes of an inline chat
+image onto disk, so there was no file to place in
+`assets/casestudylogos/` and no way to verify one via the corner-pixel
+check this project otherwise relies on for logo work.
+
+Given that, and that the mark itself is a simple two-color wordmark (navy
+"ClearShield" logotype, gray auto-glass/windshield arc, italic "Auto Glass
+Repair" underneath), I rebuilt it as a plain SVG —
+`assets/casestudylogos/logo-clearshield.svg` — rather than block on a
+re-upload. It's a vector reconstruction, not a scan, so it won't be
+pixel-identical to Dale's original file. Flagging this clearly: if the
+original logo file becomes available, it should replace this SVG rather
+than sit alongside it.
+
+## Verified
+
+- Tag-balance check (div/section/main/ol/ul/li) on both files: balanced.
+- `sweep.js` on both pages, mobile + desktop: no new contrast failures, no
+  overflow. The one failure it reports ("See if you qualify", 1.00:1) is
+  the same masthead-button false positive documented in earlier revisions
+  — a background-image button the checker can't composite against — and
+  is unrelated to this change.
+- Screenshotted the case-studies section and the logo strip on both pages:
+  the new row matches the existing rows' layout and typography exactly,
+  and the logo renders and desaturates correctly in the strip (same
+  `grayscale(1)` treatment as every other logo there).
+- No console/JS errors, no broken image request for the new SVG.
