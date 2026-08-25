@@ -60,10 +60,10 @@
   --space-6: 6rem;
   --space-7: 8rem;
 
-  --radius-sm: 10px;
-  --radius: 18px;
-  --radius-lg: 26px;
-  --radius-pill: 999px;
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
+  --radius-pill: 0;
 
   --measure: 62ch;
   --wrap: 1160px;
@@ -217,25 +217,40 @@ main a { text-decoration-color: var(--blue-300); text-underline-offset: 3px; }
   content: "";
   position: absolute;
   z-index: -2;
-  top: -18%;
+  top: -8%;
   left: 50%;
   translate: -50% 0;
-  width: min(1100px, 140%);
-  aspect-ratio: 16 / 9;
-  background:
-    radial-gradient(closest-side, rgba(245, 184, 74, 0.32), transparent 70%),
-    radial-gradient(closest-side, rgba(174, 213, 241, 0.55), transparent 70%);
-  background-size: 130% 130%, 150% 150%;
-  background-position: 45% 55%, 50% 45%;
+  width: min(1200px, 150%);
+  aspect-ratio: 16 / 12;
+  background: radial-gradient(closest-side, rgba(174, 213, 241, 0.55), transparent 70%);
+  background-size: 130% 130%;
+  background-position: 50% 15%;
   background-repeat: no-repeat;
   filter: blur(10px);
   pointer-events: none;
-  animation: glow-drift 12s ease-in-out infinite alternate;
+  animation: glow-drift-blue 12s ease-in-out infinite alternate;
 }
 
-@keyframes glow-drift {
-  from { background-position: 32% 68%, 38% 32%; }
-  to   { background-position: 62% 38%, 64% 58%; }
+@keyframes glow-drift-blue {
+  from { background-position: 42% 8%; }
+  to   { background-position: 58% 22%; }
+}
+
+/* Homepage hero only: adds the warm spark accent, tucked into its own
+   corner away from the blue so the two never blend into a muddy overlap. */
+.glow-field.glow-accent::before {
+  background:
+    radial-gradient(closest-side, rgba(245, 184, 74, 0.26), transparent 70%),
+    radial-gradient(closest-side, rgba(174, 213, 241, 0.55), transparent 70%);
+  background-size: 60% 60%, 130% 130%;
+  background-position: 92% 90%, 50% 15%;
+  background-repeat: no-repeat;
+  animation: glow-drift-accent 12s ease-in-out infinite alternate;
+}
+
+@keyframes glow-drift-accent {
+  from { background-position: 86% 84%, 42% 8%; }
+  to   { background-position: 96% 96%, 58% 22%; }
 }
 
 .glow-field::after {
@@ -405,7 +420,7 @@ main a { text-decoration-color: var(--blue-300); text-underline-offset: 3px; }
   justify-content: center;
   width: 34px;
   height: 34px;
-  border-radius: 50%;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: background-color 0.18s var(--ease), border-color 0.18s var(--ease), transform 0.18s var(--ease-bounce);
@@ -537,7 +552,7 @@ main a { text-decoration-color: var(--blue-300); text-underline-offset: 3px; }
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 16px;
+  border-radius: 0;
   background: var(--blue-050);
   color: var(--blue-700);
   flex: none;
@@ -739,7 +754,7 @@ details .prose { padding-bottom: var(--space-1); }
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
+  border-radius: 0;
   margin-bottom: var(--space-2);
   transition: transform 0.2s var(--ease-bounce);
 }
