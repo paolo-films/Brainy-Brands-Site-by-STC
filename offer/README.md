@@ -2016,3 +2016,64 @@ new five.
 - Tag balance clean on both files.
 - Distance from the top of `#apply` to the calendar: 634px on a phone, a
   little tighter than the 663px `--plain` cost.
+
+---
+
+# Revision 26 — August 26, 2026
+
+## The repo is now just the two landing pages
+
+At your request, everything not serving `offer.html` or `guide.html` is gone:
+
+- The 16 prototype pages at the root (`about`, `audit`, `book`, `booked`,
+  `contact`, `faq`, `guide-thanks`, `guide`, `index`, `method`, `not-a-fit`,
+  `portfolio`, `privacy`, `results`, `services`, `terms`) and `css/style.css`
+- `offer/index.html`, the baseline video-first page
+- 40 unreferenced asset files
+
+**78 asset files → 38. Every one of the 38 is referenced; none of the 40 was.**
+The three `.md` docs are kept — `FUNNEL-AND-SITEMAP.md` holds the locked
+guarantee wording this project keeps checking copy against.
+
+## What was in the 40
+
+The `.avif` files that were erroring on upload were never referenced by
+anything. The only occurrence of "avif" in the code is inside an HTML comment
+recording that those source files were mislabeled and got remapped to PNGs.
+
+Also removed: 12 raw screenshots in `testimonials/originals/`, a superseded
+`originals-v1/` pass, 10 hash-named files in `testimonialsv2/`, duplicate
+logo files, a `.DS_Store`, and `vsl-preview-DO-NOT-SHIP.mp4` — 9.6 MB, and a
+file whose name is an instruction.
+
+## Two near-misses worth recording
+
+**The reference scan had a blind spot.** It matched `src`, `href` and `url()`,
+which misses `poster=`. `offer/assets/vsl-poster-real.jpg` was on the delete
+list and was in fact referenced, by the `<video poster="...">` on
+`offer/index.html`. It survived only because of a second bug — the deletion
+loop was `while IFS= read -r f`, which drops the final line of a file with no
+trailing newline, and that file was last. One bug cancelled the other. The
+rescan now covers `poster` and `srcset`, and the second pass used `mapfile`.
+
+**The safety check itself gave a false positive.** After deleting, a
+verification pass reported six live-code references to deleted files —
+`review-1.png` through `review-6.png`. It compared *basenames*, so the deleted
+`testimonials/originals-v1/review-1.png` collided with the kept
+`testimonials/review-1.png`. Re-run against full paths: no real references.
+Worth recording because the check was wrong in the safe direction, and a
+check that cries wolf is one you stop reading.
+
+## Verified after deleting
+
+- Both pages loaded in a real browser with every lazy image forced eager:
+  **43 images each, zero 4xx/5xx on any local request, zero broken images,
+  zero JS errors.**
+- All 38 referenced assets confirmed present on disk by re-deriving the
+  reference set from the two pages and the stylesheet.
+- Contrast sweep, both pages, mobile + desktop: unchanged, no new failures.
+  The one reported remains the transparent masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+
+Everything deleted is recoverable from git history if any of it turns out to
+be wanted.
