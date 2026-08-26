@@ -421,7 +421,47 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    never rendered shorter than 700px. Dropped to 420px so the resize script
    actually owns the height it computes. If the widget still renders tall,
    that height is coming from GHL and has to be changed there. */
+/* The widget now sits under the audit list rather than alone in the band, so
+   it needs real separation from the copy above it. */
+.calendar-embed { margin-top: var(--s5); }
 .calendar-embed iframe { display: block; width: 100%; min-height: 420px; }
+
+/* --- Numbered deliverables on the ink ground -------------------------------
+   .deliverables was built for light bands: its rules use --line (dark ink at
+   14%) for the dividers and --ink-2 for the sub-copy, both of which vanish on
+   ink. The audit list in the booking section is the first time this list has
+   been used on a dark ground, so it needs the pair. The counter can take
+   full-strength --amz-hot here, which is the one place that orange is correct
+   -- on black, not on the light bands where it measures 2.1:1. */
+.band--ink .deliverables > li { border-top-color: oklch(0.994 0.002 250 / 0.16); }
+.band--ink .deliverables > li:last-child { border-bottom-color: oklch(0.994 0.002 250 / 0.16); }
+.band--ink .deliverables > li::before { color: var(--amz-hot); }
+.band--ink .deliverables b { color: var(--paper); font-weight: 700; }
+.band--ink .deliverables p { color: oklch(0.994 0.002 250 / 0.72); }
+
+/* The audit list sits between a heading and the booking widget, so its height
+   is not free: every pixel here pushes the calendar further from the CTA that
+   just jumped the visitor to this section. Standard .deliverables padding put
+   the widget ~1100px down on a phone, which is well past the fold. Tightened
+   so the list reads at a glance and the calendar stays close behind it. */
+/* Each item's content is wrapped in one <span> and pinned to column 2.
+   .deliverables > li is display:grid, which makes every inline child its own
+   grid item on its own row -- so an item written as
+   "Which campaigns are <b>fragmented</b>, and which keywords are <b>burning
+   money</b>" became four grid items stacked four rows deep, and measured
+   168px for what should be two lines. The existing lists never hit this
+   because their items are a single unbroken text node. Anything richer than
+   that needs the wrapper. */
+.deliverables--tight > li > span { grid-column: 2; }
+
+.deliverables--tight { margin-top: var(--s4); }
+.deliverables--tight > li {
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0 var(--s2);
+  padding-block: clamp(0.7rem, 0.55rem + 0.5vw, 1rem);
+  font-size: var(--t-lede);
+  line-height: 1.4;
+}
 
 /* On a phone the booking band gives back most of its padding. The widget is
    the tallest single element on either page, and its own height belongs to

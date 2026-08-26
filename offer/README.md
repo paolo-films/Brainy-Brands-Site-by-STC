@@ -1712,3 +1712,103 @@ element it means.
 - Screenshots reviewed for all four changes.
 - `guarantee-statement--sm` has no remaining references outside this
   changelog.
+
+---
+
+# Revision 22 — August 26, 2026
+
+## "Here's what you get in the free audit", above the booking widget
+
+Added to the booking section on both pages, between the heading and the
+calendar:
+
+> 01 A walkthrough of your **actual account** — not a template
+> 02 Where your **placement multipliers** are overcharging you
+> 03 Which campaigns are **fragmented**, and which keywords are **burning money**
+> 04 The plan — and **the number we think we can cut**
+> 05 A straight answer on whether you're a fit. Including **no**.
+>
+> *The 25% guarantee is only offered after this audit, once we've seen the
+> account.*
+
+**Every line is derived from copy already on the page**, not invented. The
+source is the FAQ answer to "What happens after I book?" — "Dale walks through
+your actual account — where the multipliers are, which campaigns are
+fragmented, what keywords are burning money — and gives you the plan. If
+you're a fit, we tell you. If you're not, we tell you that too." The fit line
+comes from "Do you take everyone who applies?" and the guarantee note from
+"What's the guarantee?" ("only offered after the audit, once we've seen the
+account").
+
+That mattered: this is a list of promises Dale has to keep on a real call.
+Anything here that he does not actually do should be cut rather than left in
+because it reads well.
+
+## It went inside `#apply`, not above it
+
+`#apply` is the target of every CTA on both pages **and** the element the
+sticky-CTA IntersectionObserver watches to hide itself. Putting the list in a
+section above the calendar would have meant CTAs landing on the list while
+the observer only saw the calendar, so the sticky bar would reappear over the
+widget. One section keeps the anchor, the observer, and the reading order
+consistent.
+
+## A grid trap worth recording
+
+`.deliverables > li` is `display: grid`, which makes **every inline child its
+own grid item on its own row**. An item written as
+
+```html
+<li>Which campaigns are <b>fragmented</b>, and which keywords are
+    <b>burning money</b></li>
+```
+
+is four grid items — two text nodes and two `<b>` — stacked four rows deep. It
+measured **168px** for what should be two lines, and the five items came out
+at wildly uneven heights (95 / 71 / 120 / 168 / 72).
+
+The existing lists never hit this because every one of their items is a single
+unbroken text node with no inline markup at all.
+
+Fixed by wrapping each item's content in one `<span>` pinned to column 2. All
+five items now measure a uniform **71px**.
+
+Worth flagging because the first two attempts at this were spent shortening
+the copy, on the assumption the text was too long for the column. It wasn't —
+the copy was fine and is now restored in full. Measuring the computed styles
+rather than the rendered height is what found it.
+
+## Height, since the booking section is the one under pressure
+
+The list is not free — it sits between the CTA target and the widget. Measured
+on a phone, distance from the top of `#apply` to the top of the calendar:
+
+| | Distance to calendar |
+|---|---|
+| First attempt (full sub-paragraphs) | 1102px |
+| After the grid fix | **601px** |
+
+At 390×844 the widget now comes into view as the list ends, rather than
+sitting a screen and a half below the button that jumped you there.
+
+## Ink variants for the numbered list
+
+`.deliverables` was built for light bands — dividers use `--line` (dark ink at
+14%) and sub-copy uses `--ink-2`, both of which vanish on ink. This is its
+first use on a dark ground, so it needed the pair. The counter takes
+full-strength `--amz-hot`, which is correct here and only here: on black, not
+on the light bands where that orange measures 2.1:1.
+
+`.calendar-embed` also gains a top margin. Its comment previously noted it
+carried none deliberately, because the band's own padding was the only
+spacing it needed — no longer true now that copy sits above it.
+
+## Verified
+
+- Contrast sweep, both pages, mobile + desktop: no new failures. This mattered
+  — the whole list is new text on ink. The single reported failure remains the
+  transparent masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance including `span` and `b` clean on both files.
+- Per-item heights measured individually, not just the list total, which is
+  what surfaced the grid bug.
