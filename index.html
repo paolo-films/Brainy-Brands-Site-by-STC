@@ -33,6 +33,18 @@
 
 <main id="main">
 
+  <!-- ===== LOGO INTRO (one-time loading screen) ==========================
+       Progressive enhancement only: stays display:none unless JS confirms
+       rAF support and the visitor allows motion (see the [data-intro] gate
+       in style.css and the script at the bottom of this file). Fixed
+       overlay showing the real logo file; scrolling through the spacer
+       below zooms it in on the bulb, then the overlay and spacer are
+       permanently removed — scrolling back up cannot bring it back. ==== -->
+  <div class="logo-intro" aria-hidden="true">
+    <img class="logo-intro-logo" src="images/BrainyBrands_SecondaryLogo_White.png" alt="">
+  </div>
+  <div class="logo-intro-spacer"></div>
+
   <!-- ===== HERO ========================================================== -->
   <section class="band hero hero--ink">
     <div class="hero-bulb" aria-hidden="true">
@@ -400,6 +412,66 @@
   } else {
     var allCounters = document.querySelectorAll('.count-up');
     for (var j = 0; j < allCounters.length; j++) { animateCount(allCounters[j]); }
+  }
+
+  var introOverlay = document.querySelector('.logo-intro');
+  var introSpacer = document.querySelector('.logo-intro-spacer');
+  if (!reduced && introOverlay && introSpacer && 'requestAnimationFrame' in window) {
+    document.documentElement.setAttribute('data-intro', '');
+    document.documentElement.setAttribute('data-intro-playing', '');
+
+    var introLogo = introOverlay.querySelector('.logo-intro-logo');
+    var introTicking = false;
+    var introDone = false;
+    var introMaxScale = 24;
+    var introFadeOutStart = 0.82;
+
+    function finishIntro() {
+      introDone = true;
+      document.documentElement.removeAttribute('data-intro-playing');
+      introOverlay.parentNode.removeChild(introOverlay);
+      introSpacer.parentNode.removeChild(introSpacer);
+      window.removeEventListener('scroll', onIntroScroll);
+      window.removeEventListener('resize', onIntroScroll);
+
+      var htmlEl = document.documentElement;
+      var prevScrollBehavior = htmlEl.style.scrollBehavior;
+      htmlEl.style.scrollBehavior = 'auto';
+      window.scrollTo(0, 0);
+      htmlEl.style.scrollBehavior = prevScrollBehavior;
+    }
+
+    function updateIntro() {
+      introTicking = false;
+      if (introDone) { return; }
+      var trackHeight = introSpacer.offsetHeight;
+      var progress = trackHeight > 0 ? Math.min(Math.max(window.scrollY / trackHeight, 0), 1) : 0;
+      var scale = 1 + progress * introMaxScale;
+      var outro = progress > introFadeOutStart ? (progress - introFadeOutStart) / (1 - introFadeOutStart) : 0;
+
+      introLogo.style.transform = 'scale(' + scale.toFixed(3) + ')';
+      introOverlay.style.opacity = 1 - outro;
+
+      if (progress >= 1) { finishIntro(); }
+    }
+
+    function onIntroScroll() {
+      if (!introTicking) { introTicking = true; requestAnimationFrame(updateIntro); }
+    }
+
+    window.addEventListener('scroll', onIntroScroll, { passive: true });
+    window.addEventListener('resize', onIntroScroll, { passive: true });
+    updateIntro();
+
+    var introFadeInStart = null;
+    var introFadeInDuration = 700;
+    function introFadeInStep(ts) {
+      if (introFadeInStart === null) { introFadeInStart = ts; }
+      var t = Math.min((ts - introFadeInStart) / introFadeInDuration, 1);
+      introLogo.style.opacity = t;
+      if (t < 1) { requestAnimationFrame(introFadeInStep); }
+    }
+    requestAnimationFrame(introFadeInStep);
   }
 })();
 </script>
