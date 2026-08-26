@@ -322,10 +322,12 @@ main a { text-decoration-color: currentColor; }
     oklch(0.240 0.032 256) 45%,
     var(--ink) 76%);
   color: oklch(0.994 0.002 250 / 0.8);
-  min-height: calc(100svh - 4.5rem);
-  display: flex;
-  align-items: center;
 }
+
+/* Full-viewport variant — homepage only. Kept separate from .hero--ink so
+   interior pages can use the dark band without inheriting a forced
+   full-screen height. */
+.hero--full { min-height: calc(100svh - 4.5rem); display: flex; align-items: center; }
 .hero--ink h1 { color: var(--paper); }
 .hero--ink .lede { color: oklch(0.994 0.002 250 / 0.8); }
 .hero--ink .cta-note { color: oklch(0.994 0.002 250 / 0.62); }
