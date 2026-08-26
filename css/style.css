@@ -477,6 +477,44 @@ main a { text-decoration-color: currentColor; }
   font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.7rem);
 }
 
+/* --- Case studies (one-at-a-time, arrow navigation) -------------------------- */
+
+.case-single { display: flex; align-items: center; gap: var(--s4); }
+.case-viewport { flex: 1 1 auto; min-width: 0; }
+
+.case-arrow {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.case-arrow svg { width: 1.15rem; height: 1.15rem; display: block; }
+.case-arrow:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.case-arrow:disabled { opacity: 0.3; cursor: default; }
+
+.case-card { transition: opacity 0.32s var(--ease), transform 0.32s var(--ease); }
+
+.case-counter {
+  margin-top: var(--s3);
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .case-single { gap: var(--s3); }
+  .case-arrow { width: 2.25rem; height: 2.25rem; }
+}
+
 /* --- Forms ------------------------------------------------------------------ */
 
 form { max-width: 34rem; }

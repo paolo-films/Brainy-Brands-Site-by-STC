@@ -141,6 +141,88 @@
     </div>
   </section>
 
+  <!-- ===== CASE STUDIES ================================================== -->
+  <section class="band">
+    <div class="shell">
+      <h2>Case studies</h2>
+      <p class="lede">
+        Five accounts, with the before-and-after numbers as reported by
+        Amazon Business Reports.
+      </p>
+
+      <div class="case-single mt-5">
+        <button type="button" class="case-arrow" data-case-prev aria-label="Previous case study">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+
+        <div class="case-viewport">
+
+          <article class="panel case-card" data-case-card>
+            <h3>ClearShield</h3>
+            <p class="stat-metric">+<span class="count-up" data-count-to="119">0</span>% revenue in the first month</p>
+            <p class="stat-tag">$41,816 &rarr; $91,572/month, on nearly flat ad spend.</p>
+            <p class="prose mt-3">
+              TACoS fell from 5.50% to 2.58% while the flagship ASIN's conversion
+              rate jumped 54%. The growth came from monetizing existing traffic
+              better, not from spending more to get it.
+            </p>
+          </article>
+
+          <article class="panel case-card" data-case-card hidden>
+            <h3>Patriot Crew</h3>
+            <p class="stat-metric">$174K &rarr; $<span class="count-up" data-count-to="388">0</span>K/month</p>
+            <p class="stat-tag">+135% average monthly sales in the first month of management.</p>
+            <p class="prose mt-3">
+              An already-healthy account that had plateaued &mdash; the ceiling was
+              a campaign structure built for a much smaller catalog. Growth
+              showed up immediately and held through month two.
+            </p>
+          </article>
+
+          <article class="panel case-card" data-case-card hidden>
+            <h3>HIKERS Co.</h3>
+            <p class="stat-metric">+<span class="count-up" data-count-to="104">0</span>% conversion, in 30 days</p>
+            <p class="stat-tag">4.02% &rarr; 8.20% on a core ASIN.</p>
+            <p class="prose mt-3">
+              Sessions fell 51% as traffic normalized, yet sales held almost
+              flat &mdash; down just 1.2%. The listing kept nearly all of its
+              revenue on half the traffic, a stronger base to scale from.
+            </p>
+          </article>
+
+          <article class="panel case-card" data-case-card hidden>
+            <h3>Primal Power Liver</h3>
+            <p class="stat-metric">+<span class="count-up" data-count-to="33">0</span>% sales, month over month</p>
+            <p class="stat-tag">$7,993 &rarr; $10,642/month, the first full month after onboarding.</p>
+            <p class="prose mt-3">
+              The account had softened during the July transition. By August it
+              had recovered and then some &mdash; sales, sessions, and units all
+              finished above the pre-onboarding baseline.
+            </p>
+          </article>
+
+          <article class="panel case-card" data-case-card hidden>
+            <h3>Emerald Plastics</h3>
+            <p class="stat-metric">$2,381 &rarr; $<span class="count-up" data-count-to="6546">0</span>/month</p>
+            <p class="stat-tag">+175% sales from a cold launch, in two months.</p>
+            <p class="prose mt-3">
+              No sales history, no reviews, no ranking to start. Orders more
+              than doubled and units grew 164% as traffic scaled toward the
+              best-performing ASINs.
+            </p>
+          </article>
+
+        </div>
+
+        <button type="button" class="case-arrow" data-case-next aria-label="Next case study">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <p class="case-counter" data-case-counter></p>
+    </div>
+  </section>
+
   <section class="band band--ink">
     <div class="shell shell--tight">
       <h2>Want this level of detail on your own account?</h2>
@@ -187,6 +269,91 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function formatNumber(n) {
+    return n >= 1000 ? n.toLocaleString('en-US') : String(n);
+  }
+
+  function animateCount(el) {
+    var to = parseInt(el.getAttribute('data-count-to'), 10);
+    if (reduced || !('requestAnimationFrame' in window)) { el.textContent = formatNumber(to); return; }
+    var duration = 1400;
+    var start = null;
+    function step(ts) {
+      if (start === null) { start = ts; }
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = formatNumber(Math.round(eased * to));
+      if (progress < 1) { requestAnimationFrame(step); }
+      else { el.textContent = formatNumber(to); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  var caseViewport = document.querySelector('.case-viewport');
+  var counters = document.querySelectorAll('.count-up');
+
+  if (!reduced && 'IntersectionObserver' in window && counters.length) {
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        var els = entry.target.querySelectorAll('.count-up');
+        for (var i = 0; i < els.length; i++) { animateCount(els[i]); }
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+
+    if (caseViewport) { seen.observe(caseViewport); }
+  } else {
+    for (var j = 0; j < counters.length; j++) { animateCount(counters[j]); }
+  }
+
+  var caseCards = Array.prototype.slice.call(document.querySelectorAll('[data-case-card]'));
+  var prevBtn = document.querySelector('[data-case-prev]');
+  var nextBtn = document.querySelector('[data-case-next]');
+  var counter = document.querySelector('[data-case-counter]');
+  var caseIndex = 0;
+
+  if (caseCards.length && prevBtn && nextBtn) {
+    function showCase(direction) {
+      caseCards.forEach(function (card, i) {
+        if (i !== caseIndex) { card.hidden = true; return; }
+        card.hidden = false;
+        if (reduced || !direction) { return; }
+        card.style.transition = 'none';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(' + (direction === 'next' ? '10px' : '-10px') + ')';
+        card.getBoundingClientRect();
+        card.style.transition = '';
+        card.style.opacity = '1';
+        card.style.transform = 'translateX(0)';
+      });
+      prevBtn.disabled = caseIndex === 0;
+      nextBtn.disabled = caseIndex === caseCards.length - 1;
+      if (counter) { counter.textContent = (caseIndex + 1) + ' / ' + caseCards.length; }
+    }
+
+    prevBtn.addEventListener('click', function () {
+      if (caseIndex === 0) { return; }
+      caseIndex -= 1;
+      showCase('prev');
+    });
+    nextBtn.addEventListener('click', function () {
+      if (caseIndex === caseCards.length - 1) { return; }
+      caseIndex += 1;
+      showCase('next');
+    });
+
+    showCase();
+  }
+})();
+</script>
 
 </body>
 </html>
