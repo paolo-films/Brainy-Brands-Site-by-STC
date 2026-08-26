@@ -952,6 +952,14 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 
 .guarantee-statement .line2 { display: block; margin-top: 0.45em; }
 
+/* guide.html breaks the offer onto three lines: the lead-in, the claim, then
+   the fallback clause. The claim needs its own wrapper rather than just
+   setting .hot to block — the full stop sits outside .hot, so a block .hot
+   would drop the period onto a line by itself. */
+.guarantee-statement .offer-lead,
+.guarantee-statement .offer-claim { display: block; }
+.guarantee-statement .offer-claim { margin-top: 0.2em; }
+
 /* --- Guarantee on a light ground -------------------------------------------
    The base .guarantee-statement is white type with an --amz-hot highlight,
    built for .band--ink and only correct there. It is now used on two light
@@ -967,16 +975,6 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    the next time one moves. */
 .band:not(.band--ink) .guarantee-statement { color: var(--ink); }
 .band:not(.band--ink) .guarantee-statement .hot { color: var(--amz-deep); }
-
-/* A restatement, not a second headline. Used under the video on offer.html,
-   where the full-size treatment would compete with the guarantee band that
-   still has its own section further down the page. */
-.guarantee-statement--sm {
-  font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.65rem);
-  letter-spacing: -0.025em;
-  max-width: 30ch;
-  margin-inline: auto;
-}
 
 /* Names the audience above the promise. Set as a legible line rather than a
    small-caps kicker — those are on the client's banned list. */

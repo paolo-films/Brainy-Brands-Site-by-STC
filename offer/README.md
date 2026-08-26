@@ -1629,3 +1629,86 @@ and I only ever see the 420px placeholder floor.
 - Section-ground audit on both pages; only the pre-existing seam above.
 - CTA renders 350×71 at 390px — comfortably above the 44px tap target.
 - `#apply` anchor resolves; no JS errors on either page.
+
+---
+
+# Revision 21 — August 26, 2026
+
+## guide.html: the offer set on three lines
+
+Now reads as specified:
+
+> These are the same methods we use to save our clients **$12M** in ad spend
+> last year
+>
+> **So here's our offer:**
+> **25% ad spend reduction in 30 days.**
+> **Or your money back, or we work for free until we hit that target.**
+
+The claim needed its own wrapper (`.offer-claim`) rather than just setting
+`.hot` to `display: block`. The full stop sits outside `.hot`, so a block
+`.hot` would have dropped a lone period onto its own line.
+
+**On the background:** the methods line and the offer have been on one
+`.band--tint` section since Revision 20 — one ground, no seam between them.
+The version quoted in the request had them the other way round with the offer
+first, which is the pre-Revision-20 layout. That is the third report this
+week that matches a stale `offer.css`/HTML pair rather than the branch. Worth
+a hard refresh before reviewing, or checking that the preview has actually
+rebuilt past the commit you are looking at.
+
+## offer.html: new title above the video
+
+Replaced the two-part hook and lede with a single title:
+
+> Here are the EXACT methods we used to save our clients **$12M** in ad spend
+> last year.
+
+`EXACT` kept in capitals as written. `$12M` is set in `.bigstat`, which is
+`--amz-deep` — the 6.8:1 pairing that is correct on white, not the
+full-strength orange that measures 2.1:1 there.
+
+This drops **"Don't believe us"**, added one revision ago. The request named
+what the title should read and the new line is a complete statement, so
+keeping both would have stacked two competing hooks. Easy to restore as a
+kicker above it if it was meant to stay.
+
+`#how h2` is capped at 22ch, so the longer title sets to four lines. That
+section deliberately runs a reduced top padding so the player clears the fold
+on a phone, so the taller heading was worth measuring rather than assuming:
+at 390×844 the video's bottom edge lands **389px** into the section against
+an 844px fold, and at 360×740 it lands **373px**. Both still clear it
+comfortably.
+
+## offer.html: guarantee removed from under the video
+
+Removed as repetitive — it was added last revision and the full guarantee
+band still owns it further down the page. `.guarantee-statement--sm` existed
+only for that block and has been deleted with it rather than left as dead
+CSS.
+
+## offer.html: CTA on the guarantee band
+
+`See if you qualify`, under the 30-day satisfaction guarantee. On the ink
+band it picks up `.band--ink .btn` — white fill, ink label, 204×56.
+
+Note the contrast sweep still reports exactly one failure reading
+`"See if you qualify"`, and it is **not** this button. It is the masthead
+ghost link, which is transparent (`rgba(0, 0, 0, 0)`) and so cannot be
+composited by the checker — the long-standing false positive. Confirmed by
+measuring both: the masthead one is 15px on a transparent ground, the new
+one is 16.8px on `oklch(0.994 0.002 250)`, roughly 15:1. Worth recording,
+because the two now share a label and the report no longer identifies which
+element it means.
+
+## Verified
+
+- Contrast sweep, both pages, mobile + desktop: no new failures; the single
+  reported one is the masthead false positive, identified explicitly above.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance including `span` (the offer now nests spans three deep) clean
+  on both files.
+- Fold measured at 390×844 and 360×740 for the taller title.
+- Screenshots reviewed for all four changes.
+- `guarantee-statement--sm` has no remaining references outside this
+  changelog.
