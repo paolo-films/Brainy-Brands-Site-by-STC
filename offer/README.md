@@ -1941,3 +1941,78 @@ Two flagged in the file itself:
   transparent masthead ghost button.
 - No horizontal overflow at 390px or 1440px.
 - No remaining `privacy.html` / `terms.html` references on either page.
+
+---
+
+# Revision 25 — August 26, 2026
+
+## The audit list goes back to mixed weight
+
+`--plain` set every word at 800, which flattened the emphasis. New
+`.deliverables--mixed`: same numbered structure, dividers and padding, but the
+item sets in regular with `<b>` carrying the pain points.
+
+Copy also pulled back a step, deliberately vaguer — these are things the call
+reveals, not the page:
+
+> 01 A walkthrough of your **actual account** — not a template
+> 02 Where **Amazon is overcharging you**
+> 03 Which campaigns are **fragmented**, and where
+> 04 The plan — and **the number we think we can cut**
+> 05 A straight answer on whether you're a fit. Including **no**.
+
+"placement multipliers" → "Amazon", and the keyword-level detail is gone from
+03. Both were naming the mechanism for free.
+
+## Body face, and that is forced rather than chosen
+
+Archivo is loaded at exactly one weight — `family=Archivo:wght@800` in the
+Google Fonts URL. Asking for anything lighter in the display face gets no file
+back and falls through to Arial, so a mixed-weight list simply cannot be set
+in Archivo as the fonts are currently loaded. Public Sans ships 400 and 700
+and is already loaded, so the list uses the body face. Measured after:
+`Public Sans 400` with `<b>` at `700`, all `oklch(0.994 0.002 250)`.
+
+Adding Archivo 400 to the font URL would be the alternative, at the cost of
+another font file on a page already carrying Vimeo, GHL and the Pixel.
+
+## A bug I introduced and caught
+
+The first attempt at this edit **overwrote the wrong list.** It anchored on
+`s.index('<ol class="deliverables deliverables--plain rv">')` — and since
+Revision 23 there were *two* `--plain` lists on each page, the first being
+"Here's what happens when you work with us" at position 6. `index()` returns
+the first match, so the audit copy replaced the what-happens items and the
+real audit list was left untouched.
+
+Caught because the browser reported `Archivo 800` and the old copy after an
+edit that should have produced `Public Sans 400` and new copy. The first
+instinct was a cache — a cache-buster changed nothing, and `curl` confirmed
+the server was serving the new markup, which ruled it out and pointed at the
+DOM instead. Querying every `.deliverables` on the page then showed two lists
+where there should have been one of each kind.
+
+Fixed by reverting both HTML files and re-anchoring the search from the index
+of `id="apply"` rather than from the start of the document, with two
+assertions: that the match falls before the section's closing tag, and that
+exactly one `deliverables` list exists earlier in the file.
+
+The lesson is one already recorded in Revision 17 and not applied here:
+`assert count == 1` before trusting a text-anchored edit. `str.index` silently
+returning the first of several matches is the same failure as a non-greedy
+regex matching the nearer closing tag. Verified after the fix that the
+what-happens list reads its original five items and the audit list reads the
+new five.
+
+## Verified
+
+- Both lists checked independently after the fix — what-happens intact at its
+  original copy, audit list carrying the new copy.
+- Computed styles: `Public Sans` 400 / `b` 700, colour `oklch(0.994 0.002 250)`
+  on every item.
+- Contrast sweep, both pages, mobile + desktop: no new failures; the one
+  reported remains the transparent masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance clean on both files.
+- Distance from the top of `#apply` to the calendar: 634px on a phone, a
+  little tighter than the 663px `--plain` cost.

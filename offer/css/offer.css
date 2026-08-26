@@ -441,14 +441,41 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 
 /* .deliverables--plain hard-sets color: var(--ink) -- correct on the tint
    band it was written for ("Here's what happens when you work with us"),
-   invisible on ink. The audit list uses the same treatment on the booking
-   band, so it needs the light-ground colour. */
+   invisible on ink. Nothing currently puts --plain on an ink band, so this
+   rule is unused today. Kept deliberately: a literal colour that only works
+   on one ground is the single failure this stylesheet keeps repeating, and
+   one line is cheaper than finding it again the next time a section moves. */
 .band--ink .deliverables--plain > li { color: var(--paper); }
 
 /* The note under the audit list is white rather than the .cta-note default of
    62% -- asked for explicitly, and it carries a real condition (the guarantee
    only exists after the audit) rather than being fine print. */
 #apply .cta-note { color: var(--paper); }
+
+/* --- Deliverables, mixed weight --------------------------------------------
+   Same numbered structure and dividers as --plain, but the item sets in
+   regular with <b> carrying the emphasis, so the pain points stand out
+   instead of every word competing at 800.
+
+   Body face, not display, and that is forced rather than chosen: Archivo is
+   loaded at a single weight (`family=Archivo:wght@800`), so asking for
+   anything lighter in the display face gets no file and silently falls back
+   to Arial. Public Sans ships 400 and 700, which is a real weight pair.
+
+   The <span> wrapper is required, not decorative -- .deliverables > li is
+   display:grid, so inline children each become their own grid item on their
+   own row. Without it, an item carrying a <b> stacks into two rows. */
+.deliverables--mixed > li {
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  padding-block: clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
+}
+.deliverables--mixed > li > span { grid-column: 2; }
+.deliverables--mixed b { font-weight: 700; }
+.band--ink .deliverables--mixed > li,
+.band--ink .deliverables--mixed b { color: var(--paper); }
 
 /* The audit list sits between a heading and the booking widget, so its height
    is not free: every pixel here pushes the calendar further from the CTA that
