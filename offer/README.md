@@ -1880,3 +1880,64 @@ view as the list ends on a 390×844 screen.
 - No horizontal overflow at 390px or 1440px.
 - Tag balance clean on both files.
 - `deliverables--tight` has zero remaining references in CSS or either page.
+
+---
+
+# Revision 24 — August 26, 2026
+
+## Footer: links gone, text white, and the band had to go with it
+
+Privacy and Terms are removed from both pages — the pages are being lifted
+into GHL on their own, so `../privacy.html` and `../terms.html` point at
+nothing. The footer is now the mark and the copyright line.
+
+**Making the text white meant making the footer dark.** `.foot` had no
+background of its own, so it sat on the body at `oklch(0.994 0.002 250)` —
+white type there would have been invisible. Measured before changing anything
+rather than applying the colour and seeing. The band is now `.foot--ink`.
+
+That in turn forced the logo: the footer was using `logo-black.png`, which
+disappears on ink. Swapped to `logo-white.png`, which already existed — the
+masthead has been crossfading between the two all along — and its opacity
+damping (0.55, for a black mark on white) is dropped since it no longer
+applies.
+
+The note under the audit list also goes full white, up from the `.cta-note`
+default of 62%. It carries a real condition rather than being fine print.
+
+**Fourth instance of the single-ground colour pattern** now recorded:
+`.guarantee-statement`, the `h2:has()` rule, `.deliverables--plain`, and now
+`.foot`. Each was a literal colour correct only where it was first used.
+
+`index.html` keeps its Privacy and Terms links. It is not part of the GHL
+move and still sits in a site that has those pages.
+
+## `GHL-ASSETS.md`
+
+New file: every asset the two pages reference, grouped, with sizes and a blank
+column for the GHL media URL. **38 files, 1.58 MB, none missing.** Generated
+by parsing the markup and the stylesheet rather than by listing the directory,
+so it covers what is actually referenced — including the one asset reached
+only from CSS.
+
+Two flagged in the file itself:
+
+- **`assets/dale headshot.png`** has a space in its filename and will be
+  renamed or percent-encoded on upload.
+- **`assets/fonts/vinyl-regular.woff2`** is a font, not an image, and is
+  fetched under CORS rules images are not. If GHL's CDN sends no
+  `Access-Control-Allow-Origin`, the browser refuses it and the display face
+  falls back silently — no console error a non-developer would notice. The fix
+  if it happens is a base64 `data:` URI in the CSS, which is never a separate
+  request and so has no CORS check.
+
+## Verified
+
+- Footer measured after the change on both pages: background
+  `oklch(0.205 0.02 258)`, text `oklch(0.994 0.002 250)`, zero links,
+  `logo-white.png` loading (`naturalWidth > 0`).
+- Contrast sweep, both pages, mobile + desktop: no new failures — the ink
+  footer and the white note both pass. The one reported failure remains the
+  transparent masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+- No remaining `privacy.html` / `terms.html` references on either page.
