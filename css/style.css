@@ -227,6 +227,8 @@ main a { text-decoration-color: currentColor; }
 .hero .lede { margin-top: var(--s4); }
 .hero .btn-row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin-top: var(--s5); }
 
+.dale-hero { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: var(--s5); align-items: center; }
+
 /* Plain bold lead-in line above a hero h1 — legible text, not a tracked
    small-caps tag. */
 .audience {
@@ -283,6 +285,9 @@ main a { text-decoration-color: currentColor; }
     oklch(0.240 0.032 256) 45%,
     var(--ink) 76%);
   color: oklch(0.994 0.002 250 / 0.8);
+  min-height: calc(100svh - 4.5rem);
+  display: flex;
+  align-items: center;
 }
 .hero--ink h1 { color: var(--paper); }
 .hero--ink .lede { color: oklch(0.994 0.002 250 / 0.8); }
@@ -517,7 +522,7 @@ form { max-width: 34rem; }
 /* --- Step cards ("Three steps to get started") ------------------------------- */
 
 .step-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s4); margin-top: var(--s5); }
-.step-card { border: 1px solid var(--line); padding: var(--s4); background: var(--paper); }
+.step-card { border: 1px solid var(--line); padding: var(--s4); background: var(--paper-2); }
 .step-card-num {
   display: block;
   font-family: var(--font-display);
@@ -537,7 +542,7 @@ form { max-width: 34rem; }
 /* --- Responsive ---------------------------------------------------------------- */
 
 @media (max-width: 860px) {
-  .dale, .split { grid-template-columns: 1fr; }
+  .dale-hero { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
