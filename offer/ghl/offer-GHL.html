@@ -1209,19 +1209,17 @@ body .c-custom-code, body .custom-code-container {
   width: 100% !important;
 }
 
-/* The white strip at the very top and bottom. The wrappers carry vertical
-   padding as well as horizontal -- section 20px, row 10px, column 10px --
-   which stacks to exactly 40px above the first band and 40px below the last.
-   `padding: 0` above collapses all four sides rather than just the two.
+/* The white strip at the very top and bottom came from vertical padding on
+   the same wrappers -- section 20px, row 10px, column 10px, stacking to
+   exactly 40px above the first band and 40px below the last. The `padding: 0`
+   above collapses all four sides, which is the whole fix.
 
-   The strip read as white because this stylesheet sets `body` to --paper,
-   which is correct on its own page and wrong here: every band paints its own
-   ground, so the only place the body colour was ever visible inside GHL was
-   through that wrapper padding. Ink means any chrome that survives reads as
-   part of the page instead of a seam. */
-html, body, body #preview-container {
-  background: var(--ink) !important;
-}
+   DO NOT also force a background here. A previous revision set html/body to
+   --ink as belt-and-braces and it broke the page: `.band` and `.band--sm` set
+   padding only and are transparent by design, so they show whatever the page
+   ground is. Making the body dark turned Dale, the logo strip and the qualify
+   section dark with it. The body stays --paper, exactly as on the standalone
+   page, and with the padding gone no part of it is visible anyway. */
 </style>
 
 <!-- ===== META PIXEL =====================================================

@@ -2200,3 +2200,56 @@ appears twice in the served bytes, but the second is inside GHL's escaped
 JSON builder config, which does not execute — worth recording, since a
 genuine duplicate would double-count every PageView and look like traffic
 had doubled.
+
+---
+
+# Revision 29 — August 26, 2026
+
+## Reverting a regression I introduced
+
+Revision 28 closed the 40px strip with `padding: 0` on the GHL wrappers, and
+then added this as belt-and-braces:
+
+```css
+html, body, body #preview-container { background: var(--ink) !important; }
+```
+
+That line broke the page. `.band` and `.band--sm` set **padding only** — they
+are transparent by design and show whatever the page ground is. Forcing the
+body dark turned every one of them dark with it: Dale, the logo strip, and the
+qualify section all went from white to ink.
+
+The padding fix was the whole fix. The background rule was solving a problem
+that `padding: 0` had already eliminated — with no padding, no part of the
+body is visible through the wrappers, whatever colour it is.
+
+Removed, and the reason recorded in the block itself so it does not get
+re-added the next time a seam appears.
+
+## Verified by comparing against the original, band by band
+
+Not "looks right" — the standalone page and the GHL build were rendered side
+by side and every section's effective background compared:
+
+| Page | Sections compared | Mismatches |
+|---|---|---|
+| `guide.html` | 10 + footer | **0** |
+| `offer.html` | 11 + footer | **0** |
+
+Dale, the logo strip and the qualify section are white again on both, the
+tint and ink bands are where they were, and the footer is still ink.
+
+Edges re-checked at the same time, since the point was to keep the padding
+fix: **L0 R0 top0 bottom0, no overflow**, on both pages at 1440px and 390px.
+
+## The pattern, for the fifth time
+
+This is the same failure that has now appeared five times in this stylesheet:
+a colour set in one place that is only correct for one ground. Previously it
+was components carrying a literal colour that broke when the section moved.
+This time it was the inverse — a ground forced under components that were
+built to inherit it.
+
+The rule that would have caught it: **`.band` is transparent, so the page
+background is load-bearing.** Anything that changes it changes every plain
+band on the page.
