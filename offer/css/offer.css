@@ -439,29 +439,18 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .band--ink .deliverables b { color: var(--paper); font-weight: 700; }
 .band--ink .deliverables p { color: oklch(0.994 0.002 250 / 0.72); }
 
+/* .deliverables--plain hard-sets color: var(--ink) -- correct on the tint
+   band it was written for ("Here's what happens when you work with us"),
+   invisible on ink. The audit list uses the same treatment on the booking
+   band, so it needs the light-ground colour. */
+.band--ink .deliverables--plain > li { color: var(--paper); }
+
 /* The audit list sits between a heading and the booking widget, so its height
    is not free: every pixel here pushes the calendar further from the CTA that
    just jumped the visitor to this section. Standard .deliverables padding put
    the widget ~1100px down on a phone, which is well past the fold. Tightened
    so the list reads at a glance and the calendar stays close behind it. */
-/* Each item's content is wrapped in one <span> and pinned to column 2.
-   .deliverables > li is display:grid, which makes every inline child its own
-   grid item on its own row -- so an item written as
-   "Which campaigns are <b>fragmented</b>, and which keywords are <b>burning
-   money</b>" became four grid items stacked four rows deep, and measured
-   168px for what should be two lines. The existing lists never hit this
-   because their items are a single unbroken text node. Anything richer than
-   that needs the wrapper. */
-.deliverables--tight > li > span { grid-column: 2; }
 
-.deliverables--tight { margin-top: var(--s4); }
-.deliverables--tight > li {
-  grid-template-columns: 2rem minmax(0, 1fr);
-  gap: 0 var(--s2);
-  padding-block: clamp(0.7rem, 0.55rem + 0.5vw, 1rem);
-  font-size: var(--t-lede);
-  line-height: 1.4;
-}
 
 /* On a phone the booking band gives back most of its padding. The widget is
    the tallest single element on either page, and its own height belongs to

@@ -1812,3 +1812,71 @@ spacing it needed — no longer true now that copy sits above it.
 - Tag balance including `span` and `b` clean on both files.
 - Per-item heights measured individually, not just the list total, which is
   what surfaced the grid bug.
+
+---
+
+# Revision 23 — August 26, 2026
+
+## The audit list now uses the "what happens" treatment
+
+Switched from the bespoke `.deliverables--tight` built one revision ago to
+`.deliverables--plain` — the same class behind "Here's what happens when you
+work with us", which was the reference. Verified by comparing computed styles
+rather than by eye: both lists now render at **18.8px / weight 800 / Archivo /
+16px padding**. The only property that differs is colour, and it has to —
+white on the ink booking band against ink on the tint band.
+
+Copy reworked to suit the treatment. `--plain` sets the whole item in bold
+display type, so the inner `<b>` tags are redundant and were removed:
+
+> 01 A walkthrough of your actual account — not a template
+> 02 Where your placement multipliers are overcharging you
+> 03 Which campaigns are fragmented, and which keywords are burning money
+> 04 The plan — and the number we think we can cut
+> 05 A straight answer on whether you're a fit. Including no.
+>
+> Note: The 25% guarantee is only offered after the audit, once we've seen the
+> account.
+
+Dropping the inline `<b>` also sidesteps the grid trap recorded in Revision
+22 — `.deliverables--plain > li` is `display: grid` in exactly the same way,
+so inline children would have stacked into separate rows here too. Every item
+is a single unbroken text node, which is why the existing lists never hit it.
+
+## Light-ground colour, third time
+
+`.deliverables--plain` hard-sets `color: var(--ink)`, correct on the tint band
+it was written for and invisible on ink. Added
+`.band--ink .deliverables--plain > li { color: var(--paper); }`.
+
+That is the third component this month that shipped with a colour valid only
+on the ground it was first used on — after `.guarantee-statement` (Revision
+19) and the `h2:has(+ .guarantee-statement)` rule (Revision 21). Worth noting
+as a pattern: anything in this stylesheet that sets a literal colour rather
+than inheriting should be assumed single-ground until proven otherwise.
+
+`.deliverables--tight` and its span-wrapper rule were deleted rather than left
+behind — the audit list was their only user.
+
+## Height, since it moved
+
+The bigger display type costs some room. Distance from the top of `#apply` to
+the top of the calendar, on a phone:
+
+| | Distance |
+|---|---|
+| Revision 22 (`--tight`) | 601px |
+| Now (`--plain`) | **663px** |
+
+A 62px trade for the treatment you asked for, and the widget still comes into
+view as the list ends on a 390×844 screen.
+
+## Verified
+
+- Computed styles compared directly against the "what happens" list — font
+  size, weight, family and padding all match.
+- Contrast sweep, both pages, mobile + desktop: no new failures; the one
+  reported remains the transparent masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance clean on both files.
+- `deliverables--tight` has zero remaining references in CSS or either page.
