@@ -243,57 +243,57 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 2. THE OFFER ==================================================
-       Moved up from position 7, at your request — straight off the back of
-       the video, so the first scroll after watching lands on the offer
-       itself. The guide earns attention; this is what it's for.
+  <!-- ===== 2. THE METHODS + THE OFFER, MERGED ============================
+       Was two sections: the methods line on its own band, the offer on
+       another. Merged at your request, in your order — the methods line is
+       the lead-in, the offer is the payload, and they now land as one
+       thought instead of two scrolls.
 
-       Lead-in is mine; the guarantee clause keeps the exact locked wording
-       from FUNNEL-AND-SITEMAP.md rather than a paraphrase, so this doesn't
-       become another version of the guarantee in circulation.
+       Guarantee clause keeps the exact locked wording from
+       FUNNEL-AND-SITEMAP.md rather than a paraphrase, so this doesn't become
+       another version of the guarantee in circulation.
 
        On the tint, not ink. The hero above is ink and carries the video, so
        an ink band here meant the offer had no edge at all between it and the
-       bottom of the player — they read as one continuous dark slab. Coming
-       straight off a dark section, any light ground is the hardest available
-       break, which is what you asked for. The statement keeps its weight
-       because .guarantee-statement is still the largest type in the section;
-       only its colour pair changes (see the light-ground rules in offer.css
-       — the highlight has to be --amz-deep here, --amz-hot is 2.1:1 on a
-       light ground).
+       bottom of the player — one continuous dark slab. Coming off a dark
+       section, a light ground is the hardest available break.
+
+       NOTE the h2 below is deliberately the lead-in size, not full --t-h2.
+       .shell--tight > h2:has(+ .guarantee-statement) already steps a heading
+       back when it sits directly above the statement, so the offer stays the
+       biggest thing in the section. That rule was written for ink bands and
+       sets a near-white colour; the light-ground pair in offer.css fixes the
+       colour without losing the step-down.
        ==================================================================== -->
   <section class="band band--tint">
     <div class="shell shell--tight center">
+      <h2 class="rv">These are the same methods we use to save our clients
+        <span class="bigstat">$12M</span> in ad spend last year</h2>
+
       <p class="guarantee-statement">
         So here's our offer: <span class="hot">25% ad spend reduction in 30
         days</span>.
         <span class="line2">Or your money back, or we work for free until we
         hit that target.</span>
       </p>
+
+      <!-- The page's only in-content CTA. Before this there was none at all:
+           between the hero and the booking widget, roughly nine screens, the
+           only routes to the calendar were the small masthead link and the
+           sticky bar. It sits here because this is where belief peaks — the
+           offer has just been stated and the guarantee with it. -->
+      <a class="btn" href="#apply">Book a free audit to see if you qualify</a>
     </div>
   </section>
 
-  <!-- ===== 3. THESE ARE THE METHODS ======================================
-       Now carries the line that used to sit in the hero, verbatim, at your
-       request — it says it once, here, instead of twice within one scroll.
-       The "Knowing them is one thing…" paragraph underneath is gone too;
-       Dale's own section makes that point better than a lead-in to it did.
+  <!-- ===== 3. DALE =======================================================
+       White now, not tint. Dale was on the tint to break from the methods
+       band above it; that band has been merged into the offer section, which
+       is itself tint, so keeping Dale tint would have put two tint sections
+       back to back and undone the very break the merge was protecting.
+       Flipping to white keeps a ground change at this seam.
        ==================================================================== -->
-  <section class="band band--sm">
-    <div class="shell shell--tight center">
-      <h2 class="rv">These are the same methods we use to save our clients
-        <span class="bigstat">$12M</span> in ad spend last year</h2>
-    </div>
-  </section>
-
-  <!-- ===== 4. DALE =======================================================
-       On the tint, deliberately: you flagged the gap between the section
-       above and this one as awkward, and a colour change is the hardest
-       break available — it reads as a new chapter rather than more of the
-       same page. The band above gives back most of its bottom padding
-       (.band--sm) so Dale starts higher up as well.
-       ==================================================================== -->
-  <section class="band band--tint">
+  <section class="band">
     <div class="shell">
       <div class="dale rv">
         <figure class="dale-photo">
@@ -318,7 +318,11 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 5. CASE STUDIES ===============================================
+  <!-- ===== 4. CASE STUDIES ===============================================
+       On the tint. Dale above moved to white when the offer section took the
+       tint, and case studies was white too — which would have put two white
+       sections back to back. Tint here keeps a ground change at every seam
+       from the hero down to the logo strip.
        The ad-spend CUT now leads every row and the revenue is demoted to a
        supporting line, because the cut is the promise the page makes and
        the revenue is the bonus.
@@ -331,7 +335,7 @@ fbq('track', 'PageView');
   <!-- White, not tinted: several of the supplied logos have a baked-in
        white background rather than transparency, and on a tinted band they
        render as visible white boxes. -->
-  <section class="band">
+  <section class="band band--tint">
     <div class="shell">
       <h2 class="rv">Case studies</h2>
 
@@ -388,7 +392,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 6. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
        ADD LOGOS HERE as you get them — the strip wraps and centres, so
        extra <li> items need no CSS change.
        ==================================================================== -->
@@ -427,7 +431,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 7. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
       <h2 class="rv">Here's what happens when you work with us</h2>
@@ -442,7 +446,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 8. REVIEWS ====================================================
+  <!-- ===== 7. REVIEWS ====================================================
        Your Upwork screenshots. Each source file was a two-up pair, which
        would have been unreadable scaled down to a phone, so each was split
        into single cards — these six are the strongest, all Amazon/PPC
@@ -467,7 +471,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 9. QUALIFY ==================================================== -->
+  <!-- ===== 8. QUALIFY ==================================================== -->
   <section class="band">
     <div class="shell">
       <h2 class="rv">We only work with brands we can genuinely help</h2>
@@ -494,7 +498,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 10. THE CALENDAR ===============================================
+  <!-- ===== 9. THE CALENDAR ===============================================
        Standing on its own, at your request — the "Book your free audit /
        twenty minutes with Dale" header and lede are gone, and with them the
        two-column split. The widget carries its own headings and its own
@@ -512,7 +516,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 11. FAQ =======================================================
+  <!-- ===== 10. FAQ =======================================================
        Five pulled from go.brainyamz.com/offer-7, edited only for length.
        ==================================================================== -->
   <section class="band band--tint">

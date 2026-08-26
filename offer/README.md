@@ -1509,3 +1509,123 @@ hero and the booking widget, roughly nine screens, there is not one in-content
 button. offer.html has one in its hero. Left alone because a soft
 guide-led page may want that on purpose, but it is the single biggest
 conversion gap on either page.
+
+---
+
+# Revision 20 — August 26, 2026
+
+guide.html only, plus one shared calendar change.
+
+## The offer and the methods line are now one section
+
+Merged at your request, in your order:
+
+> These are the same methods we use to save our clients **$12M** in ad spend
+> last year
+> **So here's our offer: 25% ad spend reduction in 30 days.**
+> **Or your money back, or we work for free until we hit that target.**
+
+The methods line reads as the lead-in and the offer as the payload, so they
+land as one thought instead of two scrolls. Guarantee wording is still the
+locked FUNNEL-AND-SITEMAP.md text, untouched.
+
+## On "this text isn't readable"
+
+Worth recording, because the code on this branch does not reproduce it.
+Measured on guide.html before this revision, the statement rendered
+`oklch(0.205 0.02 258)` on `oklch(0.972 0.004 250)` — roughly **15:1** — with
+the highlight at `--amz-deep`, 7.1:1. Both pass comfortably, on mobile and
+desktop, and the contrast sweep agreed.
+
+The likely explanation is a **stale `offer.css` against fresh HTML**. Revision
+19 changed that band from ink to tint in the HTML and changed
+`.guarantee-statement` from white to ink type in the CSS. Those two have to
+arrive together. With the old CSS cached, the rule still says
+`color: var(--paper)` — white type on a light band, which is exactly
+"not readable". A hard refresh should settle it, and the merge above makes it
+moot either way.
+
+## A near-white heading was one step away from shipping
+
+`.shell--tight > h2:has(+ .guarantee-statement)` steps a heading back when it
+sits directly above the statement, and sets it to
+`oklch(0.994 0.002 250 / 0.62)` — near-white at 62%, correct on ink.
+
+The merge puts a heading in exactly that position, on the tint. Applied as-is
+it would have rendered the methods line invisible — the same failure mode
+reported above, this time for real. Caught by reading the rule before the
+edit rather than after.
+
+Added a light-ground pair. It also steps the size **up** relative to the ink
+version: that rule was written for a two-word kicker ("This is guaranteed"),
+whereas this heading is a real claim carrying `$12M`, and 1.3rem buried the
+number. Now clamps to 1.25–1.75rem — still visibly below the statement, so
+the offer stays the biggest thing in the section.
+
+## The page finally has a call to action
+
+Flagged at the end of Revision 19, now fixed. `Book a free audit to see if you
+qualify`, directly under the offer — the point where belief peaks, the offer
+has just been stated and the guarantee with it.
+
+Before this there was none at all: between the hero and the booking widget,
+roughly nine screens, the only routes to the calendar were the small masthead
+link and the sticky bar.
+
+Styled as the default `.btn` (ink fill), matching the sticky CTA on the same
+page. The orange treatment is `.hero--ink .btn`, scoped to the ink hero
+where full-strength orange is safe on black — worth a look if you want this
+one louder, but it would be a new orange-on-light treatment and this codebase
+has a documented history of contrast traps down that exact path.
+
+## Section grounds had to be re-dealt
+
+The merge consumed a white band, which cascaded:
+
+| Section | Was | Now | Why |
+|---|---|---|---|
+| Methods + offer | tint + white | **tint** | one section now |
+| Dale | tint | **white** | tint above it after the merge |
+| Case studies | white | **tint** | Dale went white |
+
+Verified afterwards that every seam from the hero down to the logo strip
+changes ground. One same-ground seam remains and is **pre-existing, not from
+this change**: "Here's what happens" → "Here's what clients are saying", both
+tint. On offer.html those two are separated by the ink guarantee band; on
+guide.html that band moved up to position 2 in Revision 14, leaving them
+adjacent. Left alone — flagging rather than fixing, since it is outside what
+you asked for and both sections are heading-led.
+
+## The calendar, again — what is and is not ours
+
+Revision 19 removed the 700px floor that was forcing the height. It is still
+tall, and the remaining height is GHL's: `form_embed.js` measures the widget
+and sets it. Nothing in this repo can compress the widget's own content.
+
+What *is* ours is the space around it, and on a phone that was substantial —
+the standard `--band` padding is 112px top and bottom combined, plus 40px of
+shell padding across. Both now largely come off below 700px.
+
+The side padding matters for more than margins: GHL's calendar is responsive,
+so a wider frame lays the date grid and time slots out in fewer rows, which
+makes the widget itself shorter. Width is the only lever we have on its
+height. Measured at 390px: iframe went 350px → **374px** wide, and 48px of
+vertical padding came back.
+
+If it is still too tall after that, the change has to happen in GHL — the
+widget's own layout settings, or a shorter form on the booking step. I cannot
+measure which from here: `api.leadconnectorhq.com` and `link.msgsndr.com` are
+both blocked to headless Chromium in this sandbox, so the widget never mounts
+and I only ever see the 420px placeholder floor.
+
+## Verified
+
+- Contrast sweep, guide.html and offer.html, mobile + desktop: no new
+  failures. Re-run after moving case studies to the tint, because the accent
+  colours measure slightly lower on `--paper-2` than on white. The single
+  reported failure is the long-standing masthead false positive.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance (div/section/main/ol/ul/li/p/h2/a) clean on both files.
+- Section-ground audit on both pages; only the pre-existing seam above.
+- CTA renders 350×71 at 390px — comfortably above the 44px tap target.
+- `#apply` anchor resolves; no JS errors on either page.

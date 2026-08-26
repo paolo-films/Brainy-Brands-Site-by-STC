@@ -423,6 +423,22 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    that height is coming from GHL and has to be changed there. */
 .calendar-embed iframe { display: block; width: 100%; min-height: 420px; }
 
+/* On a phone the booking band gives back most of its padding. The widget is
+   the tallest single element on either page, and its own height belongs to
+   GHL — form_embed.js measures the widget and sets it. The only screen space
+   that is genuinely ours here is what surrounds it, so the standard --band
+   padding (112px of it, top and bottom combined at this width) comes off, and
+   the shell's side padding nearly all comes off too.
+
+   Widening it is not only about the margins: GHL's calendar is responsive, so
+   a wider frame lays the date grid and time slots out in fewer rows, which
+   makes the widget itself shorter. Width is the one lever we have on its
+   height. */
+@media (max-width: 700px) {
+  #apply { padding-block: var(--s4); }
+  #apply .shell { padding-inline: 0.5rem; }
+}
+
 .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 1rem + 3.5vw, 4rem); align-items: start; }
 
 /* --- Footer --------------------------------------------------------------- */
@@ -819,6 +835,25 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   letter-spacing: 0.01em;
   color: oklch(0.994 0.002 250 / 0.62);
 }
+
+/* Light-ground pair for the rule above. That colour is near-white at 62%,
+   which is correct on ink and invisible on a light band — and guide.html now
+   has exactly that case, a heading sitting above the offer on the tint.
+
+   The size also steps up here. The ink version is a two-word kicker ("This is
+   guaranteed"); on guide.html the heading is a real claim carrying $12M, so
+   shrinking it to 1.3rem buried the number. This keeps the step-down relative
+   to the statement — the offer is still the biggest thing in the section —
+   without flattening the lead-in to a label. */
+.band:not(.band--ink) .shell--tight > h2:has(+ .guarantee-statement) {
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
+  letter-spacing: -0.015em;
+  color: var(--ink-2);
+}
+
+/* The offer section's CTA. .guarantee-statement + .btn already sets the top
+   margin; this only has to survive the .line2 block underneath it. */
+.guarantee-statement + .btn { margin-top: var(--s5); }
 
 /* ==========================================================================
    REVISION 7 — gradient top cap, section breaks, outcome list
