@@ -2146,3 +2146,57 @@ identical on both sides.
 The woff2 was the standing risk, since fonts are fetched under CORS rules
 images are not. The CDN returns `access-control-allow-origin: *` — it will
 load, and the base64 fallback is not needed.
+
+---
+
+# Revision 28 — August 26, 2026
+
+## The white strip at the top
+
+Revision 27 zeroed `padding-left` and `padding-right` on the GHL wrappers and
+left the vertical padding alone, on the reading that top and bottom looked
+fine. They did not — the strip was just harder to see against the masthead.
+
+The wrappers carry vertical padding too, and it stacks:
+
+| Wrapper | padding-top |
+|---|---|
+| `.c-section` | 20px |
+| `.c-row` | 10px |
+| `.c-column` | 10px |
+| | **40px total** |
+
+Measured on the deployed block: the first band started exactly **40px** down,
+with the same gap under the footer. Now `padding: 0`, which collapses all four
+sides rather than two. Re-measured: **0px**.
+
+## Why it was white specifically
+
+`body` was `--paper`. That is correct on the standalone page and wrong inside
+GHL: every band paints its own ground, so the body colour was never visible
+anywhere *except* through that wrapper padding. The one place it could show
+was the one place it shouldn't.
+
+`html`, `body` and `#preview-container` are now set to `--ink`, so any chrome
+that survives a future GHL change reads as part of the page rather than a
+seam. Belt and braces — the padding fix alone closes the current gap.
+
+## Verified against the deployed block
+
+Not the local build — the block was extracted from what `go.brainyamz.com` is
+actually serving and run through the wrapper replica.
+
+| | 1440px | 390px |
+|---|---|---|
+| Horizontal | edge to edge | edge to edge |
+| Top gap | 0px | 0px |
+| Bottom gap | 0px | 0px |
+| Overflow | none | none |
+| `h1` face | Archivo | Archivo |
+| JS errors | none | none |
+
+Also confirmed on the live HTML: the Meta Pixel initialises **once**. It
+appears twice in the served bytes, but the second is inside GHL's escaped
+JSON builder config, which does not execute — worth recording, since a
+genuine duplicate would double-count every PageView and look like traffic
+had doubled.

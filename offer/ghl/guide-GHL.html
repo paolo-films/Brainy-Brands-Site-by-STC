@@ -1202,10 +1202,25 @@ body .c-section, body .c-section > .inner,
 body .c-row,     body .c-row > .inner,
 body .c-column,  body .c-column > .inner,
 body .c-custom-code, body .custom-code-container {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   max-width: none !important;
   width: 100% !important;
+}
+
+/* The white strip at the very top and bottom. The wrappers carry vertical
+   padding as well as horizontal -- section 20px, row 10px, column 10px --
+   which stacks to exactly 40px above the first band and 40px below the last.
+   `padding: 0` above collapses all four sides rather than just the two.
+
+   The strip read as white because this stylesheet sets `body` to --paper,
+   which is correct on its own page and wrong here: every band paints its own
+   ground, so the only place the body colour was ever visible inside GHL was
+   through that wrapper padding. Ink means any chrome that survives reads as
+   part of the page instead of a seam. */
+html, body, body #preview-container {
+  background: var(--ink) !important;
 }
 </style>
 
