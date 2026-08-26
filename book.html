@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pick a time for your audit | Brainy Brands</title>
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,22 +16,26 @@
      Do not link to this from nav, footer, or ads.
      ====================================================================== -->
 
-<header class="site-header">
-  <div class="wrap">
-    <a class="logo" href="index.html"><img src="images/BrainyBrands_PrimaryLogo_Black.png" alt="Brainy Brands"></a>
+<header class="masthead">
+  <div class="shell">
+    <a class="brandmark" href="index.html"><img src="images/BrainyBrands_PrimaryLogo_Black.png" alt="Brainy Brands"></a>
   </div>
 </header>
 
 <main id="main">
-  <section>
-    <div class="wrap funnel">
 
-      <p class="eyebrow">Step 2 of 2</p>
-      <h1>Good news — your account qualifies</h1>
-      <p class="lede mt-3">
+  <section class="band hero hero--ink">
+    <div class="shell shell--tight">
+      <h1>Good news &mdash; your account qualifies</h1>
+      <p class="lede mt-4">
         Pick a time below. Dale runs these himself, so slots are limited and
         usually a week or two out.
       </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="shell shell--tight">
 
       <!-- ===================================================================
            PAOLO: waiting on the real calendar URL from Dale. Once you have it,
@@ -39,12 +45,12 @@
            retype what they just entered. The values are in sessionStorage under
            'bb_lead' — the script at the bottom reads them.
            ================================================================ -->
-      <div class="video-embed mt-4" style="aspect-ratio:4/3;">
-        [ GHL CALENDAR EMBED GOES HERE ]
+      <div class="vsl" style="aspect-ratio:4/3;">
+        <p class="vsl-placeholder">[ GHL CALENDAR EMBED GOES HERE ]</p>
       </div>
 
-      <h2 class="mt-4">Before the call</h2>
-      <div class="prose">
+      <h2 class="mt-5">Before the call</h2>
+      <div class="prose mt-3">
         <p>Two minutes of prep makes the twenty minutes worth a lot more:</p>
         <ul>
           <li>Have Seller Central open and be ready to share your screen</li>
@@ -53,8 +59,8 @@
         </ul>
       </div>
 
-      <h2 class="mt-4">What happens on the call</h2>
-      <div class="prose">
+      <h2 class="mt-5">What happens on the call</h2>
+      <div class="prose mt-3">
         <ul>
           <li>Dale opens your account and reads the bid settings out loud</li>
           <li>He shows you where spend is going that isn't producing sales</li>
@@ -65,26 +71,29 @@
         <p>No deck. No follow-up discovery call.</p>
       </div>
 
-      <div class="callout mt-4">
+      <div class="panel mt-5">
         <p><strong>25% ad spend reduction in 30 days, scaling toward 50% by day
           60&ndash;90 &mdash; or you don't pay.</strong></p>
-        <p>Available to accounts spending $10K+/month on Amazon ads, after this
+        <p class="mt-3">Available to accounts spending $10K+/month on Amazon ads, after this
           audit.</p>
       </div>
 
-      <p class="small mt-4">
+      <p class="sm muted mt-5">
         Can't find a time that works? <a href="contact.html">Send us a note</a>
         and we'll sort something out.
       </p>
 
     </div>
   </section>
+
 </main>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <p>Brainy Brands &middot; 1007 N Orange St. 4th Floor, Wilmington, Delaware 19801</p>
-    <p>&copy; 2026 Brainy Brands. <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
+<footer class="foot">
+  <div class="shell">
+    <div class="colophon">
+      <p>Brainy Brands &middot; 1007 N Orange St. 4th Floor, Wilmington, Delaware 19801</p>
+      <p>&copy; 2026 Brainy Brands &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
+    </div>
   </div>
 </footer>
 
