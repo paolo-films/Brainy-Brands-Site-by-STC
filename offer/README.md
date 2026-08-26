@@ -1373,3 +1373,139 @@ than sit alongside it.
   and the logo renders and desaturates correctly in the strip (same
   `grayscale(1)` treatment as every other logo there).
 - No console/JS errors, no broken image request for the new SVG.
+
+---
+
+# Revision 19 — August 26, 2026
+
+Six fixes from your walkthrough. Two of them were real bugs with measurable
+causes, not taste calls — worth reading those bits.
+
+## 1. guide.html: no break between the video and the offer
+
+The hero (`.band--ink`) carries the video, and the offer band underneath was
+also `.band--ink`. Two dark sections with no edge between them read as one
+continuous slab, which is what you were seeing.
+
+The offer band is now `.band--tint`. Coming straight off a dark section, any
+light ground is the hardest break available, and the statement keeps its
+weight because it is still the largest type in its section.
+
+## 2. offer.html: no break between the video and Dale
+
+Same class of problem, opposite direction — the VSL band is white and Dale's
+section was white too. Dale is now `.band--tint`, which also matches how
+guide.html already separates that section.
+
+## 3. The guarantee statement needed a light-ground variant
+
+`.guarantee-statement` is white type with an `--amz-hot` highlight. It was
+only ever used on `.band--ink`, so moving it to a light band (fix 1) and
+adding one under the video (fix 6) would have rendered it white-on-white.
+
+Added `.band:not(.band--ink) .guarantee-statement`, which switches to ink
+type and drops the highlight from `--amz-hot` to `--amz-deep`. That colour
+change is not cosmetic: `--amz-hot` measures **2.1:1** on a light ground,
+which is the exact trap already documented against `.bigstat` further up the
+file. `--amz-deep` is 7.1:1 and reads as the same orange.
+
+Written as `:not(.band--ink)` rather than a modifier class so it keys off the
+ground the statement actually sits on, and cannot be forgotten next time one
+of them moves.
+
+## 4. Dale's mobile spacing — a specificity bug, not a design choice
+
+You were right that the gaps were too big, and the cause was a fix that had
+been written but never took effect.
+
+On mobile `.dale-copy` is `display: contents`, so the paragraphs become grid
+items and the 24px row gap separates them. A rule was already there to zero
+the paragraph margins so they would not double-count:
+
+```css
+.dale-copy p { margin-top: 0; }     /* (0,1,1) */
+```
+
+It loses to the base rule up the file:
+
+```css
+.dale p + p { margin-top: var(--s3); }   /* (0,1,2) */
+```
+
+So every paragraph kept its 24px margin **on top of** the 24px row gap.
+Measured at 390px: **48px between every line**, against an intended 24px.
+The comment sitting above the broken rule even described the exact 50px hole
+it was failing to prevent.
+
+Fixed by matching on `p + p` as well — equal specificity, and the mobile
+block is later in the file. Measured after: **24px**, on both pages.
+
+## 5. Case-study logos were inconsistently sized
+
+Each logo was capped by whichever dimension it hit first (`max-height:
+2.2rem`, `max-width: 100%`). A wide mark ran the full column while a squarer
+one shrank to ~35px and read as an afterthought.
+
+The cell is now a 3.5rem box in a 10.5rem column. Measured heights went from
+27–35px to a consistent **55–56px**, except Temptooth, which is a ~6:1
+wordmark and is still width-limited at 168×27. That one cannot be equalised
+without giving it a column wide enough to unbalance the row — it reads fine
+because it is wide, and it is the only remaining outlier.
+
+## 6. The calendar embed was too long — and it was our CSS, not GHL
+
+`.calendar-embed iframe` carried `min-height: 700px`. The comment above it
+said the height was owned by GHL's `form_embed.js` resize script, which was
+wrong in one important way: **`min-height` beats the height that script
+sets.** Whatever GHL measured its widget to be, the band could never render
+shorter than 700px.
+
+Dropped to `420px`, which is now what it was always described as — a
+placeholder for the moment before the script runs. GHL's own computed height
+now wins.
+
+If it still renders long in production, that height is genuinely coming from
+GHL and has to be changed on their side. I cannot confirm which it is from
+here: `api.leadconnectorhq.com` and `link.msgsndr.com` are both blocked to
+headless Chromium in this sandbox, so the widget never mounts and I only
+ever see the 420px floor.
+
+## 7. offer.html: the video header split, and the guarantee restated
+
+Header was one long sentence. Now:
+
+- `<h2>` — **Don't believe us**
+- lede — These are the methods we used to save our clients **$12M** in ad
+  spend last year.
+
+Kept `$12M` rather than "$12 million" as dictated, to match how the figure is
+set everywhere else on both pages. Say the word if you want it spelled out.
+
+The guarantee is restated under the player at
+`.guarantee-statement--sm`, deliberately smaller than the full guarantee band
+that still owns its own section further down — a reminder at the point of
+highest intent, not a second headline competing with it. Note this partly
+reverses Revision 14, which removed the gold statement from under the video
+at your request; this is the guarantee only, with no button.
+
+## Verified
+
+- Contrast sweep, both pages, mobile + desktop: no new failures. This
+  mattered more than usual because fix 3 moved white type onto light grounds
+  — the sweep confirms both guarantee statements pass where they now sit.
+  The one reported failure ("See if you qualify", 1.00:1) is the long-standing
+  masthead-button false positive, unrelated.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance (div/section/main/ol/ul/li/p/h2) clean on both files.
+- Dale gaps re-measured at 390px: 48px → 24px on both pages.
+- Logo heights re-measured: 27–35px → 55–56px.
+- Screenshots reviewed for all six changes.
+
+## Still open, flagged not fixed
+
+**guide.html has no call to action anywhere in its body.** The only routes to
+the calendar are the small masthead link and the sticky bar — between the
+hero and the booking widget, roughly nine screens, there is not one in-content
+button. offer.html has one in its hero. Left alone because a soft
+guide-led page may want that on purpose, but it is the single biggest
+conversion gap on either page.

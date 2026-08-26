@@ -413,10 +413,15 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 
 /* GHL calendar embed — now a section of its own on offer.html and
    guide.html rather than a column beside a header, so it carries no top
-   margin: the band's own padding is the spacing. min-height is a fallback
-   only, for the moment before form_embed.js's resize script runs; that
-   script owns the real height after that. */
-.calendar-embed iframe { display: block; width: 100%; min-height: 700px; }
+   margin: the band's own padding is the spacing.
+
+   min-height is a PRE-LOAD PLACEHOLDER ONLY. It used to be 700px, which was
+   the real reason the embed ate the screen: min-height beats the height
+   form_embed.js sets, so whatever GHL measured its widget to be, the band
+   never rendered shorter than 700px. Dropped to 420px so the resize script
+   actually owns the height it computes. If the widget still renders tall,
+   that height is coming from GHL and has to be changed there. */
+.calendar-embed iframe { display: block; width: 100%; min-height: 420px; }
 
 .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 1rem + 3.5vw, 4rem); align-items: start; }
 
@@ -536,14 +541,20 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .results { margin: var(--s5) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
 .results > li {
   display: grid;
-  grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+  grid-template-columns: 10.5rem minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--s3) var(--s4);
   padding-block: clamp(1.4rem, 1rem + 1.5vw, 2.1rem);
   border-bottom: 1px solid var(--line);
 }
-.result-logo { display: flex; align-items: center; min-height: 2.2rem; }
-.result-logo img { max-height: 2.2rem; max-width: 100%; width: auto; object-fit: contain; }
+/* The logo cell is a fixed box and every mark is contained inside it, rather
+   than each logo being capped by whichever dimension it happened to hit
+   first. At the old 2.2rem cap a wide mark (Temptooth) ran the full column
+   width while a squarer one (The Magic Brand) shrank to ~35px and read as an
+   afterthought. A taller box lifts the squarer marks most, which is where
+   the inconsistency actually was. */
+.result-logo { display: flex; align-items: center; min-height: 3.5rem; }
+.result-logo img { max-height: 3.5rem; max-width: 100%; width: auto; object-fit: contain; }
 .result-logo .fallback { font-family: var(--font-display); font-weight: 800; font-size: var(--t-sm); letter-spacing: -0.02em; color: var(--ink); }
 
 .result-cut {
@@ -707,8 +718,15 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   .dale-copy p { grid-column: 1 / -1; }
   /* display:contents promotes the paragraphs to grid items, so the row gap
      already separates them — leaving the p+p margin in place double-counts
-     it and opens a ~50px hole between every line of copy. */
-  .dale-copy p { margin-top: 0; }
+     it and opens a ~50px hole between every line of copy.
+
+     This reset was here before and did not work: `.dale-copy p` is (0,1,1)
+     and loses to `.dale p + p` (0,1,2) up in the base rules, so every
+     paragraph kept its 24px margin on top of the 24px row gap and the gaps
+     measured 48px on a phone. Matching the selector on p + p fixes it —
+     equal specificity, and this block is later in the file. */
+  .dale-copy p,
+  .dale-copy p + p { margin-top: 0; }
 }
 
 @media (max-width: 460px) {
@@ -902,6 +920,32 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 /* --- Guarantee: second sentence on its own line ---------------------------- */
 
 .guarantee-statement .line2 { display: block; margin-top: 0.45em; }
+
+/* --- Guarantee on a light ground -------------------------------------------
+   The base .guarantee-statement is white type with an --amz-hot highlight,
+   built for .band--ink and only correct there. It is now used on two light
+   bands as well — the offer on guide.html and the restatement under the
+   video on offer.html — so it needs a light-ground pair.
+
+   The highlight drops from --amz-hot to --amz-deep deliberately: --amz-hot
+   measures 2.1:1 on white, which is the exact trap already documented on
+   .bigstat above. --amz-deep is 7.1:1 and reads as the same orange.
+
+   Written as :not(.band--ink) rather than a modifier class so it applies by
+   the ground the statement is actually sitting on, and cannot be forgotten
+   the next time one moves. */
+.band:not(.band--ink) .guarantee-statement { color: var(--ink); }
+.band:not(.band--ink) .guarantee-statement .hot { color: var(--amz-deep); }
+
+/* A restatement, not a second headline. Used under the video on offer.html,
+   where the full-size treatment would compete with the guarantee band that
+   still has its own section further down the page. */
+.guarantee-statement--sm {
+  font-size: clamp(1.15rem, 0.95rem + 0.85vw, 1.65rem);
+  letter-spacing: -0.025em;
+  max-width: 30ch;
+  margin-inline: auto;
+}
 
 /* Names the audience above the promise. Set as a legible line rather than a
    small-caps kicker — those are on the client's banned list. */
