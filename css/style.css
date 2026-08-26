@@ -240,6 +240,39 @@ main a { text-decoration-color: currentColor; }
 }
 .hero--ink .audience { color: oklch(0.994 0.002 250 / 0.7); }
 
+/* Decorative bulb accent — the logo's icon, softened and pushed back so it
+   reads as ambient texture rather than a second focal point. Sits behind
+   the copy (z-index) and bleeds a quarter of its width off the section's
+   right edge, clipped by .hero--ink's own overflow. */
+.hero--ink { position: relative; overflow: hidden; }
+
+.hero-bulb {
+  position: absolute;
+  top: 50%;
+  right: -16%;
+  transform: translateY(-50%);
+  width: min(68vw, 920px);
+  color: var(--paper);
+  opacity: 0.16;
+  filter: blur(6px);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-bulb-icon { display: block; width: 100%; height: auto; }
+
+.hero-bulb-rays {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bulb-pulse 3.4s ease-in-out infinite;
+}
+
+@keyframes bulb-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.08); }
+}
+
+.hero--ink .shell { position: relative; z-index: 1; }
+
 /* The dark hero: reserved for the homepage. Radial gradient lifts the top
    corner without ever reaching the section boundary — a hard edge into the
    band below, not a fade. */
