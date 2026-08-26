@@ -1177,6 +1177,36 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   .hero--ink .vsl video { max-height: 38vh; width: auto; max-width: 100%; margin-inline: auto; }
 }
 
+
+/* ===== GHL BUILDER CHROME =================================================
+   Neutralises the wrappers GHL puts around a custom-code element. Measured
+   from the live page, these are the three that matter:
+
+     .c-row            padding-left/right: 10px !important   (GHL stylesheet)
+     .c-column         padding-left/right: 15px
+     .section-XXXXXXX  max-width: 1170px                     (builder-set)
+
+   The row padding cannot be cleared from the builder UI. GHL's own sheet
+   sets it with !important, while the builder writes the per-element rule
+   (.row-XXXXXXX { padding: ... }) without one -- so whatever you type into
+   the padding boxes loses the cascade. Hence !important here.
+
+   Selectors are prefixed with `body` to raise specificity to (0,1,1), which
+   beats GHL's (0,1,0) rules regardless of where this block ends up in the
+   document.
+
+   max-width: none is what removes the 1170px cap -- on a 1440px screen that
+   cap alone left a 280px gutter on the right.
+   ======================================================================== */
+body .c-section, body .c-section > .inner,
+body .c-row,     body .c-row > .inner,
+body .c-column,  body .c-column > .inner,
+body .c-custom-code, body .custom-code-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
 </style>
 
 <!-- ===== META PIXEL =====================================================

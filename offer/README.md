@@ -2077,3 +2077,72 @@ check that cries wolf is one you stop reading.
 
 Everything deleted is recoverable from git history if any of it turns out to
 be wanted.
+
+---
+
+# Revision 27 — August 26, 2026
+
+## The GHL side gutters, diagnosed from the live pages
+
+With the pages live at `go.brainyamz.com`, the builder's wrapper markup and
+stylesheet could finally be read rather than guessed at. Three rules produce
+the horizontal gutter:
+
+| Rule | Value | Source |
+|---|---|---|
+| `.c-row` | `padding-left/right: 10px !important` | GHL's own stylesheet |
+| `.c-column` | `padding-left/right: 15px` | GHL's own stylesheet |
+| `.section-XXXXXXX` | `max-width: 1170px` | builder-set, per element |
+
+**The row padding cannot be cleared from the builder UI.** GHL's stylesheet
+sets it with `!important`; the builder writes the per-element rule
+(`.row-XXXXXXX { padding: … }`) *without* one, so anything typed into the
+padding boxes loses the cascade. That is why the gutter survived adjusting
+the settings.
+
+The `max-width: 1170px` is the larger effect on desktop and is easy to miss
+when thinking of this as "padding": at 1440px it alone left a **280px gutter
+on the right**, against 10px on the left from the row.
+
+## The fix, and how it was verified
+
+An override block is now appended to the inlined stylesheet in both GHL
+builds, so re-pasting is the whole fix — no builder changes required.
+Selectors are prefixed with `body` to reach specificity (0,1,1), which beats
+GHL's (0,1,0) rules regardless of where the block lands in the document.
+
+`go.brainyamz.com` is blocked to headless Chromium in this sandbox
+(`ERR_CONNECTION_RESET`, the same proxy behaviour as Vimeo and the GHL CDN),
+so the live page could not be driven directly. Instead the wrapper chain was
+extracted verbatim from the served HTML —
+
+```
+.c-section > .inner > .c-row > .inner > .c-column > .vertical.inner
+  > .c-custom-code > .custom-code-container
+```
+
+— rebuilt locally with GHL's actual CSS rules copied out of the live page,
+and the real page block dropped inside it. Measured before and after:
+
+| Viewport | Before | After |
+|---|---|---|
+| 1440px | band 1150px, gutter L10 / R280 | **1440px, edge to edge** |
+| 390px | band 370px, gutter L10 / R10 | **390px, edge to edge** |
+
+This is a replica, not the live page. It is faithful in the parts that
+decide the outcome — same wrapper chain, same declarations, same cascade —
+but the live page carries GHL CSS this replica does not, so confirmation on
+the real site is still the last step.
+
+## Asset mapping, for the record
+
+The GHL media URLs are opaque hashes with no filename. Rather than asking
+for them to be labelled, all 38 were downloaded and hashed against the local
+originals: **38/38 exact byte matches**, so the mapping is derived, not
+assumed. The two duplicate URLs in the list collapsed to 38 unique, matching
+the 38 assets exactly, and the extension split (33 png / 4 svg / 1 woff2) is
+identical on both sides.
+
+The woff2 was the standing risk, since fonts are fetched under CORS rules
+images are not. The CDN returns `access-control-allow-origin: *` — it will
+load, and the base64 fallback is not needed.
