@@ -51,19 +51,19 @@
       </svg>
     </div>
     <div class="shell">
-      <h1>Your Amazon ad spend keeps going up. <span class="hl">Your sales don't.</span></h1>
-      <p class="lede mt-4">
+      <h1 class="rv" style="transition-delay:0ms">Your Amazon ad spend keeps going up. <span class="hl">Your sales don't.</span></h1>
+      <p class="lede mt-4 rv" style="transition-delay:140ms">
         That gap is almost always the same thing: Amazon's dynamic bidding and
         placement multipliers quietly raising what you pay per click, month after
         month, while nobody's watching. We take that control back by hand.
       </p>
 
-      <div class="btn-row">
+      <div class="btn-row rv" style="transition-delay:280ms">
         <a class="btn" href="audit.html">Get a free 20-minute audit</a>
         <a class="btn btn--ghost" href="guide.html">Or read the free guide first</a>
       </div>
 
-      <p class="cta-note">
+      <p class="cta-note rv" style="transition-delay:400ms">
         Audits are for sellers spending $10K+/month on Amazon ads.
       </p>
     </div>
@@ -209,20 +209,20 @@
     <div class="shell">
       <h2>What that looks like in a real account</h2>
 
-      <ol class="stat-rows">
+      <ol class="stat-rows rv">
         <li>
           <span class="stat-tag">Magic Brand</span>
-          <span class="stat-metric">$0 &rarr; $450K/mo</span>
+          <span class="stat-metric">$0 &rarr; $<span class="count-up" data-count-to="450">0</span>K/mo</span>
           <span class="stat-line">In four months, from launch.</span>
         </li>
         <li>
           <span class="stat-tag">Midtown Umbrellas</span>
-          <span class="stat-metric">$6K &rarr; $300K/mo</span>
+          <span class="stat-metric">$6K &rarr; $<span class="count-up" data-count-to="300">0</span>K/mo</span>
           <span class="stat-line">In three months.</span>
         </li>
         <li>
           <span class="stat-tag">Temp Tooth</span>
-          <span class="stat-metric">70% less ad spend</span>
+          <span class="stat-metric"><span class="count-up" data-count-to="70">0</span>% less ad spend</span>
           <span class="stat-line">Revenue went from $90K to $120K/month at the same time.</span>
         </li>
       </ol>
@@ -288,23 +288,26 @@
       <h2>Three steps to get started</h2>
       <p class="lede">Easy, fast, and no pressure.</p>
 
-      <ol class="list-numbered">
-        <li>
+      <div class="step-cards">
+        <article class="step-card rv rv--pop" style="transition-delay:0ms">
+          <span class="step-card-num">01</span>
           <h3>Look at what we do</h3>
           <p>Work out what you actually need and whether our services fit it.
             The <a href="services.html">services page</a> lays it all out.</p>
-        </li>
-        <li>
+        </article>
+        <article class="step-card rv rv--pop" style="transition-delay:120ms">
+          <span class="step-card-num">02</span>
           <h3>Fill in the form</h3>
           <p>Tell us about your account. We run an internal audit on it before we
             get on a call, so the call isn't spent gathering basics.</p>
-        </li>
-        <li>
+        </article>
+        <article class="step-card rv rv--pop" style="transition-delay:240ms">
+          <span class="step-card-num">03</span>
           <h3>Get on a call</h3>
           <p>If we can see real value to add, Dale gets on a twenty-minute call
             with you and walks through what he'd change.</p>
-        </li>
-      </ol>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -357,6 +360,49 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animateCount(el) {
+    var to = parseInt(el.getAttribute('data-count-to'), 10);
+    if (reduced || !('requestAnimationFrame' in window)) { el.textContent = to; return; }
+    var duration = 1400;
+    var start = null;
+    function step(ts) {
+      if (start === null) { start = ts; }
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * to);
+      if (progress < 1) { requestAnimationFrame(step); }
+      else { el.textContent = to; }
+    }
+    requestAnimationFrame(step);
+  }
+
+  if (!reduced && 'IntersectionObserver' in window) {
+    document.documentElement.setAttribute('data-reveal', '');
+
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.setAttribute('data-in', '');
+        var counters = entry.target.querySelectorAll('.count-up');
+        for (var i = 0; i < counters.length; i++) { animateCount(counters[i]); }
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  } else {
+    var allCounters = document.querySelectorAll('.count-up');
+    for (var j = 0; j < allCounters.length; j++) { animateCount(allCounters[j]); }
+  }
+})();
+</script>
 
 </body>
 </html>

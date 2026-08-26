@@ -505,6 +505,35 @@ form { max-width: 34rem; }
 [data-reveal] .rv { opacity: 0; transform: translateY(14px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
 [data-reveal] .rv[data-in] { opacity: 1; transform: none; }
 
+/* Bouncier variant for the step cards — a little overshoot on settle so it
+   reads as a "pop" rather than a plain fade. */
+[data-reveal] .rv--pop {
+  opacity: 0;
+  transform: translateY(28px) scale(0.96);
+  transition: opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[data-reveal] .rv--pop[data-in] { opacity: 1; transform: none; }
+
+/* --- Step cards ("Three steps to get started") ------------------------------- */
+
+.step-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s4); margin-top: var(--s5); }
+.step-card { border: 1px solid var(--line); padding: var(--s4); background: var(--paper); }
+.step-card-num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--amz);
+  margin-bottom: var(--s3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Count-up numbers --------------------------------------------------------- */
+
+.count-up { font-variant-numeric: tabular-nums; }
+
 /* --- Responsive ---------------------------------------------------------------- */
 
 @media (max-width: 860px) {
