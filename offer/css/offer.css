@@ -851,10 +851,6 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   color: var(--ink-2);
 }
 
-/* The offer section's CTA. .guarantee-statement + .btn already sets the top
-   margin; this only has to survive the .line2 block underneath it. */
-.guarantee-statement + .btn { margin-top: var(--s5); }
-
 /* ==========================================================================
    REVISION 7 — gradient top cap, section breaks, outcome list
    ========================================================================== */
