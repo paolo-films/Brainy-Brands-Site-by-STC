@@ -2347,3 +2347,82 @@ rather than forced through.
   Confirmed pre-existing, unrelated to this change.
 - Screenshots reviewed at 1440×900 and 390×844: guarantee, CTA, heading and
   the top edge of the video all render correctly, in order, on one ground.
+
+---
+
+# Revision 31 — August 26, 2026
+
+## Un-merged the guarantee and the VSL, at your request
+
+Revision 30 put both on one continuous ink ground. You asked for a hard
+colour break instead — guarantee section dark, VSL section white — so the
+merge is undone. This restores the original two-section structure
+(`#hero`, then `#how`) that existed before Revision 30, carrying forward
+only the copy update: the methods heading still reads "Here are the three
+exact methods we use to save our clients $12M in ad spend last year."
+
+## "Stretch across the entire page, not pixel-bound"
+
+Confirmed both sections do this, on the actual GHL wrapper chain, not just
+the standalone page. `.band` is full-bleed by design — the section itself
+has no width cap, only its inner `.shell` content column does — so on the
+standalone page both `#hero` and `#how` already ran edge to edge before
+this change and still do after it.
+
+The thing worth checking was GHL specifically, since that is a different
+document with its own wrapper chain (`.c-section > .c-row > .c-column`)
+around whatever gets pasted in. Measured against the real wrapper chain and
+CSS pulled from the live page (same replica built for the earlier padding
+fix): both sections read **L0 R0**, width equal to the viewport, at 1440px
+and 390px, no horizontal overflow. The GHL-side full-width fix from two
+revisions ago holds regardless of how the HTML inside the code block is
+structured — it neutralises the wrappers, not anything about our own
+markup — so splitting one section into two didn't require touching it.
+
+`#how`'s background is intentionally `transparent`, not a literal white —
+`.band` never sets one, it shows whatever is behind it, which is the page's
+own `--paper` (`oklch(0.994 0.002 250)`, near-white) on both the standalone
+page and inside GHL. Confirmed rather than assumed, since GHL's own page
+background could in principle differ from ours.
+
+## The fold cost of the separation
+
+Splitting back into two full sections costs more total height than the
+merged version did — each section carries its own padding, where the merged
+version shared one. Measured:
+
+| Viewport | Merged (Rev 30, tightened) | Split (now) |
+|---|---|---|
+| 390×844 | 59px past | 229px past |
+| 360×740 | 139px past | 305px past |
+| 1440×900 | 298px past | 385px past |
+| 1280×720 | 405px past | 494px past |
+
+Not tightened further this time. The padding in `#how` is what was already
+tuned in an earlier revision to "sit tight under the hero and clear the
+fold on a phone" — cutting it more would be fighting the same breathing
+room that makes the colour break read as a real separation rather than a
+thin line. If the extra height matters more than the separation, that's
+worth a direct answer rather than a guess baked into the CSS.
+
+## Cleanup
+
+The two ink-safe colour rules added last revision (`.hero--ink h2`,
+`.hero--ink .bigstat`) have no remaining caller now that the heading and
+video are back on white. `.hero--ink .bigstat` is kept as a documented,
+currently-inactive note — this file has now hit the "video header moves onto
+ink" failure twice, and the note exists specifically so a third time doesn't
+require re-discovering the fix. `.hero--ink h2` is removed outright, since
+nothing on either page has ever put a bare heading in `.hero--ink` except
+the one case just reverted.
+
+## Verified
+
+- Contrast sweep: no new failures; the one reported remains the transparent
+  masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance on `offer.html`: clean.
+- Both sections measured edge-to-edge (L0 R0) against the real GHL wrapper
+  chain and CSS, at 1440px and 390px.
+- Screenshot reviewed: guarantee on ink, hard colour break, methods heading
+  and video on white, immediately below with no gap.

@@ -600,14 +600,6 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .hero--ink h1 { color: var(--paper); max-width: 15ch; margin-inline: auto; }
 .hero--ink .promise .fig { color: var(--amz-hot); }
 .hero--ink .promise-terms { color: oklch(0.994 0.002 250 / 0.55); }
-
-/* .hero--ink never had a bare h2 in it before today -- only h1.promise and
-   p.audience, both hand-coloured. .band--ink has a blanket h1/h2/h3 -> paper
-   rule for exactly this situation; .hero--ink does not, because it never
-   needed one. Added now that offer.html's merged hero+VSL puts a plain h2
-   (the methods heading) on this ground for the first time. Without it the
-   heading was default --ink on --ink: 1.00:1, invisible. */
-.hero--ink h2 { color: var(--paper); }
 .hero--ink .btn { background: var(--amz-hot); border-color: var(--amz-hot); color: var(--ink); font-size: 1.1rem; }
 .hero--ink .btn:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
 .hero--ink .cta-note { color: oklch(0.994 0.002 250 / 0.62); }
@@ -877,13 +869,13 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   margin-top: 0.42em;
 }
 
-/* This note used to read "NO .bigstat--ink", on the grounds that the video
-   header sat on white, not ink, and --amz-hot measured 2.1:1 there. That
-   assumption is exactly the failure mode this file keeps hitting: the video
-   header now DOES sit on ink, because offer.html's hero and VSL were merged
-   into one section. --amz-deep (the default) is 6.8:1 on white and far
-   worse on black; --amz-hot is the ink-safe pair, and only correct there. */
-.hero--ink .bigstat { color: var(--amz-hot); }
+/* NO .bigstat--ink. The video header briefly sat on ink, while offer.html's
+   hero and VSL were merged into one section -- that merge is undone now, at
+   the client's request for a hard colour break between the guarantee and
+   the video, so the header is back on white and the default --amz-deep
+   (6.8:1) is correct again. Left as a note a second time: if anything ever
+   puts this heading back on an ink ground, it needs --amz-hot instead,
+   not --amz-deep, which measured 2.57:1 there the first time this happened. */
 
 /* With the grey line gone the button carries the bottom of the hero on its
    own, so it needs a touch more room under it than the old stacked block. */
@@ -1377,37 +1369,36 @@ fbq('track', 'PageView');
 
 <main id="top">
 
-  <!-- ===== 1. THE PROMISE + THE VSL, MERGED ==============================
-       Going all-in on this page, at your request: the guarantee, the CTA,
-       the methods heading and the video are now all one screen, in that
-       order -- guarantee first, then the way to act on it, then the proof.
-       Previously the VSL was its own section directly under the hero; now
-       there is no seam between them at all.
-
-       hero--lead-video is the same step-down guide.html already uses to
-       fit a video under its headline -- reused here rather than invented,
-       since it is exactly this problem (guarantee/headline + player on one
-       ink ground) already solved and already measured against the fold.
-       The .hero--ink .vsl height cap that comes with it is what keeps the
-       player from running the whole thing well past the fold.
-
-       Methods heading now reads "the three exact methods" rather than "the
-       EXACT methods" -- your wording, kept as given, present tense ("we
-       use") rather than the site's past tense ("we used") elsewhere. Numeral
-       kept as $12M rather than spelled out, matching every other instance
-       of the figure on this page.
+  <!-- ===== 1. THE PROMISE ================================================
+       Sized up further this revision — hero--lead now pushes noticeably
+       past index.html's already-bigger treatment, and a second CTA lives
+       here too, so the top of the page carries both the promise and a way
+       to act on it immediately, not just the masthead's small ghost button.
        ==================================================================== -->
-  <section class="band hero hero--ink hero--lead hero--lead-video" id="hero">
-    <div class="shell shell--tight center">
+  <section class="band hero hero--ink hero--lead" id="hero">
+    <div class="shell shell--tight">
       <p class="audience">Amazon brand owners&hellip;</p>
       <h1 class="promise">
         <span class="fig">25% ad spend reduction in 30 days</span>
         <span class="rest">or your money back, or we work for free until we hit that target.</span>
       </h1>
-      <a class="btn mt-4" href="#apply">Book a free audit to see if you qualify</a>
+      <a class="btn mt-5" href="#apply">Book a free audit to see if you qualify</a>
+    </div>
+  </section>
 
-      <h2 class="mt-4">Here are the three exact methods we use to save our
-        clients <span class="bigstat">$12M</span> in ad spend last year.</h2>
+  <!-- ===== 2. THE VSL =====================================================
+       Un-merged from the hero, at your request: you wanted a hard colour
+       break between the guarantee and the video rather than one continuous
+       ink block, with the video's own ground back to white. This section is
+       otherwise the original #how block, unchanged in spacing -- it was
+       already tuned to sit tight under the hero and clear the fold, which
+       is the same "digestible, no big gap" feel you said you wanted to
+       keep. Only the heading copy is new.
+       ==================================================================== -->
+  <section class="band" id="how">
+    <div class="shell shell--tight center">
+      <h2>Here are the three exact methods we use to save our clients
+        <span class="bigstat">$12M</span> in ad spend last year.</h2>
 
       <!-- Vimeo embed, replacing the hand-rolled <video> player. Vimeo's own
            controls ship with it, so the custom unmute / play / progress
@@ -1415,7 +1406,7 @@ fbq('track', 'PageView');
            it. NOTE: this URL carries no autoplay/muted params, so unlike
            the old player it does not start on its own -- add
            &autoplay=1&muted=1 if you want that behaviour back. -->
-      <div class="vsl mt-4" id="vsl">
+      <div class="vsl mt-5" id="vsl">
         <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                 frameborder="0"
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
@@ -1425,7 +1416,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 2. DALE =======================================================
+  <!-- ===== 3. DALE =======================================================
        On the tint. The VSL band above is white and this was white too, so
        the video simply ran into Dale with no edge between them — the break
        you flagged. A ground change is the hardest break available short of
@@ -1456,7 +1447,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 3. CASE STUDIES ===============================================
+  <!-- ===== 4. CASE STUDIES ===============================================
        Figures locked in FUNNEL-AND-SITEMAP.md. Logos are the real files
        from your case-study folder — note that two of them were mislabelled
        at source: "TempTooth.png" is actually the Emerald mark, and
@@ -1519,7 +1510,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 4. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+  <!-- ===== 5. OTHER ACCOUNTS WE'VE WORKED ON ===========================
        ADD LOGOS HERE as you get them — the strip wraps and centres, so
        extra <li> items need no CSS change.
        ==================================================================== -->
@@ -1558,7 +1549,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 5. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
+  <!-- ===== 6. WHAT HAPPENS WHEN YOU WORK WITH US ========================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
       <h2 class="rv">Here's what happens when you work with us</h2>
@@ -1573,7 +1564,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 6. THE GUARANTEE ===============================================
+  <!-- ===== 7. THE GUARANTEE ===============================================
        Moved up this revision, now right before the VSL rather than right
        after it — the video comes last, reinforcing the guarantee that was
        just stated rather than being evidence gathered on the way to it.
@@ -1592,7 +1583,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 7. REVIEWS ====================================================
+  <!-- ===== 8. REVIEWS ====================================================
        Same six as index.html. Originals kept in assets/testimonials/originals/.
        ==================================================================== -->
   <section class="band band--tint">
@@ -1614,7 +1605,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 8. QUALIFY ==================================================== -->
+  <!-- ===== 9. QUALIFY ==================================================== -->
   <section class="band">
     <div class="shell">
       <h2 class="rv">We only work with brands we can genuinely help</h2>
@@ -1641,7 +1632,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 9. THE CALENDAR ===============================================
+  <!-- ===== 10. THE CALENDAR ===============================================
        Standing on its own, at your request — the "Book your free audit /
        twenty minutes with Dale" header and lede are gone, and with them the
        two-column split. The widget carries its own headings and its own
@@ -1675,7 +1666,7 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 10. FAQ =======================================================
+  <!-- ===== 11. FAQ =======================================================
        Same eight as index.html, verbatim.
        ==================================================================== -->
   <section class="band band--tint">
