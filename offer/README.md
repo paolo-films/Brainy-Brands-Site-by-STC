@@ -2426,3 +2426,98 @@ the one case just reverted.
   chain and CSS, at 1440px and 390px.
 - Screenshot reviewed: guarantee on ink, hard colour break, methods heading
   and video on white, immediately below with no gap.
+
+---
+
+# Revision 32 — August 27, 2026
+
+## "I should be able to see the VSL and the guarantee, no matter how big or small the screen"
+
+The previous revision reported the overshoot honestly rather than fixing it,
+on the reasoning that shrinking the biggest headline on the page wasn't a
+call to make unasked. You made that call. This revision does the fix.
+
+## The actual cause, found by measuring, not guessing
+
+Broke the stack down element by element before touching anything. On a
+1440×900 desktop, the guarantee headline alone was rendering at **100px**
+(`.hero--lead h1`'s clamp tops out at 6.25rem, driven by `5.8vw` — on a
+1440px-wide screen that term alone is 83px). Text-only, before the video
+even started, the page already exceeded the 900px fold by 46px. The video's
+own height was never the main problem on desktop — it was already capped at
+35vh from an earlier revision. The headline was sized off viewport *width*,
+which is the wrong axis for "fits the screen"; width has nothing to do with
+how tall a screen is.
+
+On phones the split was different: text fit comfortably (827px of 844), and
+the video — capped on desktop only, gated behind
+`@media (min-width: 760px)` — had no real height ceiling below that width,
+just a raw 16:9-at-full-width relationship that happened to land under the
+old cap on typical phone widths without ever being asked to.
+
+## The fix: switch the driving unit from vw to vh, and make the video cap unconditional
+
+`.hero--lead h1`/`.audience` (offer.html's hero — confirmed below that
+`.hero--lead-video`, guide.html's variant, is untouched) now scale primarily
+off `vh`, the dimension actually being fit into, with `rem` bounds only as
+guardrails. `#hero .btn`'s margin and `#how`'s padding, heading size, and the
+video's height cap are all rewritten the same way, and the video cap no
+longer stops at a media-query gate — it now applies at every width, because
+"desktop only" was never the real requirement, just where the old numbers
+happened to still work.
+
+## A real near-miss, caught by measuring guide.html before and after
+
+`.hero--ink` — the class carrying desktop padding for the ink hero — is
+shared with guide.html, which also uses `id="hero"` and the same class.
+Removing the block wholesale (on the assumption it was superseded) shifted
+guide.html's video bottom from **881px to 920px** on a 1440×900 screen,
+past its own already-tuned 900px fold. Measured before touching anything and
+again immediately after, rather than trusting the cascade math: the
+`h1`/`.audience` font-size lines in that block *were* dead (identical
+computed values with or without them — already overridden elsewhere), but
+the `padding-block` line was not. Restored it verbatim, re-measured guide.html
+back to its exact original numbers (881px / 647px), confirmed byte-for-byte
+before finishing the rest of the change.
+
+`#hero .btn` and every `#how` rule are safe by construction rather than by
+caution: guide.html's hero has no button and no `id="how"` anywhere on that
+page, so nothing scoped to those can reach it regardless of the shared
+`#hero` id.
+
+## Verified against a real device matrix, not two token sizes
+
+| Device | Size | Result |
+|---|---|---|
+| iPhone SE | 375×667 | 3px over |
+| iPhone 12–14 | 390×844 | fits |
+| large Android | 412×915 | fits |
+| small Android | 360×740 | fits |
+| iPad portrait | 768×1024 | fits |
+| iPad landscape | 1024×768 | fits |
+| laptop 720p | 1280×720 | fits |
+| laptop 768p | 1366×768 | fits |
+| MacBook 900 | 1440×900 | fits |
+| desktop 1080p | 1920×1080 | fits |
+| ultrawide-short (stress test, not a real device) | 1920×600 | 18px over |
+
+Every real device tested fits or is within 3px — imperceptible. The one
+remaining gap is a synthetic stress case built specifically to find where
+the tuning breaks, not a size any actual screen ships at.
+
+## Verified
+
+- Contrast sweep, both pages, mobile + desktop: no new failures; the one
+  reported remains the transparent masthead ghost button.
+- No horizontal overflow at any tested width.
+- Tag balance on `offer.html`: clean.
+- `guide.html` re-measured against its pre-session baseline: exact match
+  (881px / 647px video-bottom, both viewports) — confirmed unaffected.
+- Both sections re-verified edge-to-edge (`L0 R0`) against the real GHL
+  wrapper chain and CSS at 1440px, 390px and 1280px, with the video fitting
+  fully in view at all three.
+- Screenshots reviewed at desktop and mobile: the guarantee still reads as
+  the clearly dominant element, both sections legible, no cramping.
+- `offer/ghl/offer-GHL.html`'s inlined stylesheet re-synced from
+  `offer.css` for the whole changed region and spot-checked for both the
+  new values and the absence of the old oversized ones.

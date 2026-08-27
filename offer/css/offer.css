@@ -1019,7 +1019,31 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    button under the video is not crowded.
    ------------------------------------------------------------------------- */
 
-#how { padding-block: clamp(1.75rem, 1.2rem + 2.2vw, 3rem) var(--band); }
+/* The button's own margin-top used to come from whichever of .hero .btn or
+   .hero--ink .btn won the cascade (up to 3.25rem/52px) -- fine when the
+   hero was the whole first screen, too much now that a heading and a video
+   have to fit under it too. #hero .btn is id-scoped, which beats both on
+   specificity outright rather than needing to out-order them, and is safe
+   for the same structural reason as #how below: guide.html's #hero has no
+   .btn inside it, so this cannot reach that page. */
+#hero .btn { margin-top: clamp(0.5rem, 0.3rem + 0.9vh, 0.95rem); }
+
+/* #how is unique to offer.html -- guide.html has no id="how" anywhere, so
+   nothing here can reach that page.
+
+   Padding and heading cut hard, and the video's height cap is now universal
+   rather than gated behind @media (min-width: 760px). It used to only apply
+   on desktop because mobile's own width-driven sizing happened to land
+   under 35vh anyway; that stopped being reliably true once the hero above
+   it was also asked to fit, on any width, not just typical phone widths.
+   Height-capping the video unconditionally is what actually guarantees it,
+   rather than relying on which widths happen to work out. */
+#how { padding-block: clamp(0.3rem, 0.18rem + 0.65vh, 0.65rem) var(--band); }
+#how h2 { font-size: clamp(0.88rem, 0.75rem + 1.3vh, 1.2rem); }
+#how .vsl { margin-top: clamp(0.35rem, 0.2rem + 0.55vh, 0.65rem); }
+#how .vsl { max-width: min(100%, 33.8vh); margin-inline: auto; }
+#how .vsl video, #how .vsl iframe { max-height: 19vh; }
+#how .vsl video { width: auto; max-width: 100%; margin-inline: auto; }
 
 #how h2 { max-width: 22ch; margin-inline: auto; }
 
@@ -1091,6 +1115,19 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    Measured before: hero 0-524, player 762-1271.
    ------------------------------------------------------------------------- */
 
+/* This block used to also carry #how's desktop padding, heading size and
+   35vh/62.22vh video cap. Those are gone -- replaced by the unconditional
+   #how rules above, since mobile needs the same real cap now and "desktop
+   only" was never the actual requirement, just where it happened to be
+   needed before.
+
+   The .hero--ink rules below are NOT safe to remove the same way: this
+   class is shared with guide.html's hero, and measuring before/after
+   confirmed the h1/audience sizes here are already overridden elsewhere
+   (dead, no visual effect either way) but the padding-block is not --
+   guide.html's video bottom moved from 881px to 920px, past its own
+   already-tuned 900px fold, the one time this was tried without checking.
+   Kept verbatim. */
 @media (min-width: 760px) {
   .hero--ink {
     padding-block:
@@ -1099,56 +1136,32 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   }
   .hero--ink .audience { font-size: clamp(1.45rem, 0.85rem + 1.1vw, 1.75rem); }
   .hero--ink h1 { font-size: clamp(2.35rem, 1.5rem + 2.3vw, 3.05rem); }
-
-  #how { padding-block: clamp(1.1rem, 0.5rem + 1.2vw, 1.55rem) var(--band); }
-  #how h2 { font-size: clamp(1.55rem, 1rem + 1.4vw, 2rem); }
-
-  /* Still height-driven, not width-driven: the point is "no taller than 35%
-     of the window", because 16/9 turns any width cap into a height the
-     window may not have.
-
-     But it is expressed as a max-width on the CONTAINER now, because an
-     <iframe> has no intrinsic aspect ratio the way a <video> does — give an
-     iframe `width: auto` inside a shrink-to-fit parent and the two resolve
-     against each other into nothing (measured: the player collapsed to 2px
-     tall on desktop). 35vh of height at 16:9 is 62.22vh of width, so
-     capping the container there produces exactly the same result for the
-     iframe, and still leaves the <video> rule below free to cap by height
-     the way it always did. */
-  #how .vsl { margin-top: clamp(1.1rem, 0.6rem + 1vw, 1.6rem); }
-  #how .vsl { max-width: min(100%, 62.22vh); margin-inline: auto; }
-  #how .vsl video { max-height: 35vh; width: auto; max-width: 100%; margin-inline: auto; }
 }
 
 /* ==========================================================================
-   BIG HERO — offer.html, and now guide.html too
+   BIG HERO — was offer.html and guide.html; now guide.html only
 
-   The desktop shrink on .hero--ink h1 above exists only to leave room for a
-   video sitting directly beneath it. This block opts back out of that: the
-   headline becomes the biggest, most dominant thing on the page, mobile
-   included. Declared last on purpose — same specificity as the rules above,
-   later wins — and it only ever matches a page that asks for it.
+   This block used to make .hero--lead the biggest, most dominant type on
+   the page, on the reasoning that offer.html's hero carried no video and so
+   had no fold budget to share. That stopped being true: the guarantee and
+   the VSL must now both be visible on load, on any screen, and a headline
+   sized off viewport WIDTH (5.8vw) rendered at 100px on a 1440px-wide
+   desktop -- big enough on its own to blow the fold before the video even
+   started. Width-based sizing is the wrong axis for "fits the screen";
+   height is. .hero--lead is now driven primarily by vh, so it scales with
+   the dimension that is actually constrained, on any width.
 
-   .hero--lead-video is the step-down for guide.html, whose hero DOES still
-   carry a video under the headline. Same treatment, one size smaller, so
-   the two pages read as the same design rather than two different ones.
-   No --gold token or .gold-statement here any more: the restatement under
-   offer.html's player was removed, and nothing else ever used them.
+   .hero--lead-video (guide.html) is untouched. Its hero only ever holds
+   text and the video, no button and no second heading below it -- a
+   different, already-measured budget -- so it keeps its own vw-based
+   sizing rather than inheriting this page's constraints.
    ========================================================================== */
 
-.hero--lead h1 { font-size: clamp(3.4rem, 2.2rem + 5.8vw, 6.25rem); }
-.hero--lead .audience { font-size: clamp(1.75rem, 1.3rem + 2.2vw, 3rem); }
+.hero--lead h1 { font-size: clamp(1.4rem, 0.95rem + 3.2vh, 2.6rem); }
+.hero--lead .audience { font-size: clamp(0.8rem, 0.68rem + 1vh, 1.05rem); }
 
 .hero--lead-video h1 { font-size: clamp(2.9rem, 2rem + 4.2vw, 4.9rem); }
 .hero--lead-video .audience { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); }
-
-@media (min-width: 760px) {
-  .hero--lead h1 { font-size: clamp(3.4rem, 2.2rem + 5.8vw, 6.25rem); }
-  .hero--lead .audience { font-size: clamp(1.75rem, 1.3rem + 2.2vw, 3rem); }
-
-  .hero--lead-video h1 { font-size: clamp(2.9rem, 2rem + 4.2vw, 4.9rem); }
-  .hero--lead-video .audience { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); }
-}
 
 /* ==========================================================================
    GUIDE-LED VARIANT (guide.html) — the video lives in the hero itself
