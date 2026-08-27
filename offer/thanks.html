@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're booked — Brainy Brands</title>
+<meta name="description" content="Your audit call with Dale is booked. Watch the walkthrough, see the case studies, and know what to expect on the call.">
+<meta name="robots" content="noindex">
+
+<!-- =========================================================================
+     CALL CONFIRMATION — thanks.html
+
+     Shown after the GHL booking widget confirms. Deliberately short: the
+     visitor has already converted, so every "book a call" affordance from
+     offer.html is gone -- no hero CTA, no masthead button, no sticky bar,
+     no calendar embed. Nothing on this page asks for anything.
+
+     What it keeps is the reassurance a post-booking page is for: the video
+     (in case they booked without watching), proof, and a plain statement of
+     what the call actually covers.
+
+     Every section below is lifted verbatim from offer.html rather than
+     rewritten, so the two pages cannot drift apart. Only the hero and the
+     sign-off are new.
+     ==================================================================== -->
+
+<!-- ===== META PIXEL =====================================================
+     EMANUEL — CAPI is a prerequisite, not an enhancement.
+       PageView    on load · ViewContent at 25% of the VSL
+       Lead        on form submit
+       Schedule    on the calendar confirmation, not here
+     ================================================================== -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '258230770694638');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=258230770694638&ev=PageView&noscript=1" alt=""></noscript>
+
+
+<!-- The Schedule event, fired here rather than on the landing page.
+
+     This is what the pixel note on offer.html has always specified:
+     "Schedule -- on the calendar confirmation, not here". This page is that
+     confirmation, so this is the intended home for it.
+
+     LEFT COMMENTED OUT ON PURPOSE. Dale's CAPI already reports the booking
+     server-side. Firing it here as well double-counts every booking unless
+     both sides send a matching eventID for Meta to deduplicate on, which
+     cannot be set up from this file alone. Uncomment only once the CAPI
+     side is confirmed either (a) not sending Schedule, or (b) sending it
+     with an eventID this call can be made to match. -->
+<!--
+<script>
+  fbq('track', 'Schedule');
+</script>
+-->
+
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/vinyl-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/offer.css">
+
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" d="M3 12.5l6 6L21 5.5"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/>
+    <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16.5 8.5a5 5 0 0 1 0 7M19.5 5.5a9 9 0 0 1 0 13"/>
+  </symbol>
+</svg>
+
+<header class="masthead">
+  <div class="shell">
+    <span class="brandmark" aria-label="Brainy Brands">
+      <img class="on-dark" src="assets/logo-white.png" alt="Brainy Brands" width="800" height="344">
+      <img class="on-light" src="assets/logo-black.png" alt="" aria-hidden="true" width="800" height="344">
+    </span>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== 1. THANK YOU =================================================
+       band--ink is on here as well as hero--ink, and that is load-bearing
+       rather than belt-and-braces: .hero--ink hand-colours h1 and .promise
+       but has no rule for .lede, which would otherwise inherit the default
+       --ink-2 and render dark-on-dark. .band--ink carries the .lede pair.
+       Same failure this stylesheet has hit repeatedly; avoided by using the
+       class that already solves it instead of adding another override.
+       ==================================================================== -->
+  <section class="band band--ink hero hero--ink" id="hero">
+    <div class="shell shell--tight">
+      <h1>Thank you for booking your call.</h1>
+      <p class="lede mt-3">If you haven't had a chance to watch the video
+        outlining how we do this, here it is.</p>
+    </div>
+  </section>
+
+  <!-- ===== 2. THE VIDEO ==================================================
+       id="watch", not id="how". #how carries offer.html's aggressive
+       fold-fitting rules, tuned so a full-size guarantee AND a video clear
+       the first screen together. Nothing on this page needs that -- the
+       hero above is two short lines -- so reusing that id would inherit a
+       constraint built for a different problem and shrink the player for
+       no reason. Own id, own cap, set in offer.css.
+       ==================================================================== -->
+  <section class="band" id="watch">
+    <div class="shell shell--tight center">
+      <div class="vsl" id="vsl">
+        <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Brainy Brands VSL"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. CASE STUDIES ===============================================
+       Figures locked in FUNNEL-AND-SITEMAP.md. Logos are the real files
+       from your case-study folder — note that two of them were mislabelled
+       at source: "TempTooth.png" is actually the Emerald mark, and
+       "Layer_68_2.avif" is the real Temptooth logo. Mapped correctly here.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">Case studies</h2>
+
+      <ol class="results rv">
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-temp-tooth.png" alt="Temptooth"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Temptooth</span></template>
+          </span>
+          <span class="result-cut">&darr; 70%<span class="unit">ad spend, in two months</span></span>
+          <span class="result-bonus">And revenue went <b>$90K &rarr; $120K</b>/mo</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-zestt-organics.png" alt="Zestt Organics"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Zestt Organics</span></template>
+          </span>
+          <span class="result-cut">&darr; 40%<span class="unit">ad spend, in two months</span></span>
+          <span class="result-bonus">And revenue went <b>$50K &rarr; $110K</b>/mo</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-patriot-crew.png" alt="Patriot Crew"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Patriot Crew</span></template>
+          </span>
+          <span class="result-cut">$174K &rarr; $388K<span class="unit">revenue in one month, held at $372K</span></span>
+          <span class="result-bonus">A plateaued account, restructured</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-magic-brand.png" alt="The Magic Brand"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">The Magic Brand</span></template>
+          </span>
+          <span class="result-cut">$0 &rarr; $450K<span class="unit">revenue in four months</span></span>
+          <span class="result-bonus">Cold launch, manual bids from day one</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-emerald-plastics.png" alt="Emerald Plastics"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Emerald Plastics</span></template>
+          </span>
+          <span class="result-cut">Cold launch<span class="unit">to $6,545/mo by month two</span></span>
+          <span class="result-bonus">Units sold up <b>164%</b></span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-clearshield.svg" alt="ClearShield Auto Glass Repair"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">ClearShield</span></template>
+          </span>
+          <span class="result-cut">&darr; 53%<span class="unit">TACoS, in the first full month</span></span>
+          <span class="result-bonus">And revenue went <b>$41.8K &rarr; $91.6K</b>/mo &mdash; with ad spend flat</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+
+  <!-- ===== 4. WHAT YOU GET IN THE AUDIT ==================================
+       Lifted from offer.html's booking section, minus the calendar embed.
+       It earns its place here more than it did there: the visitor has now
+       booked the thing this list describes, so it reads as "what your call
+       will actually cover" rather than as a pitch.
+       ==================================================================== -->
+  <section class="band band--ink" id="audit">
+    <div class="shell shell--tight">
+      <h2 class="rv">Here's what you get in the free audit</h2>
+
+      <ol class="deliverables deliverables--mixed rv">
+        <li><span>A walkthrough of your <b>actual account</b> &mdash; not a
+          template</span></li>
+        <li><span>Where <b>Amazon is overcharging you</b></span></li>
+        <li><span>Which campaigns are <b>fragmented</b>, and where</span></li>
+        <li><span>The plan &mdash; and <b>the number we think we can
+          cut</b></span></li>
+        <li><span>A straight answer on whether you're a fit. Including
+          <b>no</b>.</span></li>
+      </ol>
+
+      <p class="cta-note rv">Note: The 25% guarantee is only offered after the
+        audit, once we've seen the account.</p>
+    </div>
+  </section>
+
+  <!-- ===== 5. QUALIFY ==================================================== -->
+  <section class="band">
+    <div class="shell">
+      <h2 class="rv">We only work with brands we can genuinely help</h2>
+      <div class="qual rv">
+        <div class="qual--go">
+          <h3>This is for you if</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You're <b>serious about growing your brand</b> &mdash; or about cutting what it costs you to grow it</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You want <b>results in 30 days</b></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You do <b>$100K+/month</b> on Amazon and spend <b>$10K+/month</b> on ads</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You'd rather <b>hand the ads off entirely</b> and get your time back</li>
+          </ul>
+        </div>
+        <div class="qual--no">
+          <h3>It isn't for you if</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're spending <b>under $5,000/month</b> on ads</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>the cheapest option</b>, not the best outcome</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>guaranteed sales</b> &mdash; nobody can promise that</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're <b>not open to changing</b> how the account is structured</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 6. REVIEWS ====================================================
+       Same six as index.html. Originals kept in assets/testimonials/originals/.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">Here's what clients are saying</h2>
+      <p class="lede mt-3 rv">
+        Every one of these is public on Dale's Upwork profile and verifiable
+        there &mdash; <b>4.9 from 96 reviews</b>, Top Rated Plus, 99% job
+        success. <a href="https://www.upwork.com/freelancers/dalelin" target="_blank" rel="noopener">Check them yourself</a>.
+      </p>
+      <div class="reviewgrid rv">
+        <a href="assets/testimonials/review-1.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-1.png" alt="Upwork review: Dale is super sharp, manages your Amazon account like it's his own, proficient with Amazon advertising and increased our sales significantly" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="assets/testimonials/review-2.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-2.png" alt="Upwork review: highly recommended for anyone starting out with PPC or scaling existing brands, with monthly updates and clear KPIs" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="assets/testimonials/review-3.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-3.png" alt="Upwork review: very responsive, extremely knowledgeable, did amazing work on our Amazon listings" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="assets/testimonials/review-4.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-4.png" alt="Upwork review: Dale is an expert in the Amazon e-commerce space, communication was always 10 out of 10" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="assets/testimonials/review-5.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-5.png" alt="Upwork review: super helpful navigating our initial Amazon questions, will definitely rehire" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="assets/testimonials/review-6.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-6.png" alt="Upwork review: if you're floundering around and not getting the results you expect, give him a call" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 7. SIGN-OFF ===================================================
+       You listed "hope to see you soon" third. It reads as a closing, so it
+       is placed last rather than mid-page -- say the word if you meant it
+       literally where you had it.
+       ==================================================================== -->
+  <section class="band band--ink">
+    <div class="shell shell--tight center">
+      <h2 class="rv">Hope to see you soon.</h2>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot foot--ink">
+  <div class="shell">
+    <div class="colophon">
+      <span class="brandmark"><img src="assets/logo-white.png" alt="Brainy Brands" width="800" height="344"></span>
+      <p>&copy; 2026 Brainy Brands</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- Vimeo Player API. Must load BEFORE the inline script below, which uses
+     window.Vimeo for the 25%-watched ViewContent pixel. -->
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if ('IntersectionObserver' in window && !reduced) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) { return; }
+        e.target.setAttribute('data-in', '');
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+
+  var masthead = document.querySelector('.masthead');
+  var onScroll = function () {
+    if (window.scrollY > 8) { masthead.setAttribute('data-stuck', ''); }
+    else { masthead.removeAttribute('data-stuck'); }
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* 25%-watched ViewContent, same as offer.html. Worth keeping here: it is
+     how you find out whether people who booked without watching went back
+     and watched afterwards. */
+  var vslFrame = document.querySelector('#vsl iframe');
+  if (vslFrame && window.Vimeo && window.Vimeo.Player) {
+    var player = new window.Vimeo.Player(vslFrame);
+    var quarter = false;
+    player.on('timeupdate', function (data) {
+      if (!quarter && data && data.percent >= 0.25) {
+        quarter = true;
+        if (typeof fbq === 'function') { fbq('track', 'ViewContent', { content_name: 'VSL' }); }
+      }
+    });
+  }
+
+  /* No sticky-CTA block: there is no #apply and no #stickyCta on this page.
+     The observer from offer.html would have thrown on the null lookup. */
+
+})();
+</script>
+
+</body>
+</html>

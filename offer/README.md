@@ -2521,3 +2521,96 @@ the tuning breaks, not a size any actual screen ships at.
 - `offer/ghl/offer-GHL.html`'s inlined stylesheet re-synced from
   `offer.css` for the whole changed region and spot-checked for both the
   new values and the absence of the old oversized ones.
+
+---
+
+# Revision 33 — August 27, 2026
+
+## New page: `thanks.html` — the call confirmation
+
+Short, and deliberately asks for nothing. The visitor has already converted,
+so every booking affordance from `offer.html` is gone: no hero CTA, no
+masthead button, no sticky bar, no calendar embed. **Measured: 0 `a.btn`
+elements on the page.**
+
+Order:
+
+| # | Section | Ground |
+|---|---|---|
+| 1 | Thank you for booking your call + the video offer | ink |
+| 2 | The video | white |
+| 3 | Case studies | tint |
+| 4 | Here's what you get in the free audit | ink |
+| 5 | We only work with brands we can genuinely help | white |
+| 6 | Here's what clients are saying | tint |
+| 7 | Hope to see you soon. | ink |
+
+Grounds alternate at every seam, verified by measurement rather than by eye.
+
+**One ordering call, flagged:** you listed "hope to see you soon" third. It
+reads as a sign-off, so it is last rather than mid-page. Say the word if you
+meant it literally where you had it.
+
+## Built by splicing, not retyping
+
+Case studies, the audit list, the qualify block, the reviews grid, the
+footer, the SVG icon defs and the Meta Pixel block are all lifted **verbatim**
+from `offer.html` at build time. Only the hero and the sign-off are new
+markup. Nothing was transcribed by hand, so the two pages cannot drift apart
+in the ways hand-copying causes, and a future copy change to a shared block
+is a change in one place.
+
+The audit section is the same block that sits above the calendar on
+`offer.html`, cut before the embed. It earns its place here more than it did
+there: the visitor has now booked the thing it describes, so it reads as
+"what your call will actually cover" rather than as a pitch.
+
+## Two ids chosen to avoid inheriting the wrong rules
+
+**`band--ink` is on the hero as well as `hero--ink`, and that is
+load-bearing.** `.hero--ink` hand-colours `h1` and `.promise` but has no rule
+for `.lede` — which would have inherited the default `--ink-2` and rendered
+dark-on-dark. `.band--ink` carries the `.lede` pair. This is the same failure
+this stylesheet has hit repeatedly; avoided here by reaching for the class
+that already solves it instead of adding a sixth override.
+
+**The video section is `id="watch"`, not `id="how"`.** `#how` carries
+`offer.html`'s aggressive fold-fitting rules, tuned so a full-size guarantee
+*and* a video clear the first screen together. `thanks.html`'s hero is two
+short lines and has room; reusing that id would have inherited a constraint
+built for a different problem and shrunk the player for no reason. `#watch`
+gets its own cap in `offer.css`, using the same container-max-width technique
+`#how` documents (an `<iframe>` has no intrinsic aspect ratio, so it cannot be
+height-capped directly without collapsing — 62.22vh of width is 35vh of
+height at 16:9).
+
+## The Schedule pixel event — added, but left commented out
+
+`offer.html`'s pixel block has always specified *"Schedule — on the calendar
+confirmation, not here."* This page is that confirmation, so the event is
+written here, in its intended home.
+
+**It is commented out on purpose.** Dale's CAPI already reports the booking
+server-side. Firing it browser-side as well double-counts every booking
+unless both sides send a matching `eventID` for Meta to deduplicate on, which
+cannot be arranged from this file alone. The comment in the file says exactly
+what has to be true before uncommenting.
+
+## Verified
+
+- **Contrast sweep: 0 failures**, mobile and desktop — not "0 new failures".
+  This page has no masthead ghost button, so the long-standing false positive
+  that appears on the other two pages is genuinely absent here.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance clean on all three pages.
+- `offer.html` and `guide.html` re-swept and re-measured after the shared
+  `offer.css` addition: unchanged, `offer.html` still fits at every tested
+  viewport. The new `#watch` rule is id-scoped and cannot reach them.
+- All images load (0 broken, checked with lazy loading forced eager).
+- `offer/ghl/thanks-GHL.html` built through the same pipeline as the other
+  two, verified against the real GHL wrapper replica: edge-to-edge (`L0 R0`)
+  on the first and last sections, `top0`, no overflow, Archivo resolving,
+  no JS errors, at 1440px and 390px.
+- The sticky-CTA observer block from `offer.html` is deliberately **not**
+  carried over: there is no `#apply` or `#stickyCta` here and it would have
+  thrown on the null lookup.
