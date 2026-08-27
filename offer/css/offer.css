@@ -450,7 +450,7 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 /* The note under the audit list is white rather than the .cta-note default of
    62% -- asked for explicitly, and it carries a real condition (the guarantee
    only exists after the audit) rather than being fine print. */
-#apply .cta-note { color: var(--paper); }
+#apply .cta-note, #audit .cta-note { color: var(--paper); }
 
 /* --- Deliverables, mixed weight --------------------------------------------
    Same numbered structure and dividers as --plain, but the item sets in

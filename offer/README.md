@@ -2614,3 +2614,85 @@ what has to be true before uncommenting.
 - The sticky-CTA observer block from `offer.html` is deliberately **not**
   carried over: there is no `#apply` or `#stickyCta` here and it would have
   thrown on the null lookup.
+
+---
+
+# Revision 34 — August 27, 2026
+
+## `thanks.html`: the "please show up" section
+
+Premium positioning, at your request. New section 3, directly after the
+video:
+
+> **Please show up.**
+>
+> Every call is with Dale himself — no setters, no junior account managers —
+> which is why we can only run a handful of them a week. The slot you just
+> booked is one somebody else now can't have.
+>
+> 01 We hold a **limited number of audit slots** each month
+> 02 Your call is with **Dale directly**, not a setter
+> 03 We **don't reschedule no-shows**
+>
+> *If something genuinely comes up, tell us before the call and we'll release
+> the slot to someone else.*
+
+Placed third rather than at the end deliberately: it is the only instruction
+on the page, and burying it under three sections of proof would defeat it.
+
+## The scarcity is grounded, not invented
+
+"Limited spots" is the kind of claim that reads as manufactured unless it is
+tied to something real. Rather than inventing a number, it is grounded in a
+constraint the site already states — the FAQ on `offer.html`:
+
+> "You work with Dale directly. No junior account manager, no rotating staff."
+
+One person running every account **is** a genuine capacity ceiling, so "we
+can only run a handful a week" follows from something already true on the
+site rather than asserting a new fact. Same discipline as the audit list in
+Revision 22.
+
+**These are promises Dale has to keep.** Line 03 in particular: a stated
+no-reschedule policy that isn't enforced costs more trust than never stating
+it. If he does rebook no-shows in practice, cut that line.
+
+## One line added beyond the brief, flagged
+
+You said "we cannot accommodate reschedules." The escape-hatch line at the
+bottom — *"if something genuinely comes up, tell us before the call"* — is
+mine, and it is a judgement call worth surfacing rather than burying.
+
+An absolute no-reschedule rule with no path forward means a genuine
+conflict becomes a silent no-show: the slot is lost anyway, and the lead is
+gone with it. Giving people a way to tell you keeps the premium frame (the
+slot is scarce, someone else gets it) while recovering the slot. It is set
+in `.cta-note` — quieter than the three rules above it — on purpose, so it
+reads as an exception rather than an invitation.
+
+Delete it if you want the harder version.
+
+## A scoping bug this surfaced
+
+`#apply .cta-note { color: var(--paper) }` — the rule making the audit note
+full white, added at your request in Revision 24 — is **id-scoped to
+`#apply`**. `thanks.html` carries the same audit block under `id="audit"`
+(renamed because there is no calendar on that page), so the note there was
+silently falling back to the `.band--ink` default of 62% white.
+
+Not a visual break, and the sweep would never have caught it — 62% white on
+ink passes contrast comfortably. It was simply not the treatment you asked
+for. Selector extended to `#apply .cta-note, #audit .cta-note`. Measured
+after: `oklch(0.994 0.002 250)`, full white, on both pages.
+
+## Verified
+
+- **Contrast sweep on `thanks.html`: 0 failures**, mobile and desktop.
+- Section grounds re-measured: **no same-ground seams** anywhere on the page
+  (ink, white, ink, tint, ink, white, tint, ink).
+- Still **0 CTA buttons** — the new section adds urgency without adding an
+  ask, which is the point on a page where the visitor has already converted.
+- `offer.html` and `guide.html` re-swept after the shared `offer.css` change:
+  unchanged, still only the known masthead false positive.
+- Tag balance clean on all three pages.
+- `offer/ghl/thanks-GHL.html` rebuilt through the same pipeline.
