@@ -2253,3 +2253,97 @@ built to inherit it.
 The rule that would have caught it: **`.band` is transparent, so the page
 background is load-bearing.** Anything that changes it changes every plain
 band on the page.
+
+---
+
+# Revision 30 — August 26, 2026
+
+## offer.html: hero and VSL merged into one screen
+
+At your request — going all-in on this one page. The opening screen is now,
+in order: the guarantee, the CTA, the methods heading, the video. No section
+break between them; it was two sections before (hero, then a separate `#how`
+VSL block directly under it), now one.
+
+`hero--lead-video` — the class guide.html already uses to fit a video under
+its headline — is reused here rather than invented. It is exactly this
+problem (headline + player on one ink ground, sized to clear the fold)
+already solved and measured. Section renumbered 2–11 down to 2–10 to close
+the gap left by the merge.
+
+Methods heading copy: **"Here are the three exact methods we use to save
+our clients $12M in ad spend last year"** — your wording, kept close to
+given. Two small edits made on the assumption they were phrasing rather than
+instruction, flagging both: past tense **"we used"** on the rest of the site
+became present tense **"we use"** as you wrote it, and the figure stayed
+**$12M** rather than "$12 million" to match every other instance on the
+page. Say so if either should go back.
+
+## A bug this exact file predicted and I still had to fix
+
+Two rules had to be added, and one of them is almost eerie in hindsight.
+
+**The methods heading was invisible.** `.band--ink` carries a blanket
+`h1, h2, h3 { color: var(--paper) }` rule for ink sections. `.hero--ink`
+does not — because until today it only ever held `h1.promise` and
+`p.audience`, both hand-coloured, never a bare heading. The new h2 fell
+through to the plain default (`--ink` on `--ink`), which the sweep measured
+at **1.00:1**.
+
+**The `$12M` was also wrong**, and this part was already written down. A
+comment sitting right above `.bigstat` read:
+
+> "NO `.bigstat--ink`. I added one on the assumption the video header sat on
+> the ink band — it doesn't, it's on white... Kept as a note because 'light
+> orange on white' looks fine at a glance and only shows up when measured."
+
+That assumption stopped being true the moment this merge landed — the video
+header now genuinely sits on ink. `--amz-deep` (6.8:1 on white) measured
+**2.57:1** there. Added `.hero--ink .bigstat { color: var(--amz-hot) }`, the
+ink-safe pair this file had apparently been waiting to need.
+
+Both fixes are in `offer.css` and mirrored into the inlined stylesheet in
+`offer/ghl/offer-GHL.html` — `guide.html` is unaffected; re-swept to confirm.
+
+## The fold, measured rather than assumed
+
+"On page load" and "one screen" don't mean the same thing once a full 16:9
+video sits under a guarantee this size. Measured with the merge as first
+written (button and video at `mt-5`):
+
+| Viewport | Video ends at | Fold | Result |
+|---|---|---|---|
+| 390×844 (phone) | 935px | 844px | 91px past |
+| 360×740 (small phone) | 911px | 740px | 171px past |
+| 1440×900 (desktop) | 1230px | 900px | 330px past |
+| 1280×720 (laptop) | 1157px | 720px | 437px past |
+
+Tightened the two internal gaps (button→heading, heading→video) from `mt-5`
+to `mt-4`, recovering 32px everywhere without touching type size — the
+guarantee is deliberately the biggest thing on this page from an earlier
+revision, and shrinking it wasn't a call to make without asking.
+
+| Viewport | Video ends at | Overshoot after tightening |
+|---|---|---|
+| 390×844 | 903px | 59px |
+| 360×740 | 879px | 139px |
+| 1440×900 | 1198px | 298px |
+| 1280×720 | 1125px | 405px |
+
+Phones land close to a full first screen. Laptops and desktops do not, and
+closing that gap fully would mean either a visibly smaller headline or a
+visibly smaller video — a real trade-off, not a CSS tweak, so it's reported
+rather than forced through.
+
+## Verified
+
+- Contrast sweep, both pages, mobile + desktop: no new failures on either.
+  The single reported one remains the transparent masthead ghost button.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance on `offer.html`: clean. On `offer/ghl/offer-GHL.html`: clean
+  once the inlined `<style>` block is excluded — its CSS carries a comment
+  describing a past `<div>`/`<main>` bug in prose, which a comment-stripper
+  built for HTML comments doesn't touch and briefly read as a false failure.
+  Confirmed pre-existing, unrelated to this change.
+- Screenshots reviewed at 1440×900 and 390×844: guarantee, CTA, heading and
+  the top edge of the video all render correctly, in order, on one ground.

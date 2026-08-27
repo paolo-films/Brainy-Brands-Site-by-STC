@@ -597,6 +597,14 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 .hero--ink h1 { color: var(--paper); max-width: 15ch; margin-inline: auto; }
 .hero--ink .promise .fig { color: var(--amz-hot); }
 .hero--ink .promise-terms { color: oklch(0.994 0.002 250 / 0.55); }
+
+/* .hero--ink never had a bare h2 in it before today -- only h1.promise and
+   p.audience, both hand-coloured. .band--ink has a blanket h1/h2/h3 -> paper
+   rule for exactly this situation; .hero--ink does not, because it never
+   needed one. Added now that offer.html's merged hero+VSL puts a plain h2
+   (the methods heading) on this ground for the first time. Without it the
+   heading was default --ink on --ink: 1.00:1, invisible. */
+.hero--ink h2 { color: var(--paper); }
 .hero--ink .btn { background: var(--amz-hot); border-color: var(--amz-hot); color: var(--ink); font-size: 1.1rem; }
 .hero--ink .btn:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
 .hero--ink .cta-note { color: oklch(0.994 0.002 250 / 0.62); }
@@ -866,11 +874,13 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
   margin-top: 0.42em;
 }
 
-/* NO .bigstat--ink. I added one on the assumption the video header sat on the
-   ink band — it doesn't, it's on white, and the full-strength orange measured
-   2.1:1 there. The default .bigstat (--amz-deep, 6.8:1) is correct. Kept as a
-   note because "light orange on white" looks fine at a glance and only shows
-   up when measured. */
+/* This note used to read "NO .bigstat--ink", on the grounds that the video
+   header sat on white, not ink, and --amz-hot measured 2.1:1 there. That
+   assumption is exactly the failure mode this file keeps hitting: the video
+   header now DOES sit on ink, because offer.html's hero and VSL were merged
+   into one section. --amz-deep (the default) is 6.8:1 on white and far
+   worse on black; --amz-hot is the ink-safe pair, and only correct there. */
+.hero--ink .bigstat { color: var(--amz-hot); }
 
 /* With the grey line gone the button carries the bottom of the hero on its
    own, so it needs a touch more room under it than the old stacked block. */
