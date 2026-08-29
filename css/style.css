@@ -455,6 +455,11 @@ main a { text-decoration-color: currentColor; }
 .vsl { position: relative; aspect-ratio: 16 / 9; background: var(--ink); border: 1px solid var(--line); }
 .vsl iframe { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; }
 
+/* GoHighLevel booking-calendar embeds — no fixed aspect ratio (the widget
+   resizes its own height via form_embed.js), just a sane minimum so it
+   doesn't render as a sliver before that script runs. */
+.ghl-embed { display: block; width: 100%; min-height: 750px; border: none; overflow: hidden; }
+
 /* Declared after .frame/.vsl on purpose: same specificity as .frame's own
    rules, so adding this modifier to a .frame or .vsl div reliably overrides
    the default ratio instead of losing an order-dependent tie. */
