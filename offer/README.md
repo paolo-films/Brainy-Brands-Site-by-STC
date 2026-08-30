@@ -2800,3 +2800,84 @@ stays short and the proof still lands.
 - `offer/ghl/audit-GHL.html` verified against the real GHL wrapper replica:
   edge-to-edge, `top0`, no overflow, Archivo resolving, no JS errors, and the
   gate confirmed still working inside the wrapper.
+
+---
+
+# Revision 36 — August 27, 2026
+
+## `audit.html`: gate replaced with the GHL widget, laid out horizontally
+
+The five-field gate is gone, replaced by the booking widget you sent. Not a
+downgrade — the widget carries **its own form and its own qualify/disqualify
+logic**, so the hand-rolled gate in front of it was duplicating work GHL
+already does. Same conclusion as Revision 13.
+
+**What this drops, stated so it is a decision and not an accident:** the
+client-side PASS/FAIL rule from `FUNNEL-AND-SITEMAP.md` no longer runs here.
+Qualification is entirely GHL's now — arguably where it belonged, since the
+locked doc always called the JS gate *"a UX convenience, not security"* that
+had to be re-run server-side anyway.
+
+Laid out with `.split` — the existing two-column primitive, and the one the
+original booking section used before Revision 13 flattened it. This restores
+a layout the codebase already had rather than inventing one.
+
+**The iframe keeps `data-src`, not the plain `src` in your snippet.** That is
+deliberate: the fbclid block rewrites `data-src` → `src` with the Meta click
+ID appended, which is the only way that ID reaches GHL. A raw `src` would
+have silently dropped it. Your new instance id and `allow="payment"` are
+both carried over.
+
+## Two real bugs caught by measuring
+
+**1. The split didn't stack on phones.** `#apply .split` is `(1,1,0)` — an id
+beats a class regardless of source order or media query — so it overrode the
+base `.split` mobile-stacking rule inside `@media (max-width: 860px)`.
+Measured at 390px: a **137px copy column beside a 205px widget.** Wrapped in
+`@media (min-width: 861px)`. Found only because the check ran at four widths
+rather than at desktop alone.
+
+**2. A note went white-on-white — and my own earlier fix caused it.**
+`#apply .cta-note { color: var(--paper) }`, added at your request in Revision
+24, assumed `#apply` was always an ink band. On this page `#apply` is a
+**white** band, so it painted white on white: **1.00:1**. Now qualified as
+`.band--ink#apply` so it applies by ground rather than by id, falling back to
+the default dark on light grounds. Verified across all three pages carrying
+that note: white on ink for `offer.html` and `thanks.html`, dark on light
+here.
+
+That is the **sixth** instance of the same failure in this stylesheet — a
+colour correct on one ground, applied by a selector that never checks the
+ground.
+
+## On "it gets kind of long" — the honest part
+
+Going horizontal saves vertical space by putting the copy *beside* the widget
+instead of above it. But it works against itself in one way worth knowing:
+**GHL's calendar is responsive, so a narrower frame lays the date grid out in
+more rows and the widget gets taller.** Width is the only lever on its height.
+
+So the split is deliberately weighted toward the widget — `0.8fr / 1.2fr`
+rather than 50/50 — because the copy is four short lines and does not need
+half the page.
+
+Whether the section is net shorter than stacked **cannot be measured from
+here**: `api.leadconnectorhq.com` is blocked to this sandbox, so the widget
+never mounts and every measurement above is of the placeholder. If it comes
+out taller than you want in practice, widening that column further is the
+first thing to try, and it is one number.
+
+## Verified
+
+- **Contrast sweep: 0 failures** on `audit.html` and `thanks.html`;
+  `offer.html` and `guide.html` unchanged at the known masthead false
+  positive only.
+- Layout measured at 1440 / 1024 / 860 / 390px: side-by-side above the
+  breakpoint, stacked at and below it.
+- Inline JS parsed with `node --check` after removing the gate handler — no
+  orphaned references left behind.
+- No residue: `applyForm`, `applyCalendar`, `applyNoFit`, `formError`,
+  `class="field"` and the PASS list all at zero occurrences.
+- Tag balance clean including `form` and `iframe`.
+- GHL build re-verified in the wrapper replica: edge-to-edge, `top0`, no
+  overflow, no JS errors, split behaving correctly at both widths.

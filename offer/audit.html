@@ -235,98 +235,57 @@ fbq('track', 'PageView');
     </div>
   </section>
 
-  <!-- ===== 2. THE GATE ===================================================
-       Five fields, and five exactly -- FUNNEL-AND-SITEMAP.md is explicit:
-       "Five fields. Do not add more -- every extra field costs bookings."
-       The old index.html form had six and did not match the locked options,
-       so the locked spec wins over the old markup.
+  <!-- ===== 2. BOOK THE AUDIT =============================================
+       The five-field gate is gone, replaced by the GHL booking widget you
+       sent. That is not a downgrade: the widget carries its own form AND
+       its own qualify/disqualify logic, so the hand-rolled gate in front of
+       it was duplicating work GHL already does -- the same conclusion
+       reached back in Revision 13.
 
-       Submitting reveals the calendar for a PASS, or a graceful off-ramp
-       for a FAIL. Gate rule, verbatim from the locked doc:
-         PASS  ad spend $10K-$25K, $25K-$50K, or $50K+
-         FAIL  ad spend under $5K, or $5K-$10K
-       Revenue and current-manager are captured for call prep and do not
-       gate anything.
+       WHAT THIS DROPS, so it is a decision and not an accident: the
+       client-side PASS/FAIL rule from FUNNEL-AND-SITEMAP.md no longer runs
+       on this page. Qualification is now entirely GHL's. That is arguably
+       where it should have lived anyway -- the locked doc always said the
+       JS gate was "a UX convenience, not security" and had to be re-run
+       server-side regardless.
+
+       Laid out horizontally, at your request: the description of the call
+       on the left, the widget on the right. .split is the existing
+       two-column primitive and it is what the original booking section
+       used before Revision 13 flattened it -- so this restores a layout
+       this codebase already had rather than inventing one. It collapses to
+       a single column at 860px, so phones still get the stacked version.
+
+       The iframe keeps data-src rather than the plain src in your snippet.
+       That is deliberate: the fbclid block in <head> rewrites data-src to
+       src with the Meta click ID appended, which is how the click ID
+       reaches GHL at all. A raw src would silently drop that. Your new
+       instance id and allow="payment" are both carried over.
        ==================================================================== -->
   <section class="band" id="apply">
-    <div class="shell shell--tight">
-      <h2 class="rv">See if you qualify</h2>
-      <p class="lede mt-3 rv">Five questions. If it's a fit, the calendar
-        opens straight away.</p>
+    <div class="shell">
+      <div class="split">
+        <header class="rv">
+          <h2>Book your free audit</h2>
+          <p class="lede mt-4">
+            Twenty minutes with Dale, live in your account. He'll show you
+            <b>exactly where your money is going</b> and the number he thinks
+            he can cut.
+          </p>
+          <p class="cta-note">Note: The 25% guarantee is only offered after
+            the audit, once we've seen the account.</p>
+        </header>
 
-      <form id="applyForm" class="gate rv" action="#" method="post" novalidate>
-        <div class="field">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" autocomplete="name" required>
+        <div class="rv calendar-embed">
+          <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE"
+                  allow="payment"
+                  style="width:100%;border:none;overflow:hidden"
+                  scrolling="no"
+                  id="rMTistvxT1FAUAfDRPzE_1788116097008"></iframe>
+          <noscript>
+            <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
+          </noscript>
         </div>
-        <div class="field">
-          <label for="email">Work email</label>
-          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
-        </div>
-        <div class="field">
-          <label for="ad_spend">Monthly Amazon ad spend</label>
-          <select id="ad_spend" name="ad_spend" required>
-            <option value="">Choose one</option>
-            <option value="under-5k">Under $5K/mo</option>
-            <option value="5k-10k">$5K &ndash; $10K/mo</option>
-            <option value="10k-25k">$10K &ndash; $25K/mo</option>
-            <option value="25k-50k">$25K &ndash; $50K/mo</option>
-            <option value="50k-plus">$50K+/mo</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="revenue">Monthly Amazon revenue</label>
-          <select id="revenue" name="revenue" required>
-            <option value="">Choose one</option>
-            <option value="under-50k">Under $50K/mo</option>
-            <option value="50k-100k">$50K &ndash; $100K/mo</option>
-            <option value="100k-500k">$100K &ndash; $500K/mo</option>
-            <option value="500k-plus">$500K+/mo</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="manager">Who manages your ads now?</label>
-          <select id="manager" name="manager" required>
-            <option value="">Choose one</option>
-            <option value="self">Nobody / I do it myself</option>
-            <option value="agency">An agency</option>
-            <option value="freelancer">A freelancer / VA</option>
-            <option value="in-house">In-house team</option>
-          </select>
-        </div>
-
-        <!-- Meta click ID. Populated on load by the fbclid block in <head>;
-             empty when the visitor did not arrive from a Meta ad. -->
-        <input type="hidden" name="fbclid" id="fbclid">
-
-        <p id="formError" class="form-error" hidden>Please answer all five.</p>
-
-        <div class="mt-4">
-          <button class="btn btn--wide" type="submit">See if I qualify</button>
-        </div>
-        <p class="field-hint">
-          Used to prep before the call. Never sold or shared.
-        </p>
-      </form>
-
-      <!-- PASS: the calendar, revealed on submit. -->
-      <div class="rv calendar-embed" id="applyCalendar" hidden>
-        <p class="cta-note">You're a fit. Pick a time below.</p>
-        <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
-        <noscript>
-          <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
-        </noscript>
-      </div>
-
-      <!-- FAIL: an off-ramp rather than a dead end. Wording follows the FAQ,
-           which already says the math does not work under $10K and that we
-           say so rather than take the money. -->
-      <div class="confirm" id="applyNoFit" hidden>
-        <h3>Not yet &mdash; and we'd rather tell you.</h3>
-        <p>Under $10K/month in ad spend there isn't enough waste in the
-          account for the 25% guarantee to mean anything, so we'd be taking
-          your money to do very little. Come back when you're spending more
-          and we'll take another look.</p>
       </div>
     </div>
   </section>
@@ -572,69 +531,9 @@ fbq('track', 'PageView');
     });
   }
 
-  /* --- THE GATE -----------------------------------------------------------
-     EMANUEL: client-side only, and per FUNNEL-AND-SITEMAP.md this rule has
-     to be re-run server-side in GHL before an invite fires. Anyone can skip
-     this by opening the calendar URL directly.
-
-     PASS  ad spend 10k-25k / 25k-50k / 50k-plus
-     FAIL  ad spend under-5k / 5k-10k
-     ---------------------------------------------------------------------- */
-  var form     = document.getElementById('applyForm'),
-      calendar = document.getElementById('applyCalendar'),
-      noFit    = document.getElementById('applyNoFit'),
-      error    = document.getElementById('formError');
-
-  if (!form) { return; }
-
-  var PASS = ['10k-25k', '25k-50k', '50k-plus'];
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var data = new FormData(form);
-    var required = ['name', 'email', 'ad_spend', 'revenue', 'manager'];
-    var missing = required.filter(function (f) { return !String(data.get(f) || '').trim(); });
-
-    if (missing.length) {
-      error.hidden = false;
-      var first = form.elements[missing[0]];
-      if (first && first.focus) { first.focus(); }
-      return;
-    }
-    error.hidden = true;
-
-    try {
-      sessionStorage.setItem('bb_lead', JSON.stringify({
-        name: data.get('name'), email: data.get('email'),
-        ad_spend: data.get('ad_spend'), revenue: data.get('revenue'),
-        manager: data.get('manager'),
-        fbclid: data.get('fbclid') || '',
-        source: 'audit'
-      }));
-    } catch (err) { /* private browsing */ }
-
-    var qualified = PASS.indexOf(String(data.get('ad_spend'))) > -1;
-
-    if (typeof fbq === 'function') {
-      fbq('track', 'Lead', { content_name: qualified ? 'qualified' : 'not-a-fit' });
-    }
-
-    form.hidden = true;
-    var panel = qualified ? calendar : noFit;
-    panel.hidden = false;
-
-    /* The calendar iframe renders while hidden, so GHL's resize script can
-       measure it at zero height. Re-setting src forces a fresh render now
-       that the element has real dimensions. */
-    if (qualified) {
-      var frame = calendar.querySelector('iframe');
-      if (frame && frame.src) { frame.src = frame.src; }
-    }
-
-    panel.setAttribute('tabindex', '-1');
-    panel.focus();
-    panel.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-  });
+  /* The five-field gate and its PASS/FAIL rule are gone with the form --
+     the GHL widget does its own qualifying now. Nothing here to replace it:
+     the widget is self-contained. */
 
 })();
 </script>

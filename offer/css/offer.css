@@ -424,6 +424,38 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 /* The widget now sits under the audit list rather than alone in the band, so
    it needs real separation from the copy above it. */
 .calendar-embed { margin-top: var(--s5); }
+
+/* --- The widget in a two-column layout (audit.html) -------------------------
+   Two adjustments when .calendar-embed sits inside .split:
+
+   1. The top margin comes off. It exists to separate the widget from copy
+      stacked ABOVE it; beside a column it just drops the widget out of
+      alignment with the heading next to it.
+
+   2. The widget gets the wider column. This runs against the instinct --
+      the point of going horizontal is to save vertical space -- but GHL's
+      calendar is responsive, so a NARROWER frame lays the date grid and
+      time slots out in MORE rows and the widget gets TALLER. Width is the
+      only lever on its height (recorded in the GHL chrome notes). So the
+      split is weighted toward the widget rather than 50/50: the copy on
+      the left is four short lines and does not need half the page.
+
+   Whether the section is net shorter than the stacked version depends on
+   how much taller the widget goes at this width, and that cannot be
+   measured from here -- api.leadconnectorhq.com is blocked to this
+   sandbox, so the widget never mounts. If it comes out taller in practice,
+   widening this further is the first thing to try. */
+.split .calendar-embed { margin-top: 0; }
+
+/* Wrapped in min-width, and that is not decoration. The base .split stacks
+   to one column inside @media (max-width: 860px) via `.split` (0,1,0).
+   `#apply .split` is (1,1,0) -- an id beats a class regardless of source
+   order or media query -- so unwrapped, this rule overrode the mobile
+   stacking and phones rendered a 137px copy column beside a 205px widget.
+   Caught by measuring at four widths instead of only desktop. */
+@media (min-width: 861px) {
+  #apply .split { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+}
 .calendar-embed iframe { display: block; width: 100%; min-height: 420px; }
 
 /* --- Numbered deliverables on the ink ground -------------------------------
@@ -450,7 +482,18 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
 /* The note under the audit list is white rather than the .cta-note default of
    62% -- asked for explicitly, and it carries a real condition (the guarantee
    only exists after the audit) rather than being fine print. */
-#apply .cta-note, #audit .cta-note { color: var(--paper); }
+/* Ground-qualified, and it has to be. This rule started life as
+   `#apply .cta-note` -- correct while #apply was only ever an ink band. On
+   audit.html #apply is a WHITE band, so the unqualified version painted
+   white text on white: 1.00:1, invisible, caught by the sweep.
+
+   Requiring .band--ink on the same element means it applies where the
+   ground is dark and falls back to the default --ink-3 where it isn't.
+   Sixth instance of the same failure in this stylesheet: a colour that is
+   only correct on one ground, applied by a selector that does not check
+   the ground. */
+.band--ink#apply .cta-note,
+.band--ink#audit .cta-note { color: var(--paper); }
 
 /* --- Deliverables, mixed weight --------------------------------------------
    Same numbered structure and dividers as --plain, but the item sets in
