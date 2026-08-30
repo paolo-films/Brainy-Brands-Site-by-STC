@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Give us 30 days — we'll cut your ad spend by 25%+ | Brainy Brands</title>
+<meta name="description" content="Give us 30 days and we'll cut your Amazon ad spend by 25%+ without losing sales. If we don't hit it, we refund you or work for free until we do. For brands spending $10K+/month on ads.">
+<meta name="robots" content="noindex">
+
+<!-- =========================================================================
+     THE GATED VARIANT — audit.html
+
+     Third landing page. Named audit.html because that is what
+     FUNNEL-AND-SITEMAP.md already calls this exact page: "The gate. Short
+     form, decides who sees the calendar."
+
+     Structure per your spec: offer-led headline, short VSL, form directly
+     beneath it that unlocks the calendar on submit, then four proof
+     sections and nothing else. 17 sections on offer.html, 9 here.
+
+     ---------------------------------------------------------------------
+     TWO THINGS THAT NEED YOU BEFORE THIS GOES LIVE
+     ---------------------------------------------------------------------
+     1. THE VIDEO IS STILL THE OLD CUT. You described a new ~4-minute
+        edit that opens with the offer; you did not send an ID for it. The
+        embed below points at the SAME Vimeo video the other two pages use
+        (1220603494). Swap that ID when the short cut is up, or this page
+        promises a 4-minute video and plays the long one.
+
+     2. THE GATE IS CLIENT-SIDE ONLY, exactly as FUNNEL-AND-SITEMAP.md
+        warns: "the client-side JS is a UX convenience, not security...
+        Anyone can bypass the JS." The PASS/FAIL rule has to be re-run
+        server-side in GHL before a calendar invite actually fires.
+     ==================================================================== -->
+
+<!-- ===== META PIXEL =====================================================
+     EMANUEL — CAPI is a prerequisite, not an enhancement.
+       PageView    on load · ViewContent at 25% of the VSL
+       Lead        on form submit
+       Schedule    on the calendar confirmation, not here
+     ================================================================== -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '258230770694638');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=258230770694638&ev=PageView&noscript=1" alt=""></noscript>
+
+
+<!-- ===== META CLICK ID (fbclid) CAPTURE ==================================
+     Runs early, before the booking widget mounts, so the click ID is
+     resolved by the time anything needs it.
+
+       1. Read ?fbclid= from the URL.
+       2. Persist it to a first-party cookie (stc_fbclid, 90 days) so a
+          visitor who clicks the ad today and books next week still
+          carries it.
+       3. If the URL has no fbclid, fall back to that cookie.
+       4. Hand it to the form, and keep it on internal links.
+
+     No dependencies.
+     ==================================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  var COOKIE = 'stc_fbclid';
+  var MAX_AGE_DAYS = 90;
+
+  function readCookie(name) {
+    var parts = document.cookie ? document.cookie.split('; ') : [];
+    for (var i = 0; i < parts.length; i++) {
+      var eq = parts[i].indexOf('=');
+      if (eq > -1 && parts[i].slice(0, eq) === name) {
+        try { return decodeURIComponent(parts[i].slice(eq + 1)); }
+        catch (e) { return parts[i].slice(eq + 1); }
+      }
+    }
+    return '';
+  }
+
+  function writeCookie(name, value, days) {
+    var expires = new Date(Date.now() + days * 86400000).toUTCString();
+    /* Lax, not Strict: the visitor arrives here as a cross-site navigation
+       from facebook.com, and Strict would withhold the cookie on that first
+       hop. Secure only on https so this still works over local http. */
+    document.cookie = name + '=' + encodeURIComponent(value) +
+      '; expires=' + expires + '; path=/; SameSite=Lax' +
+      (location.protocol === 'https:' ? '; Secure' : '');
+  }
+
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(location.search);
+    try { return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : ''; }
+    catch (e) { return m ? m[1] : ''; }
+  }
+
+  /* URL wins over the cookie — a fresh click should overwrite an older one. */
+  var fromUrl = param('fbclid');
+  var fbclid  = fromUrl || readCookie(COOKIE);
+
+  if (fromUrl) {
+    try { writeCookie(COOKIE, fromUrl, MAX_AGE_DAYS); } catch (e) { /* blocked */ }
+  }
+
+  window.STC_FBCLID = fbclid;
+
+  function apply() {
+    /* --- 1. Native form, where one exists (index.html) ------------------ */
+    var input = document.getElementById('fbclid');
+    if (input) { input.value = fbclid; }
+
+    /* --- 2. GHL booking widget ------------------------------------------
+       The widget is a cross-origin iframe, so a hidden input inside it is
+       not reachable from here — same-origin policy. The click ID has to
+       ride in on the iframe URL instead, which is why the tag below ships
+       with data-src and gets its real src set here. GHL maps inbound query
+       params onto the matching custom field. */
+    var frames = document.querySelectorAll('iframe[data-src]');
+    for (var i = 0; i < frames.length; i++) {
+      var src = frames[i].getAttribute('data-src');
+      if (!src) { continue; }
+      if (fbclid) {
+        src += (src.indexOf('?') > -1 ? '&' : '?') + 'fbclid=' + encodeURIComponent(fbclid);
+      }
+      frames[i].src = src;
+    }
+
+    /* --- 3. Keep the query string on internal navigation -----------------
+       So the click ID survives if the booking flow ever moves to a second
+       page. Same-origin, non-anchor, non-download links only. */
+    var qs = location.search.replace(/^\?/, '');
+    if (!qs) { return; }
+    var links = document.getElementsByTagName('a');
+    for (var j = 0; j < links.length; j++) {
+      var a = links[j];
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#') { continue; }
+      if (/^(https?:)?\/\//i.test(href) && a.hostname !== location.hostname) { continue; }
+      if (/^(mailto:|tel:|javascript:)/i.test(href)) { continue; }
+      if (a.hasAttribute('download') || a.getAttribute('target') === '_blank') { continue; }
+      if (a.search) { continue; }               /* already carries its own params */
+      a.href = a.pathname + '?' + qs + a.hash;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+})();
+</script>
+
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Public+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/vinyl-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/offer.css">
+
+</head>
+<body>
+
+<a class="skip-link" href="#apply">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" d="M3 12.5l6 6L21 5.5"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/>
+    <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16.5 8.5a5 5 0 0 1 0 7M19.5 5.5a9 9 0 0 1 0 13"/>
+  </symbol>
+</svg>
+
+<!-- Masthead carries the mark only. The nav CTA is deliberately gone: it
+     pointed past the form, which is the one thing this page wants people to
+     reach. -->
+<header class="masthead">
+  <div class="shell">
+    <span class="brandmark" aria-label="Brainy Brands">
+      <img class="on-dark" src="assets/logo-white.png" alt="Brainy Brands" width="800" height="344">
+      <img class="on-light" src="assets/logo-black.png" alt="" aria-hidden="true" width="800" height="344">
+    </span>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== 1. THE PROMISE + THE VSL ======================================
+       No sub-headline above the video, at your request -- the video opens
+       with the offer itself and a line above it would argue with its first
+       ten seconds.
+
+       Headline rewritten to your wording -- a challenge/command open ("give
+       us 30 days") rather than a flat statement of the offer, with the risk
+       reversal underneath it. Written from your description of the
+       closers.io page, not from the page itself; I have not opened it.
+
+       "25%+" now, with the plus, since you asked for "25+ percent"
+       explicitly this time. Note this is the only page of the three that
+       says 25%+ -- offer.html, guide.html and the guarantee band all say
+       25%, matching the locked FUNNEL-AND-SITEMAP.md wording. That is fine
+       while this is a test variant; worth reconciling if it wins.
+
+       ONE CORRECTION, FLAGGED: you wrote "if YOU don't hit your target".
+       The subject should be we -- we are the ones doing the cutting, and
+       "you" reads as putting the obligation on the customer, which inverts
+       the guarantee. Written as "if we don't hit it".
+
+       The no-sales-loss clause you asked for earlier is folded into the
+       second line rather than the headline, which was getting long.
+       ==================================================================== -->
+  <section class="band hero hero--ink hero--lead hero--lead-video" id="hero">
+    <div class="shell shell--tight">
+      <p class="audience">Amazon brand owners&hellip;</p>
+      <h1 class="promise">
+        <span class="fig">Give us 30 days and we'll cut your ad spend by 25%+</span>
+        <span class="rest">Without losing sales. If we don't hit it, we'll
+          refund your money &mdash; or work for free until we do.</span>
+      </h1>
+
+      <div class="vsl mt-5" id="vsl">
+        <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Brainy Brands VSL"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 2. THE GATE ===================================================
+       Five fields, and five exactly -- FUNNEL-AND-SITEMAP.md is explicit:
+       "Five fields. Do not add more -- every extra field costs bookings."
+       The old index.html form had six and did not match the locked options,
+       so the locked spec wins over the old markup.
+
+       Submitting reveals the calendar for a PASS, or a graceful off-ramp
+       for a FAIL. Gate rule, verbatim from the locked doc:
+         PASS  ad spend $10K-$25K, $25K-$50K, or $50K+
+         FAIL  ad spend under $5K, or $5K-$10K
+       Revenue and current-manager are captured for call prep and do not
+       gate anything.
+       ==================================================================== -->
+  <section class="band" id="apply">
+    <div class="shell shell--tight">
+      <h2 class="rv">See if you qualify</h2>
+      <p class="lede mt-3 rv">Five questions. If it's a fit, the calendar
+        opens straight away.</p>
+
+      <form id="applyForm" class="gate rv" action="#" method="post" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Work email</label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
+        </div>
+        <div class="field">
+          <label for="ad_spend">Monthly Amazon ad spend</label>
+          <select id="ad_spend" name="ad_spend" required>
+            <option value="">Choose one</option>
+            <option value="under-5k">Under $5K/mo</option>
+            <option value="5k-10k">$5K &ndash; $10K/mo</option>
+            <option value="10k-25k">$10K &ndash; $25K/mo</option>
+            <option value="25k-50k">$25K &ndash; $50K/mo</option>
+            <option value="50k-plus">$50K+/mo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="revenue">Monthly Amazon revenue</label>
+          <select id="revenue" name="revenue" required>
+            <option value="">Choose one</option>
+            <option value="under-50k">Under $50K/mo</option>
+            <option value="50k-100k">$50K &ndash; $100K/mo</option>
+            <option value="100k-500k">$100K &ndash; $500K/mo</option>
+            <option value="500k-plus">$500K+/mo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="manager">Who manages your ads now?</label>
+          <select id="manager" name="manager" required>
+            <option value="">Choose one</option>
+            <option value="self">Nobody / I do it myself</option>
+            <option value="agency">An agency</option>
+            <option value="freelancer">A freelancer / VA</option>
+            <option value="in-house">In-house team</option>
+          </select>
+        </div>
+
+        <!-- Meta click ID. Populated on load by the fbclid block in <head>;
+             empty when the visitor did not arrive from a Meta ad. -->
+        <input type="hidden" name="fbclid" id="fbclid">
+
+        <p id="formError" class="form-error" hidden>Please answer all five.</p>
+
+        <div class="mt-4">
+          <button class="btn btn--wide" type="submit">See if I qualify</button>
+        </div>
+        <p class="field-hint">
+          Used to prep before the call. Never sold or shared.
+        </p>
+      </form>
+
+      <!-- PASS: the calendar, revealed on submit. -->
+      <div class="rv calendar-embed" id="applyCalendar" hidden>
+        <p class="cta-note">You're a fit. Pick a time below.</p>
+        <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
+        <noscript>
+          <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
+        </noscript>
+      </div>
+
+      <!-- FAIL: an off-ramp rather than a dead end. Wording follows the FAQ,
+           which already says the math does not work under $10K and that we
+           say so rather than take the money. -->
+      <div class="confirm" id="applyNoFit" hidden>
+        <h3>Not yet &mdash; and we'd rather tell you.</h3>
+        <p>Under $10K/month in ad spend there isn't enough waste in the
+          account for the 25% guarantee to mean anything, so we'd be taking
+          your money to do very little. Come back when you're spending more
+          and we'll take another look.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. CASE STUDIES ===============================================
+       Three, not six. Temptooth, Zestt and ClearShield are the three that
+       show spend or TACoS DOWN with revenue holding or climbing, which is
+       the shape of the thing being guaranteed. Magic Brand and Emerald are
+       growth-from-zero stories -- true, but a different promise -- and they
+       still appear in the logo wall below.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">Case studies</h2>
+
+      <ol class="results rv">
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-temp-tooth.png" alt="Temptooth"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Temptooth</span></template>
+          </span>
+          <span class="result-cut">&darr; 70%<span class="unit">ad spend, in two months</span></span>
+          <span class="result-bonus">And revenue went <b>$90K &rarr; $120K</b>/mo</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-zestt-organics.png" alt="Zestt Organics"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Zestt Organics</span></template>
+          </span>
+          <span class="result-cut">&darr; 40%<span class="unit">ad spend, in two months</span></span>
+          <span class="result-bonus">And revenue went <b>$50K &rarr; $110K</b>/mo</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="assets/casestudylogos/logo-clearshield.svg" alt="ClearShield Auto Glass Repair"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">ClearShield</span></template>
+          </span>
+          <span class="result-cut">&darr; 53%<span class="unit">TACoS, in the first full month</span></span>
+          <span class="result-bonus">And revenue went <b>$41.8K &rarr; $91.6K</b>/mo &mdash; with ad spend flat</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 4. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+       ADD LOGOS HERE as you get them — the strip wraps and centres, so
+       extra <li> items need no CSS change.
+       ==================================================================== -->
+  <section class="band band--sm">
+    <div class="shell">
+      <p class="striplabel">Other accounts we've worked on</p>
+      <ul class="logostrip">
+        <li><img src="assets/casestudylogos/logo-temp-tooth.png" alt="Temptooth"></li>
+        <li><img src="assets/casestudylogos/logo-zestt-organics.png" alt="Zestt Organics"></li>
+        <li><img src="assets/casestudylogos/logo-patriot-crew.png" alt="Patriot Crew"></li>
+        <li><img src="assets/casestudylogos/logo-magic-brand.png" alt="The Magic Brand"></li>
+        <li><img src="assets/casestudylogos/logo-emerald-plastics.png" alt="Emerald Plastics"></li>
+        <li><img src="assets/casestudylogos/Midtown.svg" alt="Midtown"></li>
+        <li><img src="assets/casestudylogos/logo-xpand.png" alt="Xpand" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-hk-army.png" alt="HK Army" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-envi-eheat.png" alt="Envi by eheat" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-berkey.png" alt="Berkey Water Systems" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-therapet.png" alt="TheraPet MD" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-gutterglove.png" alt="Gutterglove" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-pacific-doorware.png" alt="Pacific Doorware" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-hydroh.png" alt="Hydroh" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-bumpology.png" alt="Bumpology" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-riff-raff.png" alt="Riff Raff Baby" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-peregrune.png" alt="Peregrune" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-buddha-pants.png" alt="Buddha Pants" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-sanzo.svg" alt="Sanzo" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-mend.svg" alt="MEND" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-velocity-lacrosse.png" alt="Velocity Lacrosse" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-over-and-back.png" alt="Over & Back" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-synnutra.png" alt="SynNutra" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-fuel-pro.png" alt="Fuel Pro Nutrition" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-69-golf.png" alt="69 Golf" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-barsys.png" alt="Barsys" loading="lazy"></li>
+        <li><img src="assets/casestudylogos/logo-clearshield.svg" alt="ClearShield Auto Glass Repair" loading="lazy"></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 5. QUALIFY ====================================================
+       Numbers corrected. The disqualify line said "under $5,000/month",
+       which left $5K-$10K in a gap: neither qualified nor disqualified,
+       while FUNNEL-AND-SITEMAP.md's FAIL rule and the FAQ both put the
+       cut-off at $10K. Now $10,000, matching the gate above and the locked
+       rule. This is the "fix the numbers" item.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">We only work with brands we can genuinely help</h2>
+      <div class="qual rv">
+        <div class="qual--go">
+          <h3>This is for you if</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You're <b>serious about growing your brand</b> &mdash; or about cutting what it costs you to grow it</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You want <b>results in 30 days</b></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You do <b>$100K+/month</b> on Amazon and spend <b>$10K+/month</b> on ads</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You'd rather <b>hand the ads off entirely</b> and get your time back</li>
+          </ul>
+        </div>
+        <div class="qual--no">
+          <h3>It isn't for you if</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're spending <b>under $10,000/month</b> on ads</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>the cheapest option</b>, not the best outcome</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>guaranteed sales</b> &mdash; nobody can promise that</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're <b>not open to changing</b> how the account is structured</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 6. FAQ ========================================================
+       Four, not eight: who it's for, the guarantee, how spend comes down
+       without sales following it, and rankings. The four that answer an
+       objection someone might still be holding at the form.
+       ==================================================================== -->
+  <section class="band">
+    <div class="shell shell--tight">
+      <h2 class="rv">Questions</h2>
+      <div class="faq rv">
+        <details>
+          <summary>Who is this actually for?</summary>
+          <div class="a">Amazon sellers doing $100K+/month in revenue and
+            spending at least $10K/month on ads. Most of our clients spend
+            $20&ndash;30K/month or more. If you're under $10K/month in ad
+            spend, the math doesn't work yet &mdash; we'll tell you that on
+            the call instead of taking your money.</div>
+        </details>
+        <details>
+          <summary>What's the guarantee?</summary>
+          <div class="a">Cut your ad spend by 25% in the first 30 days
+            without losing sales. If we miss it, you get your money back or we
+            keep working free until we hit it. The guarantee is only offered
+            after the audit, once we've seen the account. Clients commonly go
+            on to see 50% by day 60&ndash;90, but 25% in 30 days is the number
+            we guarantee.</div>
+        </details>
+        <details>
+          <summary>How do you cut spend without killing my sales?</summary>
+          <div class="a">Most accounts are bleeding money on Amazon's dynamic
+            bidding and placement multipliers &mdash; settings that quietly
+            let Amazon charge more per click than you agreed to. We strip
+            those out and run manual, top-down bids. Same sales, less spend.
+            We're not cutting your budget, we're cutting your waste.</div>
+        </details>
+        <details>
+          <summary>Will this hurt my organic rankings?</summary>
+          <div class="a">No. We manage bids down, we don't blanket-block
+            keywords. Rankings you've already built cost far less to hold
+            than they did to earn.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7. REVIEWS ====================================================
+       Two, below the FAQ -- both halves of your note taken together: cut to
+       two AND placed after the questions, so the scroll to the form stays
+       short and the proof still lands.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">Here's what clients are saying</h2>
+      <p class="lede mt-3 rv">
+        Public on Dale's Upwork profile &mdash; <b>4.9 from 96 reviews</b>,
+        Top Rated Plus, 99% job success.
+        <a href="https://www.upwork.com/freelancers/dalelin" target="_blank" rel="noopener">Check them yourself</a>.
+      </p>
+      <div class="reviewgrid rv">
+        <a href="assets/testimonials/review-1.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-1.png" alt="Upwork review: Dale is super sharp, manages your Amazon account like it's his own, proficient with Amazon advertising and increased our sales significantly" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="assets/testimonials/review-2.png" target="_blank" rel="noopener"><img src="assets/testimonials/review-2.png" alt="Upwork review: highly recommended for anyone starting out with PPC or scaling existing brands, with monthly updates and clear KPIs" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8. THE ONE CTA ================================================
+       The only call to action on the page, per your spec. Everything that
+       used to point at the calendar -- masthead button, sticky bar, hero
+       button -- is gone, so this and the form are the only two ways
+       through.
+       ==================================================================== -->
+  <section class="band band--ink">
+    <div class="shell shell--tight center">
+      <h2 class="rv">See if you qualify</h2>
+      <a class="btn mt-4" href="#apply">Check if we're a fit</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot foot--ink">
+  <div class="shell">
+    <div class="colophon">
+      <span class="brandmark"><img src="assets/logo-white.png" alt="Brainy Brands" width="800" height="344"></span>
+      <p>&copy; 2026 Brainy Brands</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if ('IntersectionObserver' in window && !reduced) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) { return; }
+        e.target.setAttribute('data-in', '');
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+
+  var masthead = document.querySelector('.masthead');
+  var onScroll = function () {
+    if (window.scrollY > 8) { masthead.setAttribute('data-stuck', ''); }
+    else { masthead.removeAttribute('data-stuck'); }
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  var vslFrame = document.querySelector('#vsl iframe');
+  if (vslFrame && window.Vimeo && window.Vimeo.Player) {
+    var player = new window.Vimeo.Player(vslFrame);
+    var quarter = false;
+    player.on('timeupdate', function (data) {
+      if (!quarter && data && data.percent >= 0.25) {
+        quarter = true;
+        if (typeof fbq === 'function') { fbq('track', 'ViewContent', { content_name: 'VSL' }); }
+      }
+    });
+  }
+
+  /* --- THE GATE -----------------------------------------------------------
+     EMANUEL: client-side only, and per FUNNEL-AND-SITEMAP.md this rule has
+     to be re-run server-side in GHL before an invite fires. Anyone can skip
+     this by opening the calendar URL directly.
+
+     PASS  ad spend 10k-25k / 25k-50k / 50k-plus
+     FAIL  ad spend under-5k / 5k-10k
+     ---------------------------------------------------------------------- */
+  var form     = document.getElementById('applyForm'),
+      calendar = document.getElementById('applyCalendar'),
+      noFit    = document.getElementById('applyNoFit'),
+      error    = document.getElementById('formError');
+
+  if (!form) { return; }
+
+  var PASS = ['10k-25k', '25k-50k', '50k-plus'];
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = new FormData(form);
+    var required = ['name', 'email', 'ad_spend', 'revenue', 'manager'];
+    var missing = required.filter(function (f) { return !String(data.get(f) || '').trim(); });
+
+    if (missing.length) {
+      error.hidden = false;
+      var first = form.elements[missing[0]];
+      if (first && first.focus) { first.focus(); }
+      return;
+    }
+    error.hidden = true;
+
+    try {
+      sessionStorage.setItem('bb_lead', JSON.stringify({
+        name: data.get('name'), email: data.get('email'),
+        ad_spend: data.get('ad_spend'), revenue: data.get('revenue'),
+        manager: data.get('manager'),
+        fbclid: data.get('fbclid') || '',
+        source: 'audit'
+      }));
+    } catch (err) { /* private browsing */ }
+
+    var qualified = PASS.indexOf(String(data.get('ad_spend'))) > -1;
+
+    if (typeof fbq === 'function') {
+      fbq('track', 'Lead', { content_name: qualified ? 'qualified' : 'not-a-fit' });
+    }
+
+    form.hidden = true;
+    var panel = qualified ? calendar : noFit;
+    panel.hidden = false;
+
+    /* The calendar iframe renders while hidden, so GHL's resize script can
+       measure it at zero height. Re-setting src forces a fresh render now
+       that the element has real dimensions. */
+    if (qualified) {
+      var frame = calendar.querySelector('iframe');
+      if (frame && frame.src) { frame.src = frame.src; }
+    }
+
+    panel.setAttribute('tabindex', '-1');
+    panel.focus();
+    panel.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  });
+
+})();
+</script>
+
+<!-- GHL calendar embed script -- resizes the widget iframe to its real
+     content height. -->
+<script src="https://link.msgsndr.com/js/form_embed.js" type="text/javascript"></script>
+
+</body>
+</html>

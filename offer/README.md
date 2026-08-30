@@ -2696,3 +2696,107 @@ after: `oklch(0.994 0.002 250)`, full white, on both pages.
   unchanged, still only the known masthead false positive.
 - Tag balance clean on all three pages.
 - `offer/ghl/thanks-GHL.html` rebuilt through the same pipeline.
+
+---
+
+# Revision 35 — August 27, 2026
+
+## New page: `audit.html` — the gated variant
+
+Third landing page, built to your spec. Named `audit.html` because that is
+what `FUNNEL-AND-SITEMAP.md` already calls this exact page: *"The gate. Short
+form, decides who sees the calendar."*
+
+**17 sections on `offer.html` → 8 here.** Page height 5,072px against
+~8,000px. Everything cut is something the video covers.
+
+| # | Section | Ground |
+|---|---|---|
+| 1 | Headline + VSL | ink |
+| 2 | The gate — 5-field form, unlocks the calendar | white |
+| 3 | Case studies (3) | tint |
+| 4 | Logo wall | white |
+| 5 | Qualify / disqualify | tint |
+| 6 | FAQ (4) | white |
+| 7 | Reviews (2) | tint |
+| 8 | The one CTA | ink |
+
+Cut per your list: header nav CTA, Dale bio, sub-headline above the video,
+case studies 4–5, "what happens when you work with us", "what you get in the
+free audit", and the sticky bar. Grounds alternate at every seam — verified,
+after a first pass that left two white-on-white seams.
+
+## The headline
+
+> **Give us 30 days and we'll cut your ad spend by 25%+**
+> Without losing sales. If we don't hit it, we'll refund your money — or work
+> for free until we do.
+
+Written from your description of the closers.io page, **not from the page
+itself — I did not open it.**
+
+**One correction, flagged:** you wrote *"if **you** don't hit your target."*
+The subject should be *we* — we are the ones doing the cutting, and "you"
+reads as putting the obligation on the customer, which inverts the guarantee.
+
+`25%+` here, with the plus, as you asked this time. Worth knowing this is now
+the **only** page of the three saying 25%+; `offer.html`, `guide.html` and the
+guarantee band all say 25%, matching the locked wording. Fine for a test
+variant, worth reconciling if it wins.
+
+## The gate
+
+Five fields, and five exactly — the locked doc is explicit: *"Five fields. Do
+not add more — every extra field costs bookings."* The old `index.html` form
+had **six** and its options did not match the locked spec, so the locked spec
+won over the recovered markup.
+
+Rule, verbatim from the doc: **PASS** on $10K–$25K, $25K–$50K, $50K+.
+**FAIL** on under $5K or $5K–$10K. Revenue and current-manager are captured
+for call prep and gate nothing.
+
+FAIL gets an off-ramp rather than a dead end, in the FAQ's own language —
+under $10K there isn't enough waste for the guarantee to mean anything, so
+we'd be taking money to do very little.
+
+**Tested: 24 assertions, all passing** — empty-submit validation, both FAIL
+tiers, all three PASS tiers, `sessionStorage` capture, and the Meta click ID
+riding through onto the calendar URL. Also re-tested inside the GHL wrapper.
+
+## "Fix the numbers" — found it
+
+The disqualify line read **"under $5,000/month"**, which left $5K–$10K in a
+gap: neither qualified nor disqualified. The locked FAIL rule and the FAQ
+both put the cut-off at **$10K**. Now $10,000, matching the gate and the
+locked rule.
+
+## Two things that need you before this goes live
+
+**1. The video is still the old cut.** You described a new ~4-minute edit
+opening with the offer; no ID came with it. The embed points at the same
+Vimeo video as the other two pages (`1220603494`). Swap it when the short cut
+is up, or the page promises four minutes and plays the long one.
+
+**2. The gate is client-side only** — exactly as the locked doc warns:
+*"a UX convenience, not security… Anyone can bypass the JS."* The PASS/FAIL
+rule has to be re-run server-side in GHL before an invite actually fires.
+
+## One judgement call on the reviews
+
+Your note said testimonials "cut to 2, **or** move below the FAQ", while the
+below-fold list named four sections not including them. Both halves are
+applied: cut to two **and** placed after the FAQ, so the scroll to the form
+stays short and the proof still lands.
+
+## Verified
+
+- **Contrast sweep: 0 failures**, mobile and desktop — genuinely zero, no
+  masthead ghost button on this page.
+- No horizontal overflow at 390px or 1440px.
+- Tag balance clean, including `form`, `select` and `label`.
+- Section grounds: no same-ground seams.
+- Counts confirmed by measurement: 3 case studies, 4 FAQs, 2 reviews,
+  5 form fields.
+- `offer/ghl/audit-GHL.html` verified against the real GHL wrapper replica:
+  edge-to-edge, `top0`, no overflow, Archivo resolving, no JS errors, and the
+  gate confirmed still working inside the wrapper.

@@ -1,0 +1,1849 @@
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Public+Sans:wght@400;700&display=swap");
+
+/* ==========================================================================
+   Brainy Brands — OFFER PAGE
+   offer/index.html only. Self-contained: this folder does not read anything
+   from the parent site, so nothing here can break index.html, landing.html
+   or vsl.html, and vice versa.
+
+   This is a LIGHT system, built from scratch rather than inverted from the
+   dark one. Inverting a dark palette gives you grey mud; the neutrals here
+   are mixed toward the brand blue from white down, and the two accents were
+   re-picked for a white ground.
+
+   Reference: go.brainyamz.com/offer-7 for structure, with the busywork
+   stripped out. Minimalist, mostly white, one accent doing real work.
+   ========================================================================== */
+
+/* --- Type families ---------------------------------------------------------
+   VINYL IS NO LONGER THE DISPLAY FACE. You said you didn't like it in use,
+   and the objection is legitimate: it's a wide single-weight display face,
+   so it can't do weight contrast, it has no arrow glyph, and at paragraph
+   headings it reads more record-sleeve than premium-service.
+
+   Display is now ARCHIVO 700/800 — the face DESIGN.md already selected and
+   justified for this brand (grotesque, signage lineage, strong numerals,
+   holds up huge with tight tracking). It also gives real weight contrast,
+   which is most of what makes a page feel expensive.
+
+   Vinyl stays loaded and available as .vinyl for one-off accents, and the
+   logo lockup is still set in it, so the brand link is intact. The
+   @font-face below is kept for that reason, not because the page needs it.
+
+   Original note on the file, still relevant:
+
+   >>> LICENSING, please read <<<
+   The file you sent carries NO trademark, foundry, designer or license
+   metadata, and its readme says it came from a free-font aggregator. Vinyl
+   is a commercial T-26 face licensed through Adobe Fonts. Free-font sites
+   routinely redistribute commercial faces without a licence, and a desktop
+   licence does not cover webfont embedding regardless.
+
+   If you have Creative Cloud, the licensed route is an Adobe Fonts web
+   project: it gives you a <link> that replaces the @font-face below, and
+   everything else on this page keeps working untouched. Worth doing before
+   this is public.
+
+   Vinyl has no arrow glyph, so "->" in the case metrics is deliberately set
+   in the body face via .arr. Without that it silently falls back mid-word
+   and the weight jumps.
+   ------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Vinyl";
+  src: url("https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46377ac084b112566d6e.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Tokens --------------------------------------------------------------- */
+
+:root {
+  /* Ground. Warm-white, not #fff — a pure white page on an LCD is glare. */
+  --paper:      oklch(0.994 0.002 250);
+  --paper-2:    oklch(0.972 0.004 250);   /* banded sections */
+  --paper-3:    oklch(0.945 0.006 250);   /* input wells, media backing */
+
+  /* Ink. Tinted toward the brand blue, never #000. */
+  --ink:        oklch(0.205 0.020 258);   /* 15.9:1 on --paper */
+  --ink-2:      oklch(0.430 0.018 258);   /*  7.4:1 — body copy */
+  --ink-3:      oklch(0.525 0.016 258);   /* the floor: 5.3 on paper, 5.0 on
+                                             paper-2, 4.6 on paper-3. Solved
+                                             against the DARKEST ground it
+                                             lands on, not the lightest —
+                                             0.560 passed on white and failed
+                                             at 4.29 on the tinted bands where
+                                             most of these captions live. */
+
+  --line:       oklch(0.205 0.020 258 / 0.14);
+  --line-soft:  oklch(0.205 0.020 258 / 0.07);
+
+  /* Accents, re-picked for a white ground. The orange that carried the dark
+     page is too light here; both of these are darkened until they hold
+     4.5:1 against --paper. */
+  --amz:        oklch(0.559 0.170 47);    /*  4.9 on paper, 4.6 on paper-2 */
+  --amz-deep:   oklch(0.480 0.150 45);    /*  7.1:1 — accent text at body size */
+  --brand-blue: oklch(0.820 0.075 245);   /* the logo blue, decorative only */
+
+  --go:         oklch(0.505 0.140 152);   /*  5.4 on paper, 5.0 on paper-2 */
+  --no:         oklch(0.545 0.190 27);    /*  5.4 on paper, 5.0 on paper-2 */
+
+  --error:      oklch(0.510 0.190 27);
+
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body:    "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Archivo takes more size than Vinyl did at the same optical weight. */
+  --t-mega:   clamp(2.35rem, 1.35rem + 3.6vw, 4.5rem);
+  --t-h2:     clamp(1.75rem, 1.2rem + 2.1vw, 2.9rem);
+  --t-h3:     clamp(1.05rem, 0.97rem + 0.38vw, 1.28rem);
+  --t-lede:   clamp(1.06rem, 0.99rem + 0.34vw, 1.25rem);
+  --t-body:   1.0625rem;
+  --t-sm:     0.9375rem;
+  --t-xs:     0.8125rem;
+
+  --s2: 1rem; --s3: 1.5rem; --s4: 2rem; --s5: 3rem; --s6: 4rem;
+  --band:     clamp(3.5rem, 2.2rem + 5vw, 6.5rem);
+  --band-lg:  clamp(5rem, 3rem + 7vw, 9rem);
+
+  --shell: 1120px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Reset ---------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, p, ul, ol, figure, blockquote { margin: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+img, svg, video { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--ink-2);
+  background: var(--paper);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Layout --------------------------------------------------------------- */
+
+.shell { width: 100%; max-width: var(--shell); margin-inline: auto; padding-inline: clamp(1.25rem, 0.6rem + 2.2vw, 2.25rem); }
+.shell--tight { max-width: 860px; }
+
+.band { padding-block: var(--band); }
+.band--lg { padding-block: var(--band-lg); }
+.band--tint { background: var(--paper-2); }
+.band--rule { border-top: 1px solid var(--line-soft); }
+
+/* --- Type ----------------------------------------------------------------- */
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.03;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+/* Vinyl kept available for accents. Single weight, so never synthesise bold. */
+.vinyl { font-family: "Vinyl", var(--font-display); font-weight: 400; letter-spacing: 0; }
+h1 { font-size: var(--t-mega); }
+h2 { font-size: var(--t-h2); }
+h3 { font-family: var(--font-body); font-size: var(--t-h3); font-weight: 700; letter-spacing: -0.012em; line-height: 1.3; color: var(--ink); }
+
+.lede { font-size: var(--t-lede); line-height: 1.55; color: var(--ink-2); max-width: 56ch; text-wrap: pretty; }
+.sm { font-size: var(--t-sm); }
+.xs { font-size: var(--t-xs); }
+.muted { color: var(--ink-3); }
+.accent { color: var(--amz-deep); }
+
+/* Vinyl has no arrow. Set it in the body face on purpose rather than let
+   the browser fall back mid-string. */
+.arr { font-weight: 400; color: var(--amz); padding-inline: 0.12em; }
+
+/* --- Buttons -------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  padding: 0.9rem 2rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.btn:hover { background: var(--amz-deep); border-color: var(--amz-deep); color: var(--paper); }
+.btn--ghost { background: transparent; color: var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); }
+.btn--sm { min-height: 2.7rem; padding: 0.55rem 1.15rem; font-size: var(--t-sm); }
+.btn--wide { width: 100%; }
+
+.cta-note { margin-top: var(--s3); font-size: var(--t-sm); color: var(--ink-3); }
+
+:where(a, button, input, select, summary):focus-visible {
+  outline: 2px solid var(--amz-deep);
+  outline-offset: 3px;
+}
+a { color: var(--amz-deep); text-underline-offset: 0.2em; }
+
+/* --- Masthead ------------------------------------------------------------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s var(--ease);
+}
+.masthead[data-stuck] { border-bottom-color: var(--line); }
+.masthead .shell { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 4.5rem; }
+.brandmark img { height: 2rem; width: auto; }
+.foot .brandmark img { height: 1.6rem; opacity: 0.55; }
+
+/* --- Hero ----------------------------------------------------------------- */
+
+.hero { padding-block: clamp(2.5rem, 1.4rem + 4vw, 5rem) clamp(2.5rem, 1.5rem + 3.5vw, 4.5rem); text-align: center; }
+.hero h1 { max-width: 17ch; margin-inline: auto; }
+.hero .lede { margin: var(--s4) auto 0; }
+.hero .btn { margin-top: var(--s5); }
+
+/* The guarantee, set as the hero. Vinyl at display size with the figure
+   picked out in the accent — no highlighter block, this page is quiet. */
+.promise { display: block; }
+.promise .fig { color: var(--amz); }
+.promise .rest {
+  display: block;
+  margin-top: 0.35em;
+  font-size: 0.42em;
+  line-height: 1.2;
+  color: var(--ink-2);
+}
+.promise-terms { margin-top: var(--s3); font-size: var(--t-sm); color: var(--ink-3); }
+
+/* --- Client strip --------------------------------------------------------- */
+
+.striplabel { text-align: center; font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: var(--s4); }
+.logostrip { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: clamp(1.25rem, 0.5rem + 2.2vw, 2.75rem); margin: 0; padding: 0; list-style: none; }
+.logostrip li { font-family: var(--font-display); font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.15rem); color: var(--ink-3); }
+.logostrip img { height: 1.6rem; width: auto; filter: grayscale(1); opacity: 0.6; }
+
+/* --- Deliverables ("what happens when you work with us") -------------------
+   Numbered rows, hairline separated. No cards, no icon tiles — the count
+   and the rule carry the structure.
+   ------------------------------------------------------------------------- */
+
+.deliverables { margin: var(--s5) 0 0; padding: 0; list-style: none; counter-reset: d; }
+.deliverables > li {
+  counter-increment: d;
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  gap: 0.25rem var(--s3);
+  padding-block: clamp(1.4rem, 1rem + 1.4vw, 2.1rem);
+  border-top: 1px solid var(--line);
+}
+.deliverables > li:last-child { border-bottom: 1px solid var(--line); }
+.deliverables > li::before {
+  content: counter(d, decimal-leading-zero);
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--amz);
+  padding-top: 0.15em;
+}
+.deliverables p { grid-column: 2; margin-top: 0.4rem; color: var(--ink-2); max-width: 58ch; }
+
+/* --- Guarantee panel ------------------------------------------------------ */
+
+.promise-panel {
+  margin-top: var(--s5);
+  padding: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  background: var(--ink);
+  color: var(--paper);
+}
+.promise-panel h3 { color: var(--paper); font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, 1rem + 1.3vw, 2rem); line-height: 1.15; letter-spacing: -0.005em; }
+.promise-panel h3 .fig { color: var(--brand-blue); }
+.promise-panel p { margin-top: var(--s3); color: oklch(0.994 0.002 250 / 0.72); max-width: 60ch; }
+
+/* --- Case metrics --------------------------------------------------------- */
+
+/* Two up, not four. At four the metric wraps mid-figure and leaves the
+   arrow dangling at the end of a line; two gives each one room to sit on a
+   single line, which is the whole point of setting them big. */
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); border-top: 1px solid var(--line); }
+.cases > div { padding: clamp(1.5rem, 1rem + 1.6vw, 2.25rem) var(--s4) clamp(1.5rem, 1rem + 1.6vw, 2.25rem) 0; border-left: 1px solid var(--line); margin-left: -1px; border-bottom: 1px solid var(--line); }
+.cases > div { padding-left: var(--s4); }
+.cases > div:nth-child(odd) { border-left: 0; margin-left: 0; padding-left: 0; }
+.case-tag { font-size: var(--t-xs); letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-3); }
+.case-metric { margin-top: 0.55rem; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, 1rem + 1.2vw, 1.85rem); line-height: 1.1; color: var(--ink); white-space: nowrap; }
+.case-line { margin-top: 0.5rem; font-size: var(--t-sm); color: var(--ink-2); max-width: 42ch; }
+.case-who { margin-top: 0.7rem; font-size: var(--t-sm); font-weight: 700; color: var(--ink); }
+
+/* --- Testimonial screenshots ----------------------------------------------
+   Real Upwork screenshots, not retyped quotes. A screenshot is the proof;
+   retyping it throws the proof away.
+   ------------------------------------------------------------------------- */
+
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: clamp(1rem, 0.6rem + 1.2vw, 1.75rem); margin-top: var(--s5); }
+.shots figure { margin: 0; border: 1px solid var(--line); background: var(--paper); }
+.shots img { width: 100%; height: auto; display: block; }
+.shot-slot {
+  display: grid;
+  place-content: center;
+  gap: 0.4rem;
+  aspect-ratio: 3 / 2;
+  padding: var(--s3);
+  text-align: center;
+  background: var(--paper-3);
+  color: var(--ink-3);
+  font-size: var(--t-xs);
+}
+.shot-slot b { font-family: var(--font-body); font-weight: 700; color: var(--ink-2); }
+
+/* --- Qualification -------------------------------------------------------- */
+
+.qual { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: clamp(2rem, 1rem + 3vw, 4rem); margin-top: var(--s5); }
+.qual h3 { display: flex; align-items: center; gap: 0.55rem; font-size: var(--t-h3); }
+.qual h3 svg { flex: none; width: 1.1rem; height: 1.1rem; }
+.qual--go h3 svg { color: var(--go); }
+.qual--no h3 svg { color: var(--no); }
+.qual ul { margin: var(--s3) 0 0; padding: 0; list-style: none; }
+.qual li { position: relative; padding: 0.65rem 0 0.65rem 2rem; border-top: 1px solid var(--line); color: var(--ink-2); }
+.qual li:last-child { border-bottom: 1px solid var(--line); }
+.qual li b { color: var(--ink); font-weight: 700; }
+.qual li svg { position: absolute; left: 0; top: 1.05em; width: 1.05rem; height: 1.05rem; }
+.qual--go li svg { color: var(--go); }
+.qual--no li svg { color: var(--no); }
+
+/* --- Dale ----------------------------------------------------------------- */
+
+.dale { display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr); gap: clamp(1.75rem, 1rem + 3vw, 3.5rem); align-items: center; }
+.dale-photo { background: var(--paper-3); }
+/* height:auto is load-bearing. The <img> carries width/height attributes for
+   layout stability, and without height:auto those presentational attributes
+   win over aspect-ratio — the square source rendered 272x512 instead of the
+   intended 4:5 crop. */
+.dale-photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.dale p { color: var(--ink-2); }
+.dale p + p { margin-top: var(--s3); }
+.dale b { color: var(--ink); font-weight: 700; }
+
+/* --- Video ---------------------------------------------------------------- */
+
+.vsl { position: relative; background: var(--ink); border: 1px solid var(--line); }
+
+/* Vimeo embed (offer.html, guide.html). The iframe is a replaced element, so
+   giving it aspect-ratio + width:100% makes it responsive without the old
+   padding-top hack, and lets the desktop rules below cap it by HEIGHT and
+   derive width from the ratio — the same trick the <video> used, and the
+   only version that holds at every window size. */
+.vsl iframe { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; }
+
+/* Everything from .vsl video down to .vsl-time below drives the hand-rolled
+   player that only index.html still uses. offer.html and guide.html moved to
+   the Vimeo embed above and no longer emit any of these elements — the rules
+   are inert there, and deleting them would break index.html. */
+.vsl video { width: 100%; aspect-ratio: 16 / 9; display: block; }
+/* Fallback content paints only when the browser can't decode the source, by
+   which point it is dark-on-dark unless coloured literally rather than
+   through a custom property. */
+.vsl video { color: #F4F6F9; }
+.vsl video a { color: #FFC08A; }
+.vsl-unmute {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; gap: 0.7rem; justify-items: center;
+  border: 0; background: oklch(0.205 0.020 258 / 0.35);
+  color: #fff; font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: background-color 0.3s var(--ease);
+}
+.vsl-unmute:hover { background: oklch(0.205 0.020 258 / 0.18); }
+.vsl-unmute svg { width: 2.5rem; height: 2.5rem; }
+.vsl[data-sound] .vsl-unmute { display: none; }
+.vsl-bar { display: flex; align-items: center; gap: var(--s3); padding: 0.8rem var(--s3); background: var(--ink); border-top: 1px solid oklch(0.994 0.002 250 / 0.14); }
+.vsl-play { flex: none; width: 2.4rem; height: 2.4rem; display: grid; place-content: center; border: 1px solid oklch(0.994 0.002 250 / 0.25); background: transparent; color: #fff; cursor: pointer; }
+.vsl-play svg { width: 0.9rem; height: 0.9rem; }
+.vsl-play .ico-pause { display: none; }
+.vsl[data-playing] .vsl-play .ico-pause { display: block; }
+.vsl[data-playing] .vsl-play .ico-play { display: none; }
+.vsl-progress { flex: 1 1 auto; height: 2px; background: oklch(0.994 0.002 250 / 0.2); pointer-events: none; }
+.vsl-progress span { display: block; height: 100%; width: 0; background: var(--amz); }
+.vsl-time { flex: none; font-size: var(--t-xs); font-variant-numeric: tabular-nums; color: oklch(0.994 0.002 250 / 0.6); }
+
+/* --- Form ----------------------------------------------------------------- */
+
+.gate { max-width: 34rem; }
+.field + .field { margin-top: var(--s3); }
+.field label { display: block; font-size: var(--t-sm); font-weight: 700; color: var(--ink); margin-bottom: 0.45rem; }
+.field input, .field select {
+  width: 100%; height: 3.4rem; padding: 0 0.9rem;
+  font-family: inherit; font-size: 1.0625rem; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 0;
+  appearance: none; -webkit-appearance: none;
+  transition: border-color 0.3s var(--ease);
+}
+.field select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23566073' stroke-width='1.6'%3E%3Cpath d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 0.75rem; padding-right: 2.4rem;
+}
+.field input:hover, .field select:hover { border-color: var(--ink-3); }
+.field input:focus, .field select:focus { outline: 2px solid var(--amz-deep); outline-offset: 1px; border-color: var(--amz-deep); }
+.field-hint { margin-top: var(--s3); font-size: var(--t-xs); color: var(--ink-3); }
+.form-error { margin-top: var(--s3); padding: 0.8rem 1rem; border: 1px solid var(--error); background: oklch(0.545 0.190 27 / 0.07); color: var(--ink); font-size: var(--t-sm); font-weight: 700; }
+.confirm { border: 1px solid var(--amz); padding: clamp(1.5rem, 1rem + 1.6vw, 2.25rem); }
+.confirm h3 { color: var(--amz-deep); }
+.confirm p { margin-top: var(--s2); }
+
+/* GHL calendar embed — now a section of its own on offer.html and
+   guide.html rather than a column beside a header, so it carries no top
+   margin: the band's own padding is the spacing.
+
+   min-height is a PRE-LOAD PLACEHOLDER ONLY. It used to be 700px, which was
+   the real reason the embed ate the screen: min-height beats the height
+   form_embed.js sets, so whatever GHL measured its widget to be, the band
+   never rendered shorter than 700px. Dropped to 420px so the resize script
+   actually owns the height it computes. If the widget still renders tall,
+   that height is coming from GHL and has to be changed there. */
+/* The widget now sits under the audit list rather than alone in the band, so
+   it needs real separation from the copy above it. */
+.calendar-embed { margin-top: var(--s5); }
+.calendar-embed iframe { display: block; width: 100%; min-height: 420px; }
+
+/* --- Numbered deliverables on the ink ground -------------------------------
+   .deliverables was built for light bands: its rules use --line (dark ink at
+   14%) for the dividers and --ink-2 for the sub-copy, both of which vanish on
+   ink. The audit list in the booking section is the first time this list has
+   been used on a dark ground, so it needs the pair. The counter can take
+   full-strength --amz-hot here, which is the one place that orange is correct
+   -- on black, not on the light bands where it measures 2.1:1. */
+.band--ink .deliverables > li { border-top-color: oklch(0.994 0.002 250 / 0.16); }
+.band--ink .deliverables > li:last-child { border-bottom-color: oklch(0.994 0.002 250 / 0.16); }
+.band--ink .deliverables > li::before { color: var(--amz-hot); }
+.band--ink .deliverables b { color: var(--paper); font-weight: 700; }
+.band--ink .deliverables p { color: oklch(0.994 0.002 250 / 0.72); }
+
+/* .deliverables--plain hard-sets color: var(--ink) -- correct on the tint
+   band it was written for ("Here's what happens when you work with us"),
+   invisible on ink. Nothing currently puts --plain on an ink band, so this
+   rule is unused today. Kept deliberately: a literal colour that only works
+   on one ground is the single failure this stylesheet keeps repeating, and
+   one line is cheaper than finding it again the next time a section moves. */
+.band--ink .deliverables--plain > li { color: var(--paper); }
+
+/* The note under the audit list is white rather than the .cta-note default of
+   62% -- asked for explicitly, and it carries a real condition (the guarantee
+   only exists after the audit) rather than being fine print. */
+#apply .cta-note, #audit .cta-note { color: var(--paper); }
+
+/* --- Deliverables, mixed weight --------------------------------------------
+   Same numbered structure and dividers as --plain, but the item sets in
+   regular with <b> carrying the emphasis, so the pain points stand out
+   instead of every word competing at 800.
+
+   Body face, not display, and that is forced rather than chosen: Archivo is
+   loaded at a single weight (`family=Archivo:wght@800`), so asking for
+   anything lighter in the display face gets no file and silently falls back
+   to Arial. Public Sans ships 400 and 700, which is a real weight pair.
+
+   The <span> wrapper is required, not decorative -- .deliverables > li is
+   display:grid, so inline children each become their own grid item on their
+   own row. Without it, an item carrying a <b> stacks into two rows. */
+.deliverables--mixed > li {
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  padding-block: clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
+}
+.deliverables--mixed > li > span { grid-column: 2; }
+.deliverables--mixed b { font-weight: 700; }
+.band--ink .deliverables--mixed > li,
+.band--ink .deliverables--mixed b { color: var(--paper); }
+
+/* The audit list sits between a heading and the booking widget, so its height
+   is not free: every pixel here pushes the calendar further from the CTA that
+   just jumped the visitor to this section. Standard .deliverables padding put
+   the widget ~1100px down on a phone, which is well past the fold. Tightened
+   so the list reads at a glance and the calendar stays close behind it. */
+
+
+/* On a phone the booking band gives back most of its padding. The widget is
+   the tallest single element on either page, and its own height belongs to
+   GHL — form_embed.js measures the widget and sets it. The only screen space
+   that is genuinely ours here is what surrounds it, so the standard --band
+   padding (112px of it, top and bottom combined at this width) comes off, and
+   the shell's side padding nearly all comes off too.
+
+   Widening it is not only about the margins: GHL's calendar is responsive, so
+   a wider frame lays the date grid and time slots out in fewer rows, which
+   makes the widget itself shorter. Width is the one lever we have on its
+   height. */
+@media (max-width: 700px) {
+  #apply { padding-block: var(--s4); }
+  #apply .shell { padding-inline: 0.5rem; }
+}
+
+.split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 1rem + 3.5vw, 4rem); align-items: start; }
+
+/* --- Footer --------------------------------------------------------------- */
+
+.foot { padding-block: var(--s6) var(--s5); border-top: 1px solid var(--line-soft); }
+.colophon { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s3); font-size: var(--t-xs); color: var(--ink-3); }
+.colophon a { color: var(--ink-3); }
+
+/* --- Footer on ink ---------------------------------------------------------
+   The footer text is white now, which only works on a dark ground: .foot sat
+   on the body (oklch 0.994), so white type there would have been invisible.
+   The band goes ink with it rather than the colour changing on its own.
+
+   The mark swaps to logo-white.png for the same reason -- the footer was
+   using logo-black.png, which disappears on ink. Both files already exist;
+   the masthead has been crossfading between them all along. */
+.foot--ink { background: var(--ink); border-top: 0; }
+.foot--ink .colophon { color: var(--paper); }
+.foot--ink .brandmark img { opacity: 1; }
+
+/* --- Sticky CTA ----------------------------------------------------------- */
+
+.sticky-cta {
+  position: fixed; inset: auto 0 0 0; z-index: 60;
+  padding: 0.7rem clamp(1rem, 0.5rem + 2vw, 1.5rem) calc(0.7rem + env(safe-area-inset-bottom));
+  background: var(--paper); border-top: 1px solid var(--line);
+  transform: translateY(110%); transition: transform 0.4s var(--ease);
+}
+.sticky-cta[data-show] { transform: translateY(0); }
+.sticky-cta .btn { width: 100%; }
+@media (min-width: 861px) { .sticky-cta { display: none; } }
+
+/* --- Reveal --------------------------------------------------------------- */
+
+[data-reveal] .rv { opacity: 0; transform: translateY(14px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+[data-reveal] .rv[data-in] { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { [data-reveal] .rv { opacity: 1; transform: none; } }
+
+/* --- Utility -------------------------------------------------------------- */
+
+.mt-3 { margin-top: var(--s3); }
+.mt-4 { margin-top: var(--s4); }
+.mt-5 { margin-top: var(--s5); }
+.center { text-align: center; }
+.center .lede { margin-inline: auto; }
+[hidden] { display: none !important; }
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--ink); color: var(--paper); padding: 0.6rem 1rem; text-decoration: none; font-weight: 700; }
+
+/* --- Responsive ----------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .split, .dale { grid-template-columns: 1fr; }
+  .dale-photo { max-width: 17rem; }
+}
+
+@media (max-width: 620px) {
+  .cases > div { border-left: 0; margin-left: 0; padding-left: 0 !important; padding-right: 0; }
+  .deliverables > li { grid-template-columns: 2.25rem minmax(0, 1fr); }
+  .logostrip { gap: 0.8rem 1.4rem; }
+  .shots { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   REVISION 2 — contrast, premium, mobile-first
+
+   "Everything looks white" was fair: v1 was white on white with one tinted
+   band. This adds real tonal range — full-black panels, a brand-blue panel,
+   white — so the page has rhythm instead of one flat value. Majority still
+   white.
+   ========================================================================== */
+
+/* --- Inverted + blue panels ------------------------------------------------
+   The contrast the page was missing. Black for the two moments that must
+   land (the guarantee, the urgency), blue for the one that should feel
+   lighter (how it works).
+   ------------------------------------------------------------------------- */
+
+.band--ink { background: var(--ink); color: oklch(0.994 0.002 250 / 0.78); }
+.band--ink h1, .band--ink h2, .band--ink h3 { color: var(--paper); }
+.band--ink .lede { color: oklch(0.994 0.002 250 / 0.80); }
+.band--ink .muted, .band--ink .cta-note { color: oklch(0.994 0.002 250 / 0.62); }
+.band--ink .btn { background: var(--paper); border-color: var(--paper); color: var(--ink); }
+.band--ink .btn:hover { background: var(--amz); border-color: var(--amz); color: var(--paper); }
+.band--ink a { color: var(--brand-blue); }
+
+
+/* --- Hero, rebuilt ---------------------------------------------------------
+   Black. The guarantee is the single loudest thing on the page and it now
+   sits on the highest-contrast ground available, which is what "make the
+   guarantee bolder" actually means structurally.
+   ------------------------------------------------------------------------- */
+
+.hero--ink { background: var(--ink); text-align: center; }
+.hero--ink h1 { color: var(--paper); max-width: 15ch; margin-inline: auto; }
+.hero--ink .promise .fig { color: var(--amz-hot); }
+.hero--ink .promise-terms { color: oklch(0.994 0.002 250 / 0.55); }
+.hero--ink .btn { background: var(--amz-hot); border-color: var(--amz-hot); color: var(--ink); font-size: 1.1rem; }
+.hero--ink .btn:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
+.hero--ink .cta-note { color: oklch(0.994 0.002 250 / 0.62); }
+
+/* On black the accent can go back to full Amazon orange — it only had to be
+   darkened for the white ground. */
+:root { --amz-hot: oklch(0.772 0.174 64.6); }
+
+/* --- Trust row under the hero --------------------------------------------- */
+
+.hero-trust {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: 0.5rem 0; margin-top: var(--s5); padding: 0;
+  list-style: none; font-size: var(--t-sm);
+  color: oklch(0.994 0.002 250 / 0.68);
+}
+.hero-trust li { display: inline-flex; align-items: center; gap: 0.4rem; }
+.hero-trust li:not(:last-child)::after { content: "\00B7"; margin-inline: 0.85rem; color: oklch(0.994 0.002 250 / 0.35); }
+.hero-trust b { color: var(--paper); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* --- Big stat header ------------------------------------------------------- */
+
+.bigstat { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--amz-deep); font-variant-numeric: tabular-nums; }
+
+/* --- Result rows, ad-spend led ---------------------------------------------
+   The cut is the promise, so the cut is the headline number and the revenue
+   is demoted to a supporting line. Previously they were peers, which buried
+   the thing the offer is actually about.
+   ------------------------------------------------------------------------- */
+
+.results { margin: var(--s5) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.results > li {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s3) var(--s4);
+  padding-block: clamp(1.4rem, 1rem + 1.5vw, 2.1rem);
+  border-bottom: 1px solid var(--line);
+}
+/* The logo cell is a fixed box and every mark is contained inside it, rather
+   than each logo being capped by whichever dimension it happened to hit
+   first. At the old 2.2rem cap a wide mark (Temptooth) ran the full column
+   width while a squarer one (The Magic Brand) shrank to ~35px and read as an
+   afterthought. A taller box lifts the squarer marks most, which is where
+   the inconsistency actually was. */
+.result-logo { display: flex; align-items: center; min-height: 3.5rem; }
+.result-logo img { max-height: 3.5rem; max-width: 100%; width: auto; object-fit: contain; }
+.result-logo .fallback { font-family: var(--font-display); font-weight: 800; font-size: var(--t-sm); letter-spacing: -0.02em; color: var(--ink); }
+
+.result-cut {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 1.15rem + 1.9vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--amz-deep);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.result-cut .unit { font-size: 0.5em; font-weight: 700; letter-spacing: -0.01em; color: var(--ink-3); display: block; margin-top: 0.35rem; }
+.result-bonus { font-size: var(--t-sm); color: var(--ink-2); text-align: right; max-width: 22ch; justify-self: end; }
+.result-bonus b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* --- Reviews, real screenshots -------------------------------------------- */
+
+/* Two up, not three. These are now the FULL uncut reviews rather than the
+   cropped cards, so each one is a paragraph of body text in a ~770px-wide
+   screenshot. At three columns each landed at 335px — a 44% downscale, which
+   put the review text at about 7px. Two columns keeps it near 70%. */
+.reviewgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: clamp(0.85rem, 0.5rem + 1vw, 1.4rem); margin-top: var(--s5); align-items: start; }
+.reviewgrid a { display: block; border: 1px solid var(--line); background: var(--paper); }
+.reviewgrid img { width: 100%; height: auto; display: block; }
+
+/* --- FAQ ------------------------------------------------------------------- */
+
+.faq { margin-top: var(--s5); border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3);
+  padding-block: clamp(1rem, 0.8rem + 0.7vw, 1.4rem);
+  font-family: var(--font-body); font-weight: 700; font-size: var(--t-h3);
+  color: var(--ink); cursor: pointer; list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; flex: none; font-size: 1.4rem; line-height: 1; color: var(--amz-deep); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq .a { padding-bottom: clamp(1rem, 0.8rem + 0.7vw, 1.4rem); color: var(--ink-2); max-width: 62ch; }
+
+/* --- Urgency --------------------------------------------------------------- */
+
+.rules { margin: var(--s4) 0 0; padding: 0; list-style: none; }
+.rules li { position: relative; padding: 0.7rem 0 0.7rem 1.9rem; border-top: 1px solid oklch(0.994 0.002 250 / 0.16); }
+.rules li:last-child { border-bottom: 1px solid oklch(0.994 0.002 250 / 0.16); }
+.rules li::before { content: ""; position: absolute; left: 0; top: 1.5em; width: 0.8rem; height: 1px; background: var(--amz-hot); }
+.rules b { color: var(--paper); font-weight: 700; }
+
+/* --- Mobile ---------------------------------------------------------------
+   ~80% of this traffic is on a phone. Every stacked layout below is a
+   deliberate mobile shape, not a desktop grid that happens to collapse.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 700px) {
+  .results > li {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 0.75rem var(--s3);
+  }
+  .result-logo { grid-column: 1 / -1; }
+  .result-cut { font-size: 2rem; }
+  .result-bonus { text-align: left; justify-self: start; grid-column: 1 / -1; max-width: none; }
+  .hero-trust { flex-direction: column; align-items: center; gap: 0.45rem; }
+  .hero-trust li:not(:last-child)::after { content: none; }
+  .reviewgrid { grid-template-columns: 1fr; }
+}
+
+/* --- The form on the inverted band ----------------------------------------
+   Moving the apply section onto black broke the form: labels inherit
+   --ink, which on --ink is 1:1 — literally invisible. Caught by the
+   contrast sweep, not by eye, because the labels were there the whole time
+   in the DOM.
+
+   Fields go white-on-black rather than dark-on-dark. A white input on a
+   black ground also reads as obviously interactive, which is worth having
+   at the one point on the page where someone has to type.
+   ------------------------------------------------------------------------- */
+
+.band--ink .field label { color: var(--paper); }
+.band--ink .field input,
+.band--ink .field select {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: transparent;
+}
+.band--ink .field input::placeholder { color: var(--ink-3); }
+.band--ink .field input:hover,
+.band--ink .field select:hover { border-color: var(--brand-blue); }
+.band--ink .field input:focus,
+.band--ink .field select:focus { outline-color: var(--amz-hot); border-color: var(--amz-hot); }
+.band--ink .field-hint { color: oklch(0.994 0.002 250 / 0.65); }
+.band--ink .field-hint a { color: var(--brand-blue); }
+
+.band--ink .form-error {
+  border-color: var(--amz-hot);
+  background: oklch(0.772 0.174 64.6 / 0.14);
+  color: var(--paper);
+}
+.band--ink .confirm { border-color: var(--amz-hot); }
+.band--ink .confirm h3 { color: var(--amz-hot); }
+.band--ink .confirm p { color: oklch(0.994 0.002 250 / 0.78); }
+
+/* ==========================================================================
+   REVISION 3 — hero restraint, simpler lists, square portrait
+   ========================================================================== */
+
+/* --- Hero -------------------------------------------------------------------
+   Spacing was off because the block had five stacked children fighting for
+   the same vertical rhythm. With two, the interval can be deliberate.
+   ------------------------------------------------------------------------- */
+
+.hero--ink h1 { max-width: 16ch; }
+.hero--ink .promise .rest { margin-top: 0.5em; }
+.hero--ink .btn { margin-top: clamp(2.25rem, 1.5rem + 2.4vw, 3.25rem); }
+.hero--ink .cta-note { margin-top: var(--s3); }
+
+.band--sm { padding-block: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); }
+
+/* Logo strip — the supplied marks vary wildly in aspect, so cap by height and
+   let width do what it likes rather than forcing a grid. */
+.logostrip img { height: clamp(1.5rem, 1.15rem + 1.1vw, 2.1rem); width: auto; filter: grayscale(1); opacity: 0.55; transition: opacity 0.3s var(--ease); }
+.logostrip img:hover { opacity: 0.9; }
+
+/* --- Deliverables, titles only --------------------------------------------- */
+
+.deliverables--plain { counter-reset: d; }
+.deliverables--plain > li {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--s3);
+  padding-block: clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 0.98rem + 0.8vw, 1.75rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+/* --- Dale ------------------------------------------------------------------
+   Portrait is square everywhere now, not a 4:5 crop. On a phone it sits
+   beside the heading instead of stacking above it at full width — a
+   full-bleed portrait ate the entire first screen of the section.
+   ------------------------------------------------------------------------- */
+
+.dale-photo img { aspect-ratio: 1 / 1; }
+
+@media (max-width: 860px) {
+  .dale {
+    display: grid;
+    grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+    grid-template-areas: "photo head" "copy copy";
+    align-items: center;
+    gap: var(--s3) var(--s4);
+  }
+  .dale-photo { grid-area: photo; max-width: none; }
+  .dale-copy { grid-area: copy; display: contents; }
+  .dale-copy h2 { grid-area: head; }
+  .dale-copy p { grid-column: 1 / -1; }
+  /* display:contents promotes the paragraphs to grid items, so the row gap
+     already separates them — leaving the p+p margin in place double-counts
+     it and opens a ~50px hole between every line of copy.
+
+     This reset was here before and did not work: `.dale-copy p` is (0,1,1)
+     and loses to `.dale p + p` (0,1,2) up in the base rules, so every
+     paragraph kept its 24px margin on top of the 24px row gap and the gaps
+     measured 48px on a phone. Matching the selector on p + p fixes it —
+     equal specificity, and this block is later in the file. */
+  .dale-copy p,
+  .dale-copy p + p { margin-top: 0; }
+}
+
+@media (max-width: 460px) {
+  .dale { grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr); gap: var(--s3); }
+}
+
+/* --- FAQ answers that contain structure ------------------------------------ */
+.faq .a p { margin: 0; }
+.faq .a ul { margin: var(--s2) 0 0; padding: 0; list-style: none; }
+.faq .a li { position: relative; padding: 0.35rem 0 0.35rem 1.4rem; }
+.faq .a li::before { content: ""; position: absolute; left: 0; top: 1.15em; width: 0.65rem; height: 1px; background: var(--amz); }
+
+/* Review screenshots are now the full uncut reviews, which vary in height.
+   Let them size naturally instead of forcing a ratio. */
+.reviewgrid img { height: auto; align-self: start; }
+
+
+/* On a phone even one column is a ~45% downscale, so each review links to the
+   full-size image. The visual gist (green job title, orange stars, "5.0", a
+   paragraph of type) still reads as a genuine Upwork review at that size;
+   the tap is there for anyone who wants to actually read it. */
+.reviewgrid a { position: relative; }
+.enlarge { display: none; }
+@media (max-width: 700px) {
+  .reviewgrid { grid-template-columns: 1fr; }
+  .enlarge {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    color: var(--amz-deep);
+    background: var(--paper);
+  }
+}
+
+/* ==========================================================================
+   REVISION 5 — hero remedy line up, $12M in the video header
+   ========================================================================== */
+
+/* The "or your money back..." clause was set at 0.42em, which made it read as
+   fine print under the headline rather than as part of the promise. It IS the
+   promise — the number alone isn't the offer. */
+.hero--ink .promise .rest {
+  font-size: 0.56em;
+  line-height: 1.18;
+  color: var(--paper);
+  margin-top: 0.42em;
+}
+
+/* NO .bigstat--ink. The video header briefly sat on ink, while offer.html's
+   hero and VSL were merged into one section -- that merge is undone now, at
+   the client's request for a hard colour break between the guarantee and
+   the video, so the header is back on white and the default --amz-deep
+   (6.8:1) is correct again. Left as a note a second time: if anything ever
+   puts this heading back on an ink ground, it needs --amz-hot instead,
+   not --amz-deep, which measured 2.57:1 there the first time this happened. */
+
+/* With the grey line gone the button carries the bottom of the hero on its
+   own, so it needs a touch more room under it than the old stacked block. */
+.hero--ink .btn { margin-bottom: 0.5rem; }
+
+/* --- The guarantee statement -----------------------------------------------
+   Set big: this sentence is the offer, so it should be the largest block of
+   type on the page after the hero. Previously it was inline-styled at
+   ~2.3rem max, which put it below the section heading in visual weight —
+   the label was louder than the thing it labelled.
+
+   Now sized above the h2 it sits under. That inversion is deliberate: "This
+   is guaranteed" is a two-word lead-in, the sentence is the substance.
+   ------------------------------------------------------------------------- */
+
+.guarantee-statement {
+  margin-top: var(--s4);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 1.05rem + 2.3vw, 3.05rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--paper);
+  text-wrap: pretty;
+}
+.guarantee-statement .hot { color: var(--amz-hot); }
+
+/* With the statement carrying the section, the heading steps back so the two
+   aren't competing. */
+.band--ink .guarantee-statement + .btn,
+.guarantee-statement + .btn { margin-top: var(--s5); }
+
+.shell--tight > h2:has(+ .guarantee-statement) {
+  font-size: clamp(1.05rem, 0.97rem + 0.4vw, 1.3rem);
+  letter-spacing: 0.01em;
+  color: oklch(0.994 0.002 250 / 0.62);
+}
+
+/* Light-ground pair for the rule above. That colour is near-white at 62%,
+   which is correct on ink and invisible on a light band — and guide.html now
+   has exactly that case, a heading sitting above the offer on the tint.
+
+   The size also steps up here. The ink version is a two-word kicker ("This is
+   guaranteed"); on guide.html the heading is a real claim carrying $12M, so
+   shrinking it to 1.3rem buried the number. This keeps the step-down relative
+   to the statement — the offer is still the biggest thing in the section —
+   without flattening the lead-in to a label. */
+.band:not(.band--ink) .shell--tight > h2:has(+ .guarantee-statement) {
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
+  letter-spacing: -0.015em;
+  color: var(--ink-2);
+}
+
+/* ==========================================================================
+   REVISION 7 — gradient top cap, section breaks, outcome list
+   ========================================================================== */
+
+/* --- The top cap -----------------------------------------------------------
+   Masthead and hero share one gradient that resolves to the page white by
+   the time the hero ends, so the dark top doesn't cut off at a hard edge —
+   it dissolves into the rest of the page.
+
+   The masthead is transparent while it sits over the dark part and swaps to
+   solid white once stuck, which is why the logo ships in two versions here.
+   ------------------------------------------------------------------------- */
+
+/* The dark top.
+
+   Built as: a real ink background on the hero (so the contrast checker can
+   actually read it) plus a pseudo-element extending that ink UP behind the
+   sticky masthead.
+
+   NO BOTTOM FADE. The hero used to dissolve into the band below it; you
+   read the dark-blue-to-light-blue result as a gradient rather than as a
+   transition, so the two bands now meet on a hard edge. The subtle radial
+   inside the hero stays — it lifts the top corner without ever reaching
+   the boundary.
+
+   Two earlier attempts at the top cap were wrong and worth recording:
+     1. A wrapper <div> around header + hero. It had to open before <header>
+        and close inside <main>, which straddles the element — invalid, and
+        the parser caught it.
+     2. One gradient running ink -> white across the whole hero. The fade
+        passed straight through the sub-headline, so it sat on mid-grey.
+
+   The bottom padding is now short: with the button gone, the only thing
+   this block owes the reader is the promise, and every pixel it does not
+   spend is a pixel of VSL inside the first screen. */
+
+/* The hero is pulled UP under the sticky masthead by exactly the masthead's
+   own min-height, then given that height back as padding. One element, one
+   background, so the radial runs unbroken from the very top of the page.
+
+   The earlier version painted the strip behind the masthead with a separate
+   ::before carrying its own radial. Two gradients cannot be made to meet:
+   the join showed as a horizontal seam right under the logo. */
+.hero--ink {
+  position: relative;
+  /* -4.5rem is the masthead's min-height; the extra 1px is its always-present
+     (usually transparent) bottom border, which is part of its box. */
+  margin-top: calc(-4.5rem - 1px);
+  background-color: var(--ink);
+  background-image: radial-gradient(115% 90% at 50% -6%,
+    oklch(0.330 0.055 250) 0%,
+    oklch(0.240 0.032 256) 45%,
+    var(--ink) 76%);
+  padding-block:
+    calc(4.5rem + 1px + clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem))
+    clamp(2.75rem, 1.8rem + 3.8vw, 4.75rem);
+}
+
+
+/* Masthead rides the gradient until it sticks. */
+.masthead { background: transparent; }
+.masthead[data-stuck] { background: var(--paper); }
+
+.brandmark { position: relative; display: inline-flex; }
+.brandmark .on-light { position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s var(--ease); }
+.brandmark .on-dark  { opacity: 1; transition: opacity 0.25s var(--ease); }
+.masthead[data-stuck] .brandmark .on-light { opacity: 1; }
+.masthead[data-stuck] .brandmark .on-dark  { opacity: 0; }
+
+/* Ghost button inverts with it. */
+.masthead .btn--ghost { color: var(--paper); border-color: oklch(0.994 0.002 250 / 0.45); }
+.masthead .btn--ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.masthead[data-stuck] .btn--ghost { color: var(--ink); border-color: var(--ink); }
+.masthead[data-stuck] .btn--ghost:hover { background: var(--ink); color: var(--paper); }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .brandmark .on-light, .brandmark .on-dark, .masthead .btn--ghost { transition: none; }
+}
+
+/* --- The VSL band -----------------------------------------------------------
+   Plain white, not brand blue. The flat colour band read as a decorative
+   choice rather than a break; the ink-hero-to-white edge above it is
+   already the harder transition, and the video's own dark frame supplies
+   the contrast blue used to provide. The default .btn (orange) and .bigstat
+   (--amz-deep) both already pass contrast on white — see the note on
+   .bigstat above — so no colour overrides are needed here at all.
+
+   Its top padding is cut well below the standard --band so the player
+   clears the fold on a phone; the bottom keeps the full measure so the
+   button under the video is not crowded.
+   ------------------------------------------------------------------------- */
+
+/* The button's own margin-top used to come from whichever of .hero .btn or
+   .hero--ink .btn won the cascade (up to 3.25rem/52px) -- fine when the
+   hero was the whole first screen, too much now that a heading and a video
+   have to fit under it too. #hero .btn is id-scoped, which beats both on
+   specificity outright rather than needing to out-order them, and is safe
+   for the same structural reason as #how below: guide.html's #hero has no
+   .btn inside it, so this cannot reach that page. */
+#hero .btn { margin-top: clamp(0.5rem, 0.3rem + 0.9vh, 0.95rem); }
+
+/* #how is unique to offer.html -- guide.html has no id="how" anywhere, so
+   nothing here can reach that page.
+
+   Padding and heading cut hard, and the video's height cap is now universal
+   rather than gated behind @media (min-width: 760px). It used to only apply
+   on desktop because mobile's own width-driven sizing happened to land
+   under 35vh anyway; that stopped being reliably true once the hero above
+   it was also asked to fit, on any width, not just typical phone widths.
+   Height-capping the video unconditionally is what actually guarantees it,
+   rather than relying on which widths happen to work out. */
+#how { padding-block: clamp(0.3rem, 0.18rem + 0.65vh, 0.65rem) var(--band); }
+#how h2 { font-size: clamp(0.88rem, 0.75rem + 1.3vh, 1.2rem); }
+#how .vsl { margin-top: clamp(0.35rem, 0.2rem + 0.55vh, 0.65rem); }
+#how .vsl { max-width: min(100%, 33.8vh); margin-inline: auto; }
+#how .vsl video, #how .vsl iframe { max-height: 19vh; }
+#how .vsl video { width: auto; max-width: 100%; margin-inline: auto; }
+
+#how h2 { max-width: 22ch; margin-inline: auto; }
+
+/* --- thanks.html's player ---------------------------------------------------
+   Its own id, deliberately not #how. #how's rules are tuned to fit a
+   full-size guarantee AND a video on one screen; thanks.html's hero is two
+   short lines, so it has room and inheriting that budget would shrink the
+   player for a constraint that does not exist there.
+
+   Same container-max-width technique as #how though, and for the same
+   reason recorded there: an <iframe> has no intrinsic aspect ratio, so it
+   cannot be capped by height directly without collapsing. 62.22vh of width
+   is 35vh of height at 16:9. */
+#watch .vsl { max-width: min(100%, 62.22vh); margin-inline: auto; }
+
+/* --- Guarantee: second sentence on its own line ---------------------------- */
+
+.guarantee-statement .line2 { display: block; margin-top: 0.45em; }
+
+/* guide.html breaks the offer onto three lines: the lead-in, the claim, then
+   the fallback clause. The claim needs its own wrapper rather than just
+   setting .hot to block — the full stop sits outside .hot, so a block .hot
+   would drop the period onto a line by itself. */
+.guarantee-statement .offer-lead,
+.guarantee-statement .offer-claim { display: block; }
+.guarantee-statement .offer-claim { margin-top: 0.2em; }
+
+/* --- Guarantee on a light ground -------------------------------------------
+   The base .guarantee-statement is white type with an --amz-hot highlight,
+   built for .band--ink and only correct there. It is now used on two light
+   bands as well — the offer on guide.html and the restatement under the
+   video on offer.html — so it needs a light-ground pair.
+
+   The highlight drops from --amz-hot to --amz-deep deliberately: --amz-hot
+   measures 2.1:1 on white, which is the exact trap already documented on
+   .bigstat above. --amz-deep is 7.1:1 and reads as the same orange.
+
+   Written as :not(.band--ink) rather than a modifier class so it applies by
+   the ground the statement is actually sitting on, and cannot be forgotten
+   the next time one moves. */
+.band:not(.band--ink) .guarantee-statement { color: var(--ink); }
+.band:not(.band--ink) .guarantee-statement .hot { color: var(--amz-deep); }
+
+/* Names the audience above the promise. Set as a legible line rather than a
+   small-caps kicker — those are on the client's banned list. */
+.audience {
+  font-size: var(--t-lede);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: oklch(0.994 0.002 250 / 0.62);
+  margin-bottom: var(--s3);
+}
+
+/* ==========================================================================
+   REVISION 8 — audience line up top, VSL moved above the logo strip
+   ========================================================================== */
+
+/* "Amazon brand owners…" now opens the page at display scale. It reads as the
+   first half of a sentence that the promise completes, so it's sized one
+   clear step below the promise rather than matching it — two blocks at the
+   same size would compete instead of leading. */
+.audience {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.45rem, 1.05rem + 1.6vw, 2.45rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--paper);
+  margin-bottom: clamp(0.75rem, 0.5rem + 0.8vw, 1.35rem);
+}
+
+
+/* --- Fitting the video into the first screen -------------------------------
+   The VSL is the point of the page, so it has to be on screen at load, not
+   one scroll down. On a phone it already is. On a laptop the default type
+   scale pushed the player's bottom edge to 1271px against a ~900px window,
+   so this block spends the desktop's extra width instead of its height:
+   the display type comes down a step, the two blocks give back padding, and
+   the player is capped by viewport height rather than by column width.
+
+   Measured before: hero 0-524, player 762-1271.
+   ------------------------------------------------------------------------- */
+
+/* This block used to also carry #how's desktop padding, heading size and
+   35vh/62.22vh video cap. Those are gone -- replaced by the unconditional
+   #how rules above, since mobile needs the same real cap now and "desktop
+   only" was never the actual requirement, just where it happened to be
+   needed before.
+
+   The .hero--ink rules below are NOT safe to remove the same way: this
+   class is shared with guide.html's hero, and measuring before/after
+   confirmed the h1/audience sizes here are already overridden elsewhere
+   (dead, no visual effect either way) but the padding-block is not --
+   guide.html's video bottom moved from 881px to 920px, past its own
+   already-tuned 900px fold, the one time this was tried without checking.
+   Kept verbatim. */
+@media (min-width: 760px) {
+  .hero--ink {
+    padding-block:
+      calc(4.5rem + 1px + clamp(1.4rem, 0.4rem + 1.9vw, 2.1rem))
+      clamp(1.35rem, 0.6rem + 1.5vw, 1.9rem);
+  }
+  .hero--ink .audience { font-size: clamp(1.45rem, 0.85rem + 1.1vw, 1.75rem); }
+  .hero--ink h1 { font-size: clamp(2.35rem, 1.5rem + 2.3vw, 3.05rem); }
+}
+
+/* ==========================================================================
+   BIG HERO — was offer.html and guide.html; now guide.html only
+
+   This block used to make .hero--lead the biggest, most dominant type on
+   the page, on the reasoning that offer.html's hero carried no video and so
+   had no fold budget to share. That stopped being true: the guarantee and
+   the VSL must now both be visible on load, on any screen, and a headline
+   sized off viewport WIDTH (5.8vw) rendered at 100px on a 1440px-wide
+   desktop -- big enough on its own to blow the fold before the video even
+   started. Width-based sizing is the wrong axis for "fits the screen";
+   height is. .hero--lead is now driven primarily by vh, so it scales with
+   the dimension that is actually constrained, on any width.
+
+   .hero--lead-video (guide.html) is untouched. Its hero only ever holds
+   text and the video, no button and no second heading below it -- a
+   different, already-measured budget -- so it keeps its own vw-based
+   sizing rather than inheriting this page's constraints.
+   ========================================================================== */
+
+.hero--lead h1 { font-size: clamp(1.4rem, 0.95rem + 3.2vh, 2.6rem); }
+.hero--lead .audience { font-size: clamp(0.8rem, 0.68rem + 1vh, 1.05rem); }
+
+.hero--lead-video h1 { font-size: clamp(2.9rem, 2rem + 4.2vw, 4.9rem); }
+.hero--lead-video .audience { font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); }
+
+/* ==========================================================================
+   GUIDE-LED VARIANT (guide.html) — the video lives in the hero itself
+
+   Merges what used to be two separate bands (the ink hero, then a white
+   #how section holding the VSL) into one: the video now sits directly
+   under the headline, still on the ink ground. Capped by height on desktop
+   only, same principle the old #how treatment used — a full-width 860px
+   16:9 video runs past 480px tall and dwarfs the headline above it. Scoped
+   to .hero--ink .vsl rather than reusing #how's id, deliberately: an id
+   selector would outrank .hero--ink's own padding rule (the one that merges
+   the hero with the sticky masthead) and silently break that seam again. */
+
+@media (min-width: 760px) {
+  /* Container-width form of a 38vh height cap, for the same reason as #how
+     above: an iframe can't be capped by height directly without collapsing,
+     and 38vh at 16:9 is 67.55vh wide.
+
+     38, not the 46 this used to be: with the headline sized up to
+     .hero--lead-video the player's bottom edge measured 953px against a
+     900px window, i.e. clipped. You asked for the opening screen to be the
+     headline and the video and nothing else, so the video gives back the
+     height the bigger headline took. Measured after: bottom at 881. */
+  .hero--ink .vsl { max-width: min(100%, 67.55vh); margin-inline: auto; }
+  .hero--ink .vsl video { max-height: 38vh; width: auto; max-width: 100%; margin-inline: auto; }
+}
+
+
+/* ===== GHL BUILDER CHROME =================================================
+   Neutralises the wrappers GHL puts around a custom-code element. Measured
+   from the live page, these are the three that matter:
+
+     .c-row            padding-left/right: 10px !important   (GHL stylesheet)
+     .c-column         padding-left/right: 15px
+     .section-XXXXXXX  max-width: 1170px                     (builder-set)
+
+   The row padding cannot be cleared from the builder UI. GHL's own sheet
+   sets it with !important, while the builder writes the per-element rule
+   (.row-XXXXXXX { padding: ... }) without one -- so whatever you type into
+   the padding boxes loses the cascade. Hence !important here.
+
+   Selectors are prefixed with `body` to raise specificity to (0,1,1), which
+   beats GHL's (0,1,0) rules regardless of where this block ends up in the
+   document.
+
+   max-width: none is what removes the 1170px cap -- on a 1440px screen that
+   cap alone left a 280px gutter on the right.
+   ======================================================================== */
+body .c-section, body .c-section > .inner,
+body .c-row,     body .c-row > .inner,
+body .c-column,  body .c-column > .inner,
+body .c-custom-code, body .custom-code-container {
+  padding: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* The white strip at the very top and bottom came from vertical padding on
+   the same wrappers -- section 20px, row 10px, column 10px, stacking to
+   exactly 40px above the first band and 40px below the last. The `padding: 0`
+   above collapses all four sides, which is the whole fix.
+
+   DO NOT also force a background here. A previous revision set html/body to
+   --ink as belt-and-braces and it broke the page: `.band` and `.band--sm` set
+   padding only and are transparent by design, so they show whatever the page
+   ground is. Making the body dark turned Dale, the logo strip and the qualify
+   section dark with it. The body stays --paper, exactly as on the standalone
+   page, and with the padding gone no part of it is visible anyway. */
+</style>
+
+<!-- ===== META PIXEL =====================================================
+     EMANUEL — CAPI is a prerequisite, not an enhancement.
+       PageView    on load · ViewContent at 25% of the VSL
+       Lead        on form submit
+       Schedule    on the calendar confirmation, not here
+     ================================================================== -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '258230770694638');
+fbq('track', 'PageView');
+</script>
+
+<!-- ===== META CLICK ID (fbclid) CAPTURE ==================================
+     Runs early, before the booking widget mounts, so the click ID is
+     resolved by the time anything needs it.
+
+       1. Read ?fbclid= from the URL.
+       2. Persist it to a first-party cookie (stc_fbclid, 90 days) so a
+          visitor who clicks the ad today and books next week still
+          carries it.
+       3. If the URL has no fbclid, fall back to that cookie.
+       4. Hand it to the form, and keep it on internal links.
+
+     No dependencies.
+     ==================================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  var COOKIE = 'stc_fbclid';
+  var MAX_AGE_DAYS = 90;
+
+  function readCookie(name) {
+    var parts = document.cookie ? document.cookie.split('; ') : [];
+    for (var i = 0; i < parts.length; i++) {
+      var eq = parts[i].indexOf('=');
+      if (eq > -1 && parts[i].slice(0, eq) === name) {
+        try { return decodeURIComponent(parts[i].slice(eq + 1)); }
+        catch (e) { return parts[i].slice(eq + 1); }
+      }
+    }
+    return '';
+  }
+
+  function writeCookie(name, value, days) {
+    var expires = new Date(Date.now() + days * 86400000).toUTCString();
+    /* Lax, not Strict: the visitor arrives here as a cross-site navigation
+       from facebook.com, and Strict would withhold the cookie on that first
+       hop. Secure only on https so this still works over local http. */
+    document.cookie = name + '=' + encodeURIComponent(value) +
+      '; expires=' + expires + '; path=/; SameSite=Lax' +
+      (location.protocol === 'https:' ? '; Secure' : '');
+  }
+
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&#]*)').exec(location.search);
+    try { return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : ''; }
+    catch (e) { return m ? m[1] : ''; }
+  }
+
+  /* URL wins over the cookie — a fresh click should overwrite an older one. */
+  var fromUrl = param('fbclid');
+  var fbclid  = fromUrl || readCookie(COOKIE);
+
+  if (fromUrl) {
+    try { writeCookie(COOKIE, fromUrl, MAX_AGE_DAYS); } catch (e) { /* blocked */ }
+  }
+
+  window.STC_FBCLID = fbclid;
+
+  function apply() {
+    /* --- 1. Native form, where one exists (index.html) ------------------ */
+    var input = document.getElementById('fbclid');
+    if (input) { input.value = fbclid; }
+
+    /* --- 2. GHL booking widget ------------------------------------------
+       The widget is a cross-origin iframe, so a hidden input inside it is
+       not reachable from here — same-origin policy. The click ID has to
+       ride in on the iframe URL instead, which is why the tag below ships
+       with data-src and gets its real src set here. GHL maps inbound query
+       params onto the matching custom field. */
+    var frames = document.querySelectorAll('iframe[data-src]');
+    for (var i = 0; i < frames.length; i++) {
+      var src = frames[i].getAttribute('data-src');
+      if (!src) { continue; }
+      if (fbclid) {
+        src += (src.indexOf('?') > -1 ? '&' : '?') + 'fbclid=' + encodeURIComponent(fbclid);
+      }
+      frames[i].src = src;
+    }
+
+    /* --- 3. Keep the query string on internal navigation -----------------
+       So the click ID survives if the booking flow ever moves to a second
+       page. Same-origin, non-anchor, non-download links only. */
+    var qs = location.search.replace(/^\?/, '');
+    if (!qs) { return; }
+    var links = document.getElementsByTagName('a');
+    for (var j = 0; j < links.length; j++) {
+      var a = links[j];
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#') { continue; }
+      if (/^(https?:)?\/\//i.test(href) && a.hostname !== location.hostname) { continue; }
+      if (/^(mailto:|tel:|javascript:)/i.test(href)) { continue; }
+      if (a.hasAttribute('download') || a.getAttribute('target') === '_blank') { continue; }
+      if (a.search) { continue; }               /* already carries its own params */
+      a.href = a.pathname + '?' + qs + a.hash;
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+})();
+</script>
+
+
+<a class="skip-link" href="#apply">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" d="M3 12.5l6 6L21 5.5"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/>
+    <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16.5 8.5a5 5 0 0 1 0 7M19.5 5.5a9 9 0 0 1 0 13"/>
+  </symbol>
+</svg>
+
+<!-- Masthead carries the mark only. The nav CTA is deliberately gone: it
+     pointed past the form, which is the one thing this page wants people to
+     reach. -->
+<header class="masthead">
+  <div class="shell">
+    <span class="brandmark" aria-label="Brainy Brands">
+      <img class="on-dark" src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46371a899e4264425d50.png" alt="Brainy Brands" width="800" height="344">
+      <img class="on-light" src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4633d1afbd2cbcbc0580.png" alt="" aria-hidden="true" width="800" height="344">
+    </span>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== 1. THE PROMISE + THE VSL ======================================
+       No sub-headline above the video, at your request -- the video opens
+       with the offer itself and a line above it would argue with its first
+       ten seconds.
+
+       Headline rewritten to your wording -- a challenge/command open ("give
+       us 30 days") rather than a flat statement of the offer, with the risk
+       reversal underneath it. Written from your description of the
+       closers.io page, not from the page itself; I have not opened it.
+
+       "25%+" now, with the plus, since you asked for "25+ percent"
+       explicitly this time. Note this is the only page of the three that
+       says 25%+ -- offer.html, guide.html and the guarantee band all say
+       25%, matching the locked FUNNEL-AND-SITEMAP.md wording. That is fine
+       while this is a test variant; worth reconciling if it wins.
+
+       ONE CORRECTION, FLAGGED: you wrote "if YOU don't hit your target".
+       The subject should be we -- we are the ones doing the cutting, and
+       "you" reads as putting the obligation on the customer, which inverts
+       the guarantee. Written as "if we don't hit it".
+
+       The no-sales-loss clause you asked for earlier is folded into the
+       second line rather than the headline, which was getting long.
+       ==================================================================== -->
+  <section class="band hero hero--ink hero--lead hero--lead-video" id="hero">
+    <div class="shell shell--tight">
+      <p class="audience">Amazon brand owners&hellip;</p>
+      <h1 class="promise">
+        <span class="fig">Give us 30 days and we'll cut your ad spend by 25%+</span>
+        <span class="rest">Without losing sales. If we don't hit it, we'll
+          refund your money &mdash; or work for free until we do.</span>
+      </h1>
+
+      <div class="vsl mt-5" id="vsl">
+        <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="Brainy Brands VSL"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 2. THE GATE ===================================================
+       Five fields, and five exactly -- FUNNEL-AND-SITEMAP.md is explicit:
+       "Five fields. Do not add more -- every extra field costs bookings."
+       The old index.html form had six and did not match the locked options,
+       so the locked spec wins over the old markup.
+
+       Submitting reveals the calendar for a PASS, or a graceful off-ramp
+       for a FAIL. Gate rule, verbatim from the locked doc:
+         PASS  ad spend $10K-$25K, $25K-$50K, or $50K+
+         FAIL  ad spend under $5K, or $5K-$10K
+       Revenue and current-manager are captured for call prep and do not
+       gate anything.
+       ==================================================================== -->
+  <section class="band" id="apply">
+    <div class="shell shell--tight">
+      <h2 class="rv">See if you qualify</h2>
+      <p class="lede mt-3 rv">Five questions. If it's a fit, the calendar
+        opens straight away.</p>
+
+      <form id="applyForm" class="gate rv" action="#" method="post" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Work email</label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
+        </div>
+        <div class="field">
+          <label for="ad_spend">Monthly Amazon ad spend</label>
+          <select id="ad_spend" name="ad_spend" required>
+            <option value="">Choose one</option>
+            <option value="under-5k">Under $5K/mo</option>
+            <option value="5k-10k">$5K &ndash; $10K/mo</option>
+            <option value="10k-25k">$10K &ndash; $25K/mo</option>
+            <option value="25k-50k">$25K &ndash; $50K/mo</option>
+            <option value="50k-plus">$50K+/mo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="revenue">Monthly Amazon revenue</label>
+          <select id="revenue" name="revenue" required>
+            <option value="">Choose one</option>
+            <option value="under-50k">Under $50K/mo</option>
+            <option value="50k-100k">$50K &ndash; $100K/mo</option>
+            <option value="100k-500k">$100K &ndash; $500K/mo</option>
+            <option value="500k-plus">$500K+/mo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="manager">Who manages your ads now?</label>
+          <select id="manager" name="manager" required>
+            <option value="">Choose one</option>
+            <option value="self">Nobody / I do it myself</option>
+            <option value="agency">An agency</option>
+            <option value="freelancer">A freelancer / VA</option>
+            <option value="in-house">In-house team</option>
+          </select>
+        </div>
+
+        <!-- Meta click ID. Populated on load by the fbclid block in <head>;
+             empty when the visitor did not arrive from a Meta ad. -->
+        <input type="hidden" name="fbclid" id="fbclid">
+
+        <p id="formError" class="form-error" hidden>Please answer all five.</p>
+
+        <div class="mt-4">
+          <button class="btn btn--wide" type="submit">See if I qualify</button>
+        </div>
+        <p class="field-hint">
+          Used to prep before the call. Never sold or shared.
+        </p>
+      </form>
+
+      <!-- PASS: the calendar, revealed on submit. -->
+      <div class="rv calendar-embed" id="applyCalendar" hidden>
+        <p class="cta-note">You're a fit. Pick a time below.</p>
+        <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE" style="width:100%;border:none;overflow:hidden" scrolling="no" id="rMTistvxT1FAUAfDRPzE_1787500521042"></iframe>
+        <noscript>
+          <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
+        </noscript>
+      </div>
+
+      <!-- FAIL: an off-ramp rather than a dead end. Wording follows the FAQ,
+           which already says the math does not work under $10K and that we
+           say so rather than take the money. -->
+      <div class="confirm" id="applyNoFit" hidden>
+        <h3>Not yet &mdash; and we'd rather tell you.</h3>
+        <p>Under $10K/month in ad spend there isn't enough waste in the
+          account for the 25% guarantee to mean anything, so we'd be taking
+          your money to do very little. Come back when you're spending more
+          and we'll take another look.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. CASE STUDIES ===============================================
+       Three, not six. Temptooth, Zestt and ClearShield are the three that
+       show spend or TACoS DOWN with revenue holding or climbing, which is
+       the shape of the thing being guaranteed. Magic Brand and Emerald are
+       growth-from-zero stories -- true, but a different promise -- and they
+       still appear in the logo wall below.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">Case studies</h2>
+
+      <ol class="results rv">
+        <li>
+          <span class="result-logo">
+            <img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463621c5e42dc0cf5f3c.png" alt="Temptooth"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Temptooth</span></template>
+          </span>
+          <span class="result-cut">&darr; 70%<span class="unit">ad spend, in two months</span></span>
+          <span class="result-bonus">And revenue went <b>$90K &rarr; $120K</b>/mo</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4636d6548da0f136a9c4.png" alt="Zestt Organics"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">Zestt Organics</span></template>
+          </span>
+          <span class="result-cut">&darr; 40%<span class="unit">ad spend, in two months</span></span>
+          <span class="result-bonus">And revenue went <b>$50K &rarr; $110K</b>/mo</span>
+        </li>
+        <li>
+          <span class="result-logo">
+            <img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463521c5e42dc0cf5f14.svg" alt="ClearShield Auto Glass Repair"
+                 onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))"><template><span class="fallback">ClearShield</span></template>
+          </span>
+          <span class="result-cut">&darr; 53%<span class="unit">TACoS, in the first full month</span></span>
+          <span class="result-bonus">And revenue went <b>$41.8K &rarr; $91.6K</b>/mo &mdash; with ad spend flat</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 4. OTHER ACCOUNTS WE'VE WORKED ON ===========================
+       ADD LOGOS HERE as you get them — the strip wraps and centres, so
+       extra <li> items need no CSS change.
+       ==================================================================== -->
+  <section class="band band--sm">
+    <div class="shell">
+      <p class="striplabel">Other accounts we've worked on</p>
+      <ul class="logostrip">
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463621c5e42dc0cf5f3c.png" alt="Temptooth"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4636d6548da0f136a9c4.png" alt="Zestt Organics"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46351a899e4264425cd4.png" alt="Patriot Crew"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46356871c377dac7e373.png" alt="The Magic Brand"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4637722007d7ffd8967b.png" alt="Emerald Plastics"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4637722007d7ffd89656.svg" alt="Midtown"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46347ac084b112566cd4.png" alt="Xpand" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46376871c377dac7e3e5.png" alt="HK Army" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463621c5e42dc0cf5f2f.png" alt="Envi by eheat" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4636d6548da0f136a9bb.png" alt="Berkey Water Systems" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4634e20cab63726a8719.png" alt="TheraPet MD" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46377ac084b112566d43.png" alt="Gutterglove" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4635722007d7ffd89622.png" alt="Pacific Doorware" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4635d6548da0f136a9a9.png" alt="Hydroh" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46357ac084b112566d20.png" alt="Bumpology" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4634747464c6b380b558.png" alt="Riff Raff Baby" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4634722007d7ffd89608.png" alt="Peregrune" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4637722007d7ffd89660.png" alt="Buddha Pants" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46361a899e4264425d06.svg" alt="Sanzo" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46366871c377dac7e3cb.svg" alt="MEND" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463521c5e42dc0cf5f03.png" alt="Velocity Lacrosse" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4635d1afbd2cbcbc05a6.png" alt="Over & Back" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463514ad347ccb6da9fd.png" alt="SynNutra" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46357ac084b112566cfd.png" alt="Fuel Pro Nutrition" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463521c5e42dc0cf5f0c.png" alt="69 Golf" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f4634d6548da0f136a955.png" alt="Barsys" loading="lazy"></li>
+        <li><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f463521c5e42dc0cf5f14.svg" alt="ClearShield Auto Glass Repair" loading="lazy"></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 5. QUALIFY ====================================================
+       Numbers corrected. The disqualify line said "under $5,000/month",
+       which left $5K-$10K in a gap: neither qualified nor disqualified,
+       while FUNNEL-AND-SITEMAP.md's FAIL rule and the FAQ both put the
+       cut-off at $10K. Now $10,000, matching the gate above and the locked
+       rule. This is the "fix the numbers" item.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">We only work with brands we can genuinely help</h2>
+      <div class="qual rv">
+        <div class="qual--go">
+          <h3>This is for you if</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You're <b>serious about growing your brand</b> &mdash; or about cutting what it costs you to grow it</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You want <b>results in 30 days</b></li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You do <b>$100K+/month</b> on Amazon and spend <b>$10K+/month</b> on ads</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You'd rather <b>hand the ads off entirely</b> and get your time back</li>
+          </ul>
+        </div>
+        <div class="qual--no">
+          <h3>It isn't for you if</h3>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're spending <b>under $10,000/month</b> on ads</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>the cheapest option</b>, not the best outcome</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You want <b>guaranteed sales</b> &mdash; nobody can promise that</li>
+            <li><svg aria-hidden="true"><use href="#i-cross"/></svg>You're <b>not open to changing</b> how the account is structured</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== 6. FAQ ========================================================
+       Four, not eight: who it's for, the guarantee, how spend comes down
+       without sales following it, and rankings. The four that answer an
+       objection someone might still be holding at the form.
+       ==================================================================== -->
+  <section class="band">
+    <div class="shell shell--tight">
+      <h2 class="rv">Questions</h2>
+      <div class="faq rv">
+        <details>
+          <summary>Who is this actually for?</summary>
+          <div class="a">Amazon sellers doing $100K+/month in revenue and
+            spending at least $10K/month on ads. Most of our clients spend
+            $20&ndash;30K/month or more. If you're under $10K/month in ad
+            spend, the math doesn't work yet &mdash; we'll tell you that on
+            the call instead of taking your money.</div>
+        </details>
+        <details>
+          <summary>What's the guarantee?</summary>
+          <div class="a">Cut your ad spend by 25% in the first 30 days
+            without losing sales. If we miss it, you get your money back or we
+            keep working free until we hit it. The guarantee is only offered
+            after the audit, once we've seen the account. Clients commonly go
+            on to see 50% by day 60&ndash;90, but 25% in 30 days is the number
+            we guarantee.</div>
+        </details>
+        <details>
+          <summary>How do you cut spend without killing my sales?</summary>
+          <div class="a">Most accounts are bleeding money on Amazon's dynamic
+            bidding and placement multipliers &mdash; settings that quietly
+            let Amazon charge more per click than you agreed to. We strip
+            those out and run manual, top-down bids. Same sales, less spend.
+            We're not cutting your budget, we're cutting your waste.</div>
+        </details>
+        <details>
+          <summary>Will this hurt my organic rankings?</summary>
+          <div class="a">No. We manage bids down, we don't blanket-block
+            keywords. Rankings you've already built cost far less to hold
+            than they did to earn.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7. REVIEWS ====================================================
+       Two, below the FAQ -- both halves of your note taken together: cut to
+       two AND placed after the questions, so the scroll to the form stays
+       short and the proof still lands.
+       ==================================================================== -->
+  <section class="band band--tint">
+    <div class="shell">
+      <h2 class="rv">Here's what clients are saying</h2>
+      <p class="lede mt-3 rv">
+        Public on Dale's Upwork profile &mdash; <b>4.9 from 96 reviews</b>,
+        Top Rated Plus, 99% job success.
+        <a href="https://www.upwork.com/freelancers/dalelin" target="_blank" rel="noopener">Check them yourself</a>.
+      </p>
+      <div class="reviewgrid rv">
+        <a href="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46331a899e4264425c94.png" target="_blank" rel="noopener"><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46331a899e4264425c94.png" alt="Upwork review: Dale is super sharp, manages your Amazon account like it's his own, proficient with Amazon advertising and increased our sales significantly" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+        <a href="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46337ac084b112566cab.png" target="_blank" rel="noopener"><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46337ac084b112566cab.png" alt="Upwork review: highly recommended for anyone starting out with PPC or scaling existing brands, with monthly updates and clear KPIs" loading="lazy" width="770" height="180"><span class="enlarge">Tap to read full size</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8. THE ONE CTA ================================================
+       The only call to action on the page, per your spec. Everything that
+       used to point at the calendar -- masthead button, sticky bar, hero
+       button -- is gone, so this and the form are the only two ways
+       through.
+       ==================================================================== -->
+  <section class="band band--ink">
+    <div class="shell shell--tight center">
+      <h2 class="rv">See if you qualify</h2>
+      <a class="btn mt-4" href="#apply">Check if we're a fit</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot foot--ink">
+  <div class="shell">
+    <div class="colophon">
+      <span class="brandmark"><img src="https://assets.cdn.filesafe.space/by9hkph4sOTZvP8t91Rh/media/6a8f46371a899e4264425d50.png" alt="Brainy Brands" width="800" height="344"></span>
+      <p>&copy; 2026 Brainy Brands</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if ('IntersectionObserver' in window && !reduced) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) { return; }
+        e.target.setAttribute('data-in', '');
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+
+  var masthead = document.querySelector('.masthead');
+  var onScroll = function () {
+    if (window.scrollY > 8) { masthead.setAttribute('data-stuck', ''); }
+    else { masthead.removeAttribute('data-stuck'); }
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  var vslFrame = document.querySelector('#vsl iframe');
+  if (vslFrame && window.Vimeo && window.Vimeo.Player) {
+    var player = new window.Vimeo.Player(vslFrame);
+    var quarter = false;
+    player.on('timeupdate', function (data) {
+      if (!quarter && data && data.percent >= 0.25) {
+        quarter = true;
+        if (typeof fbq === 'function') { fbq('track', 'ViewContent', { content_name: 'VSL' }); }
+      }
+    });
+  }
+
+  /* --- THE GATE -----------------------------------------------------------
+     EMANUEL: client-side only, and per FUNNEL-AND-SITEMAP.md this rule has
+     to be re-run server-side in GHL before an invite fires. Anyone can skip
+     this by opening the calendar URL directly.
+
+     PASS  ad spend 10k-25k / 25k-50k / 50k-plus
+     FAIL  ad spend under-5k / 5k-10k
+     ---------------------------------------------------------------------- */
+  var form     = document.getElementById('applyForm'),
+      calendar = document.getElementById('applyCalendar'),
+      noFit    = document.getElementById('applyNoFit'),
+      error    = document.getElementById('formError');
+
+  if (!form) { return; }
+
+  var PASS = ['10k-25k', '25k-50k', '50k-plus'];
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = new FormData(form);
+    var required = ['name', 'email', 'ad_spend', 'revenue', 'manager'];
+    var missing = required.filter(function (f) { return !String(data.get(f) || '').trim(); });
+
+    if (missing.length) {
+      error.hidden = false;
+      var first = form.elements[missing[0]];
+      if (first && first.focus) { first.focus(); }
+      return;
+    }
+    error.hidden = true;
+
+    try {
+      sessionStorage.setItem('bb_lead', JSON.stringify({
+        name: data.get('name'), email: data.get('email'),
+        ad_spend: data.get('ad_spend'), revenue: data.get('revenue'),
+        manager: data.get('manager'),
+        fbclid: data.get('fbclid') || '',
+        source: 'audit'
+      }));
+    } catch (err) { /* private browsing */ }
+
+    var qualified = PASS.indexOf(String(data.get('ad_spend'))) > -1;
+
+    if (typeof fbq === 'function') {
+      fbq('track', 'Lead', { content_name: qualified ? 'qualified' : 'not-a-fit' });
+    }
+
+    form.hidden = true;
+    var panel = qualified ? calendar : noFit;
+    panel.hidden = false;
+
+    /* The calendar iframe renders while hidden, so GHL's resize script can
+       measure it at zero height. Re-setting src forces a fresh render now
+       that the element has real dimensions. */
+    if (qualified) {
+      var frame = calendar.querySelector('iframe');
+      if (frame && frame.src) { frame.src = frame.src; }
+    }
+
+    panel.setAttribute('tabindex', '-1');
+    panel.focus();
+    panel.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  });
+
+})();
+</script>
+
+<!-- GHL calendar embed script -- resizes the widget iframe to its real
+     content height. -->
+<script src="https://link.msgsndr.com/js/form_embed.js" type="text/javascript"></script>
+
