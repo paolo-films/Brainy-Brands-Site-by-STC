@@ -399,8 +399,7 @@ main a { text-decoration-color: currentColor; }
 .qualify { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(2rem, 1rem + 3vw, 4rem); margin-top: var(--s5); }
 .qualify h3 { font-size: var(--t-h3); }
 .qualify ul { margin: var(--s3) 0 0; padding: 0; list-style: none; }
-.qualify li { position: relative; padding: 0.65rem 0 0.65rem 1.9rem; border-top: 1px solid var(--line); color: var(--ink-2); }
-.qualify li:last-child { border-bottom: 1px solid var(--line); }
+.qualify li { position: relative; padding: 0.65rem 0 0.65rem 1.9rem; color: var(--ink-2); }
 .qualify li b { color: var(--ink); font-weight: 700; }
 .qualify li svg { position: absolute; left: 0; top: 1.05em; width: 1rem; height: 1rem; }
 .qualify--go li svg { color: var(--go); }
@@ -471,7 +470,7 @@ main a { text-decoration-color: currentColor; }
 .case-arrow:disabled { opacity: 0.3; cursor: default; }
 
 .case-card { position: relative; transition: opacity 0.32s var(--ease), transform 0.32s var(--ease); }
-.case-logo { height: 28px; width: auto; max-width: 140px; object-fit: contain; object-position: left center; margin-bottom: var(--s3); }
+.case-logo { height: 48px; width: auto; max-width: 220px; object-fit: contain; object-position: left center; margin-bottom: var(--s3); }
 
 .case-counter {
   margin-top: var(--s3);
