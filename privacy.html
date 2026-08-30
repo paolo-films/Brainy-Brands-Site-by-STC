@@ -25,7 +25,24 @@
     <nav aria-label="Main">
       <ul class="navlinks" id="primary-nav">
         <li><a href="method.html">The Method</a></li>
-        <li><a href="services.html">Services</a></li>
+        <li class="has-submenu">
+          <a href="services.html">Services</a>
+          <button type="button" class="submenu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="Show all services">
+            <span class="submenu-caret" aria-hidden="true"></span>
+          </button>
+          <ul class="submenu">
+            <li><a href="graphic-optimization.html">Graphic Optimization</a></li>
+            <li><a href="content-keyword-optimization.html">Content / Keyword Optimization</a></li>
+            <li><a href="a-content-build-out.html">A+ Content build out</a></li>
+            <li><a href="product-3d-rendering.html">Product 3D rendering</a></li>
+            <li><a href="full-ppc-build-out-management.html">Full PPC build Out &amp; Management</a></li>
+            <li><a href="services.html#troubleshooting">General Account Troubleshooting</a></li>
+            <li><a href="services.html#vetting">New Product Vetting</a></li>
+            <li><a href="services.html#ab-testing">A/B Testing</a></li>
+            <li><a href="services.html#inventory">Inventory Management</a></li>
+            <li><a href="services.html#ip-enforcement">IP Enforcement</a></li>
+          </ul>
+        </li>
         <li><a href="results.html">Results</a></li>
         <li><a href="portfolio.html">Portfolio</a></li>
         <li><a href="about.html">About Dale</a></li>
@@ -148,5 +165,6 @@
   </div>
 </footer>
 
+<script src="js/nav.js" defer></script>
 </body>
 </html>

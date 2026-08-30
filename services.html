@@ -19,7 +19,24 @@
     <nav aria-label="Main">
       <ul class="navlinks" id="primary-nav">
         <li><a href="method.html">The Method</a></li>
-        <li><a href="services.html" aria-current="page">Services</a></li>
+        <li class="has-submenu">
+          <a href="services.html" aria-current="page">Services</a>
+          <button type="button" class="submenu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="Show all services">
+            <span class="submenu-caret" aria-hidden="true"></span>
+          </button>
+          <ul class="submenu">
+            <li><a href="graphic-optimization.html">Graphic Optimization</a></li>
+            <li><a href="content-keyword-optimization.html">Content / Keyword Optimization</a></li>
+            <li><a href="a-content-build-out.html">A+ Content build out</a></li>
+            <li><a href="product-3d-rendering.html">Product 3D rendering</a></li>
+            <li><a href="full-ppc-build-out-management.html">Full PPC build Out &amp; Management</a></li>
+            <li><a href="services.html#troubleshooting">General Account Troubleshooting</a></li>
+            <li><a href="services.html#vetting">New Product Vetting</a></li>
+            <li><a href="services.html#ab-testing">A/B Testing</a></li>
+            <li><a href="services.html#inventory">Inventory Management</a></li>
+            <li><a href="services.html#ip-enforcement">IP Enforcement</a></li>
+          </ul>
+        </li>
         <li><a href="results.html">Results</a></li>
         <li><a href="portfolio.html">Portfolio</a></li>
         <li><a href="about.html">About Dale</a></li>
@@ -70,56 +87,60 @@
       <h2 class="rv">What we do</h2>
       <p class="lede rv" style="transition-delay:80ms">Pricing is based on the number of SKUs we manage.</p>
 
-      <ol class="list-numbered rv" style="transition-delay:140ms">
+      <ol class="list-numbered list-numbered--noindex rv" style="transition-delay:140ms">
         <li>
           <h3>Full PPC Build-Out &amp; Management</h3>
           <p>Building, expanding, tuning, and managing your campaigns daily.
             Manual top-down bidding, dynamic bidding and placement multipliers
             off. This is the one the guarantee attaches to.
-            <a href="method.html">How the method works &rarr;</a></p>
+            <a href="full-ppc-build-out-management.html">Learn more &rarr;</a></p>
         </li>
         <li>
           <h3>Graphic Optimization</h3>
           <p>A close look at every image on your SKUs to find what's costing you
-            conversions, then fixing it.</p>
+            conversions, then fixing it.
+            <a href="graphic-optimization.html">Learn more &rarr;</a></p>
         </li>
         <li>
           <h3>Content / Keyword Optimization</h3>
           <p>Full keyword research worked into your listings so they hold search
-            position long term, not just after a refresh.</p>
+            position long term, not just after a refresh.
+            <a href="content-keyword-optimization.html">Learn more &rarr;</a></p>
         </li>
         <li>
           <h3>A+ Content Build-Out</h3>
           <p>Finding where A+ content can do more, then building it. Done well it
-            moves both conversion rate and sales.</p>
+            moves both conversion rate and sales.
+            <a href="a-content-build-out.html">Learn more &rarr;</a></p>
         </li>
         <li>
           <h3>Product 3D Rendering</h3>
           <p>When the original photography isn't good enough and a reshoot isn't
             practical, we render the product instead. Sharp, clean, and consistent
-            across the listing.</p>
+            across the listing.
+            <a href="product-3d-rendering.html">Learn more &rarr;</a></p>
         </li>
-        <li>
+        <li id="troubleshooting">
           <h3>General Account Troubleshooting</h3>
           <p>Catalog and account problems come up constantly on Amazon. We handle
             them so you're not sitting in Seller Support queues.</p>
         </li>
-        <li>
+        <li id="vetting">
           <h3>New Product Vetting</h3>
           <p>Thinking about launching something? We'll vet it properly before you
             commit inventory to it.</p>
         </li>
-        <li>
+        <li id="ab-testing">
           <h3>A/B Testing</h3>
           <p>New content tested every month. Listing quality is not a one-time
             project.</p>
         </li>
-        <li>
+        <li id="inventory">
           <h3>Inventory Management</h3>
           <p>Inventory planning and shipment build-outs, whether goods ship from a
             3PL or direct from a factory in China. We'll coordinate the logistics.</p>
         </li>
-        <li>
+        <li id="ip-enforcement">
           <h3>IP Enforcement</h3>
           <p>If you hold IP on your products, we monitor for infringement and file
             claims on your behalf through Amazon.</p>
@@ -246,7 +267,7 @@
           <li>Review management</li>
           <li>Amazon storefront design</li>
           <li>Data-driven marketing</li>
-          <li>Streamlined supply chain</li>
+          <li>Inventory and shipment coordination</li>
           <li>Data analytics integration</li>
           <li>A/B testing and experimentation</li>
           <li>Market research and competitor analysis</li>
@@ -317,6 +338,7 @@
   </div>
 </footer>
 
+<script src="js/nav.js" defer></script>
 <script>
 (function () {
   'use strict';

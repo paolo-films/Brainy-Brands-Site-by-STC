@@ -62,6 +62,11 @@ img, svg, video { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; }
 address { font-style: normal; }
 ::selection { background: var(--brand-blue); color: var(--ink); }
+html { caret-color: var(--amz-deep); scrollbar-color: var(--ink-3) var(--paper-2); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--paper-2); }
+::-webkit-scrollbar-thumb { background: var(--ink-3); border: 3px solid var(--paper-2); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-2); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -220,6 +225,48 @@ main a { text-decoration-color: currentColor; }
 
 .masthead-actions { display: flex; align-items: center; gap: var(--s3); flex: none; }
 
+/* --- Services nav dropdown --------------------------------------------------- */
+
+.has-submenu { position: relative; display: flex; align-items: center; }
+.submenu-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.6rem; height: 1.6rem; margin-left: -0.5rem;
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: var(--ink-2);
+}
+.submenu-toggle:hover, .has-submenu:hover .submenu-toggle { color: var(--ink); }
+.submenu-caret {
+  width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 0.2s var(--ease);
+}
+.has-submenu.is-open .submenu-caret,
+.has-submenu:hover .submenu-caret,
+.has-submenu:focus-within .submenu-caret { transform: rotate(180deg); }
+
+.submenu {
+  position: absolute; top: 100%; left: 0;
+  margin: 0; padding: 0.5rem 0; list-style: none;
+  min-width: 280px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 32px -12px oklch(0.205 0.020 258 / 0.22);
+  opacity: 0; visibility: hidden; transform: translateY(4px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease), visibility 0.18s linear;
+  z-index: 60;
+}
+.has-submenu:hover .submenu,
+.has-submenu:focus-within .submenu,
+.has-submenu.is-open .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+
+.submenu li { margin: 0; }
+.submenu a {
+  display: block; padding: 0.6rem 1.1rem; margin: 0;
+  color: var(--ink-2); font-size: var(--t-sm); font-weight: 500;
+  text-decoration: none; border-bottom: none; white-space: nowrap;
+}
+.submenu a:hover, .submenu a:focus-visible { color: var(--ink); background: var(--paper-2); }
+
 /* --- Hero ------------------------------------------------------------------- */
 
 .hero { padding-block: clamp(3rem, 1.8rem + 5vw, 5.5rem) clamp(2.5rem, 1.6rem + 3.5vw, 4.5rem); }
@@ -326,6 +373,7 @@ main a { text-decoration-color: currentColor; }
 .list-numbered { margin: var(--s5) 0 0; padding: 0; list-style: none; counter-reset: n; }
 .list-numbered > li {
   counter-increment: n;
+  scroll-margin-top: 6rem;
   display: grid;
   grid-template-columns: 2.75rem minmax(0, 1fr);
   gap: 0.25rem var(--s3);
@@ -346,6 +394,13 @@ main a { text-decoration-color: currentColor; }
 .list-numbered p { grid-column: 2; margin-top: 0.5rem; color: var(--ink-2); max-width: 60ch; }
 .band--ink .list-numbered > li { border-color: oklch(0.994 0.002 250 / 0.16); }
 .band--ink .list-numbered p { color: oklch(0.994 0.002 250 / 0.75); }
+
+/* Unindexed variant: same hairline-rule structure, no counter — for lists
+   whose items are parallel facts rather than an actual sequence. Numbering
+   a set with no real order is a habit worth dropping, not a style choice. */
+.list-numbered--noindex > li { grid-template-columns: minmax(0, 1fr); }
+.list-numbered--noindex > li::before { content: none; }
+.list-numbered--noindex h3, .list-numbered--noindex p { grid-column: 1; }
 
 /* Title-only variant: bigger type, no description line. */
 .list-numbered--plain > li {
@@ -557,12 +612,12 @@ form { max-width: 34rem; }
 [data-reveal] .rv { opacity: 0; transform: translateY(14px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
 [data-reveal] .rv[data-in] { opacity: 1; transform: none; }
 
-/* Bouncier variant for the step cards — a little overshoot on settle so it
-   reads as a "pop" rather than a plain fade. */
+/* Variant for the step cards — settles with more travel than a plain fade,
+   eased smoothly rather than with a spring overshoot. */
 [data-reveal] .rv--pop {
   opacity: 0;
   transform: translateY(28px) scale(0.96);
-  transition: opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
 }
 [data-reveal] .rv--pop[data-in] { opacity: 1; transform: none; }
 
