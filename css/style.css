@@ -275,43 +275,6 @@ main a { text-decoration-color: currentColor; }
 
 .hero--ink .shell { position: relative; z-index: 1; }
 
-/* --- Logo intro (one-time loading screen, zooms into the bulb) --------------
-   Progressive enhancement only — stays display:none unless JS confirms rAF
-   support and prefers-reduced-motion allows it (see the script at the
-   bottom of index.html, which sets [data-intro] on <html>). Without that
-   gate this never takes up scroll space and never renders. Once the zoom
-   finishes, the script removes both elements from layout entirely, so
-   scrolling back to the top cannot bring it back. The masthead is hidden
-   for the same window ([data-intro-playing]) so the nav only appears once
-   the hero is reached. */
-.logo-intro,
-.logo-intro-spacer { display: none; }
-
-[data-intro-playing] .masthead { display: none; }
-
-[data-intro] .logo-intro {
-  display: flex;
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-[data-intro] .logo-intro-spacer { height: 180vh; }
-[data-intro-playing] .logo-intro-spacer { display: block; }
-
-.logo-intro-logo {
-  width: min(70vw, 640px);
-  height: auto;
-  opacity: 0;
-  transform-origin: 48% 42%; /* anchored on the bulb icon within the lockup */
-  will-change: transform, opacity, filter;
-}
-
 /* The dark hero: reserved for the homepage. Radial gradient lifts the top
    corner without ever reaching the section boundary — a hard edge into the
    band below, not a fade. */
@@ -508,18 +471,7 @@ main a { text-decoration-color: currentColor; }
 .case-arrow:disabled { opacity: 0.3; cursor: default; }
 
 .case-card { position: relative; transition: opacity 0.32s var(--ease), transform 0.32s var(--ease); }
-.case-card h3 { max-width: calc(100% - 130px); }
-
-.case-logo {
-  position: absolute;
-  top: var(--s4);
-  right: var(--s4);
-  height: 28px;
-  width: auto;
-  max-width: 120px;
-  object-fit: contain;
-  object-position: right center;
-}
+.case-logo { height: 28px; width: auto; max-width: 140px; object-fit: contain; object-position: left center; margin-bottom: var(--s3); }
 
 .case-counter {
   margin-top: var(--s3);

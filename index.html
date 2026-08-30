@@ -33,18 +33,6 @@
 
 <main id="main">
 
-  <!-- ===== LOGO INTRO (one-time loading screen) ==========================
-       Progressive enhancement only: stays display:none unless JS confirms
-       rAF support and the visitor allows motion (see the [data-intro] gate
-       in style.css and the script at the bottom of this file). Fixed
-       overlay showing the real logo file; scrolling through the spacer
-       below zooms it in on the bulb, then the overlay and spacer are
-       permanently removed — scrolling back up cannot bring it back. ==== -->
-  <div class="logo-intro" aria-hidden="true">
-    <img class="logo-intro-logo" src="images/BrainyBrands_SecondaryLogo_White.png" alt="">
-  </div>
-  <div class="logo-intro-spacer"></div>
-
   <!-- ===== HERO ========================================================== -->
   <section class="band hero hero--ink hero--full">
     <div class="hero-bulb" aria-hidden="true">
@@ -87,10 +75,10 @@
        ==================================================================== -->
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Watch this before you spend another dollar</h2>
-      <p class="lede">Dale walks through what's actually happening inside a
+      <h2 class="rv">Watch this before you spend another dollar</h2>
+      <p class="lede rv" style="transition-delay:80ms">Dale walks through what's actually happening inside a
         typical Amazon ad account — using a real one.</p>
-      <div class="vsl mt-4">
+      <div class="vsl mt-4 rv" style="transition-delay:140ms">
         <iframe src="https://player.vimeo.com/video/1220603494?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Brainy Brands VSL"></iframe>
       </div>
     </div>
@@ -104,9 +92,9 @@
        ==================================================================== -->
   <section class="band">
     <div class="shell">
-      <h2>Supercharge your Amazon success</h2>
-      <p class="lede">Fully-managed Amazon services since 2013.</p>
-      <div class="grid mt-4">
+      <h2 class="rv">Supercharge your Amazon success</h2>
+      <p class="lede rv" style="transition-delay:80ms">Fully-managed Amazon services since 2013.</p>
+      <div class="grid mt-4 rv" style="transition-delay:140ms">
         <article>
           <p class="stat-metric">[NUMBER]+</p>
           <p class="stat-tag">Years of Amazon expertise</p>
@@ -129,9 +117,9 @@
   <!-- ===== PROBLEM ======================================================= -->
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>If any of this sounds familiar, keep reading</h2>
+      <h2 class="rv">If any of this sounds familiar, keep reading</h2>
 
-      <ol class="list-numbered">
+      <ol class="list-numbered rv" style="transition-delay:80ms">
         <li>
           <h3>Your ad spend climbs every quarter</h3>
           <p>Sales stay flat. Nobody can tell you why. The account looks "fine"
@@ -159,14 +147,14 @@
   <!-- ===== CHALLENGES / SOLUTIONS ======================================== -->
   <section class="band">
     <div class="shell">
-      <h2>Maximize your Amazon revenue</h2>
-      <p class="lede mt-3">
+      <h2 class="rv">Maximize your Amazon revenue</h2>
+      <p class="lede mt-3 rv" style="transition-delay:80ms">
         Since 2013 we've partnered with high-performing Amazon sellers to drive
         sustainable growth, and we've kept adding new techniques rather than
         settling into one playbook.
       </p>
 
-      <div class="grid grid-2 mt-5">
+      <div class="grid grid-2 mt-5 rv" style="transition-delay:140ms">
         <div>
           <h3>What sellers keep running into</h3>
           <ul class="prose">
@@ -197,8 +185,8 @@
   <!-- ===== METHOD SUMMARY ================================================ -->
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>What we do differently</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">What we do differently</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Amazon's default settings let Amazon decide what you pay. Dynamic
           bidding adjusts your bid in real time. Placement multipliers add a
@@ -219,9 +207,9 @@
   <!-- ===== PROOF ========================================================= -->
   <section class="band">
     <div class="shell">
-      <h2>What that looks like in a real account</h2>
+      <h2 class="rv">What that looks like in a real account</h2>
 
-      <ol class="stat-rows rv">
+      <ol class="stat-rows rv" style="transition-delay:80ms">
         <li>
           <span class="stat-tag">Magic Brand</span>
           <span class="stat-metric">$0 &rarr; $<span class="count-up" data-count-to="450">0</span>K/mo</span>
@@ -250,8 +238,8 @@
        ==================================================================== -->
   <section class="band band--ink">
     <div class="shell shell--tight center">
-      <h2>Backed by a number, not a promise</h2>
-      <p class="guarantee-statement">25% ad spend reduction in 30 days, scaling
+      <h2 class="rv">Backed by a number, not a promise</h2>
+      <p class="guarantee-statement rv" style="transition-delay:80ms">25% ad spend reduction in 30 days, scaling
         toward <span class="hot">50% by day 60&ndash;90</span> &mdash; or you
         don't pay.</p>
       <p class="lede mt-4" style="max-width:56ch; margin-inline:auto;">
@@ -269,9 +257,9 @@
   <!-- ===== DIFFERENTIATORS =============================================== -->
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Three things most agencies won't do</h2>
+      <h2 class="rv">Three things most agencies won't do</h2>
 
-      <ol class="list-numbered">
+      <ol class="list-numbered rv" style="transition-delay:80ms">
         <li>
           <h3>One person, the whole time</h3>
           <p>Dale manages your account personally. Not a pod, not a rotating
@@ -297,8 +285,8 @@
   <!-- ===== HOW IT WORKS ================================================== -->
   <section class="band">
     <div class="shell shell--tight">
-      <h2>Three steps to get started</h2>
-      <p class="lede">Easy, fast, and no pressure.</p>
+      <h2 class="rv">Three steps to get started</h2>
+      <p class="lede rv" style="transition-delay:80ms">Easy, fast, and no pressure.</p>
 
       <div class="step-cards">
         <article class="step-card rv rv--pop" style="transition-delay:0ms">
@@ -326,8 +314,8 @@
   <!-- ===== FINAL CTA ===================================================== -->
   <section class="band band--ink">
     <div class="shell shell--tight center">
-      <h2>Find out what your account is actually costing you</h2>
-      <p class="lede mt-3" style="margin-inline:auto;">
+      <h2 class="rv">Find out what your account is actually costing you</h2>
+      <p class="lede mt-3 rv" style="margin-inline:auto; transition-delay:80ms;">
         Twenty minutes, live, with Dale. He opens your account, shows you where
         the money is going, and tells you what he'd change. You keep the notes
         whether or not you hire us.
@@ -414,65 +402,6 @@
     for (var j = 0; j < allCounters.length; j++) { animateCount(allCounters[j]); }
   }
 
-  var introOverlay = document.querySelector('.logo-intro');
-  var introSpacer = document.querySelector('.logo-intro-spacer');
-  if (!reduced && introOverlay && introSpacer && 'requestAnimationFrame' in window) {
-    document.documentElement.setAttribute('data-intro', '');
-    document.documentElement.setAttribute('data-intro-playing', '');
-
-    var introLogo = introOverlay.querySelector('.logo-intro-logo');
-    var introTicking = false;
-    var introDone = false;
-    var introMaxScale = 24;
-    var introFadeOutStart = 0.82;
-
-    function finishIntro() {
-      introDone = true;
-      document.documentElement.removeAttribute('data-intro-playing');
-      introOverlay.parentNode.removeChild(introOverlay);
-      introSpacer.parentNode.removeChild(introSpacer);
-      window.removeEventListener('scroll', onIntroScroll);
-      window.removeEventListener('resize', onIntroScroll);
-
-      var htmlEl = document.documentElement;
-      var prevScrollBehavior = htmlEl.style.scrollBehavior;
-      htmlEl.style.scrollBehavior = 'auto';
-      window.scrollTo(0, 0);
-      htmlEl.style.scrollBehavior = prevScrollBehavior;
-    }
-
-    function updateIntro() {
-      introTicking = false;
-      if (introDone) { return; }
-      var trackHeight = introSpacer.offsetHeight;
-      var progress = trackHeight > 0 ? Math.min(Math.max(window.scrollY / trackHeight, 0), 1) : 0;
-      var scale = 1 + progress * introMaxScale;
-      var outro = progress > introFadeOutStart ? (progress - introFadeOutStart) / (1 - introFadeOutStart) : 0;
-
-      introLogo.style.transform = 'scale(' + scale.toFixed(3) + ')';
-      introOverlay.style.opacity = 1 - outro;
-
-      if (progress >= 1) { finishIntro(); }
-    }
-
-    function onIntroScroll() {
-      if (!introTicking) { introTicking = true; requestAnimationFrame(updateIntro); }
-    }
-
-    window.addEventListener('scroll', onIntroScroll, { passive: true });
-    window.addEventListener('resize', onIntroScroll, { passive: true });
-    updateIntro();
-
-    var introFadeInStart = null;
-    var introFadeInDuration = 700;
-    function introFadeInStep(ts) {
-      if (introFadeInStart === null) { introFadeInStart = ts; }
-      var t = Math.min((ts - introFadeInStart) / introFadeInDuration, 1);
-      introLogo.style.opacity = t;
-      if (t < 1) { requestAnimationFrame(introFadeInStep); }
-    }
-    requestAnimationFrame(introFadeInStep);
-  }
 })();
 </script>
 
