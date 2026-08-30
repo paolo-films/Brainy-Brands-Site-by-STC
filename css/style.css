@@ -434,6 +434,7 @@ main a { text-decoration-color: currentColor; }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 .grid > article { border-top: 1px solid var(--line); padding-top: var(--s3); }
 .stat-hero .stat-metric { font-size: clamp(2.75rem, 1.9rem + 4vw, 5rem); }
+.stat-hero .stat-tag { font-size: clamp(1rem, 0.85rem + 0.6vw, 1.25rem); color: var(--ink-2); }
 
 /* --- Case-study / pricing panel (no rounded card, hairline only) ------------- */
 
