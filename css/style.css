@@ -51,6 +51,7 @@
 
   --shell: 1160px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --header-h: 4.5rem;
 }
 
 /* --- Reset ---------------------------------------------------------------- */
@@ -197,14 +198,24 @@ main a { text-decoration-color: currentColor; }
 
 /* --- Masthead --------------------------------------------------------------- */
 
+/* Transparent by default so it reads as part of the hero underneath it
+   (every page opens on .hero--ink), goes solid only once the page has
+   scrolled past that hero and needs to sit on top of light content. */
 .masthead {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease);
 }
-.masthead .shell { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: 4.5rem; }
+.masthead.is-scrolled {
+  background: var(--ink);
+  border-bottom-color: oklch(0.994 0.002 250 / 0.14);
+}
+.masthead .shell { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: var(--header-h); }
 .brandmark { display: inline-flex; align-items: center; text-decoration: none; }
 .brandmark img { height: 1.9rem; width: auto; }
 
@@ -213,17 +224,19 @@ main a { text-decoration-color: currentColor; }
   display: inline-block;
   padding: 0.4rem 0;
   margin-inline: var(--s3);
-  color: var(--ink-2);
+  color: oklch(0.994 0.002 250 / 0.75);
   font-size: var(--t-sm);
   font-weight: 700;
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
-.navlinks a:hover { color: var(--ink); border-bottom-color: var(--line); }
-.navlinks a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--amz-deep); }
+.navlinks a:hover { color: var(--paper); border-bottom-color: oklch(0.994 0.002 250 / 0.35); }
+.navlinks a[aria-current="page"] { color: var(--paper); border-bottom-color: var(--amz-hot); }
 
 .masthead-actions { display: flex; align-items: center; gap: var(--s3); flex: none; }
+.masthead .btn--ghost { color: var(--paper); border-color: oklch(0.994 0.002 250 / 0.4); }
+.masthead .btn--ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 
 /* --- Services nav dropdown --------------------------------------------------- */
 
@@ -232,9 +245,9 @@ main a { text-decoration-color: currentColor; }
   display: inline-flex; align-items: center; justify-content: center;
   width: 1.6rem; height: 1.6rem; margin-left: -0.5rem;
   background: none; border: none; padding: 0; cursor: pointer;
-  color: var(--ink-2);
+  color: oklch(0.994 0.002 250 / 0.7);
 }
-.submenu-toggle:hover, .has-submenu:hover .submenu-toggle { color: var(--ink); }
+.submenu-toggle:hover, .has-submenu:hover .submenu-toggle { color: var(--paper); }
 .submenu-caret {
   width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent;
   border-top: 5px solid currentColor;
@@ -269,7 +282,7 @@ main a { text-decoration-color: currentColor; }
 
 /* --- Hero ------------------------------------------------------------------- */
 
-.hero { padding-block: clamp(3rem, 1.8rem + 5vw, 5.5rem) clamp(2.5rem, 1.6rem + 3.5vw, 4.5rem); }
+.hero { padding-block: calc(var(--header-h) + clamp(3rem, 1.8rem + 5vw, 5.5rem)) clamp(2.5rem, 1.6rem + 3.5vw, 4.5rem); }
 .hero h1 { max-width: 20ch; }
 .hero .lede { margin-top: var(--s4); }
 .hero .btn-row { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin-top: var(--s5); }
@@ -337,7 +350,7 @@ main a { text-decoration-color: currentColor; }
 /* Full-viewport variant — homepage only. Kept separate from .hero--ink so
    interior pages can use the dark band without inheriting a forced
    full-screen height. */
-.hero--full { min-height: calc(100svh - 4.5rem); display: flex; align-items: center; }
+.hero--full { min-height: 100svh; display: flex; align-items: center; }
 .hero--ink h1 { color: var(--paper); }
 .hero--ink .lede { color: oklch(0.994 0.002 250 / 0.8); }
 .hero--ink .cta-note { color: oklch(0.994 0.002 250 / 0.62); }
@@ -648,7 +661,6 @@ form { max-width: 34rem; }
 }
 
 @media (max-width: 640px) {
-  :root { --t-mega: clamp(2.1rem, 1.6rem + 3vw, 3.2rem); }
-  .masthead .shell { min-height: 4rem; }
+  :root { --t-mega: clamp(2.1rem, 1.6rem + 3vw, 3.2rem); --header-h: 4rem; }
   .foot-row { flex-direction: column; align-items: flex-start; }
 }
