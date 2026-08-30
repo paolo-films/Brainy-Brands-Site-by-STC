@@ -2958,3 +2958,102 @@ recording because the failure looked exactly like a real regression, and the
 fix was to regenerate `/tmp/replica/audit.html` from the authentic template
 rather than to change any code. Check what the port is actually serving
 before believing a measurement that contradicts the markup you just read.
+
+---
+
+# Revision 38 — August 30, 2026
+
+## `audit.html`: the calendar moves behind a button, and the headline is rewritten
+
+Two changes, both at your request.
+
+## 1. Calendar into a modal
+
+The full-width booking band that sat directly under the hero is gone. In
+its place: a button, `Book your free audit`, right below the VSL, and a
+second one repeating it at the bottom of the page (`Check if we're a fit`).
+Click either and the widget opens as a centred dialog; the case studies
+that used to follow a static calendar band now follow the VSL immediately.
+
+**Lazy-mounted**, which is the mobile-optimisation half of this: the
+iframe now carries `data-lazy-src` instead of `data-src`, so the page-load
+fbclid script never touches it and the GHL widget fetches nothing until a
+visitor actually opens the modal. The old band loaded the calendar on
+every single pageview, booked or not; this only pays that cost for someone
+who asked to see it. The modal's own script builds the same
+fbclid-appended URL by hand on first open, reading `window.STC_FBCLID`
+(already resolved by the head script before the body even parses), then
+never touches it again.
+
+**Mobile-first sizing**, since that was the explicit ask: below 700px --
+the same breakpoint the old calendar band used for its own padding
+reclaim, and for the same reason: GHL's calendar renders tallest at phone
+width -- the dialog is a full-bleed sheet, not a card with margins to
+spare. Above it, a centred 640px panel. Verified at 1440/1024/860/700/390:
+edge-to-edge below 700, centred card above it, in both the standalone page
+and the GHL wrapper replica.
+
+**Closes three ways**: the backdrop, the X, or Escape -- and returns focus
+to whichever button opened it. Body scroll is locked with the
+position:fixed/restore-scrollY trick rather than plain `overflow:hidden`,
+because `overflow:hidden` on the body alone does not stop touch-scroll
+under a fixed-position dialog on iOS Safari -- the page visibly scrolls
+behind the sheet otherwise.
+
+`.rv` (the scroll-reveal class) is dropped from the modal's markup on
+purpose: the IntersectionObserver it depends on needs the element visible
+to ever fire, and this content is never visible on scroll, only on click --
+left in place, it would sit at `opacity: 0` forever the first time someone
+opened the dialog.
+
+Both anchors that used to `href="#apply"` (the bottom CTA and the
+skip-link) are updated: the CTA now opens the modal directly instead of
+jumping to a section that no longer scrolls to anything, and the skip-link
+points at `#top`, matching the same fix `thanks.html` already needed for
+the same reason -- no `#apply` section left to skip to.
+
+## 2. Headline rewritten
+
+```
+Give us 30 days and we'll cut your ad spend by 25%+          <- was
+Without losing sales. If we don't hit it, we'll refund your
+money -- or work for free until we do.
+
+Cut your Amazon ad spend 25%+ in 30 days. Without losing      <- now
+sales.
+If we miss it, you get your money back -- or we work free
+until we hit it.
+```
+
+"Without losing sales" moves into the headline itself rather than opening
+the subhead -- you grouped it under "Headline:" this time. The
+challenge/command framing ("give us 30 days") is gone in favour of a flat
+statement of the cut, closer to the shape of the closers.io reference than
+the previous draft.
+
+## Verified
+
+- Headline and subhead read back exactly as specified, on both
+  `audit.html` and the GHL build.
+- Modal opens from both triggers, closes via backdrop/X/Escape, returns
+  focus correctly, locks and restores body scroll -- checked via direct
+  DOM dispatch rather than Playwright's synthetic click, which fought with
+  this page's `scroll-behavior: smooth` on the long scroll to the bottom
+  trigger (a Playwright/automation quirk, not a page bug -- confirmed by
+  dispatching the same click via the DOM API instead).
+- Contrast sweep: **0 failures**; no horizontal overflow at 390 or 1440.
+- `offer.html`, `guide.html` and `thanks.html` unaffected by the shared
+  `.modal`/`.sr-only` CSS additions -- no `#auditModal` on any of them, no
+  new JS errors.
+- Tag balance clean (`section`, `div`, `button`); the only `<div>` count
+  mismatch is the pre-existing comment-text instance flagged in Revision
+  36, unchanged.
+- Inline JS on both files parses clean per script block with `node
+  --check` -- caught and fixed one mistake this revision: syncing the GHL
+  build by naive text substitution briefly duplicated the outer IIFE's
+  closing brace, which `node --check` caught immediately. Fixed by
+  swapping in the whole verified-correct script block from `audit.html`
+  wholesale rather than patching around the error.
+- GHL build re-verified in the wrapper replica: hero `L0 R0 top0`, no
+  overflow, Archivo resolving, modal opens and lazy-mounts correctly
+  inside the wrapper chrome, no JS errors.
