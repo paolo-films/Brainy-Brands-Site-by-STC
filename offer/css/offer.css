@@ -425,37 +425,13 @@ a { color: var(--amz-deep); text-underline-offset: 0.2em; }
    it needs real separation from the copy above it. */
 .calendar-embed { margin-top: var(--s5); }
 
-/* --- The widget in a two-column layout (audit.html) -------------------------
-   Two adjustments when .calendar-embed sits inside .split:
+/* The margin above only makes sense when the widget follows copy in the same
+   band, which is how offer.html uses it (the audit list sits above). On
+   audit.html the widget is the band's only child, so that margin would just
+   stack on top of the band's own padding-block. Keyed off :first-child so it
+   stays correct on both pages without a page-scoped override. */
+.calendar-embed:first-child { margin-top: 0; }
 
-   1. The top margin comes off. It exists to separate the widget from copy
-      stacked ABOVE it; beside a column it just drops the widget out of
-      alignment with the heading next to it.
-
-   2. The widget gets the wider column. This runs against the instinct --
-      the point of going horizontal is to save vertical space -- but GHL's
-      calendar is responsive, so a NARROWER frame lays the date grid and
-      time slots out in MORE rows and the widget gets TALLER. Width is the
-      only lever on its height (recorded in the GHL chrome notes). So the
-      split is weighted toward the widget rather than 50/50: the copy on
-      the left is four short lines and does not need half the page.
-
-   Whether the section is net shorter than the stacked version depends on
-   how much taller the widget goes at this width, and that cannot be
-   measured from here -- api.leadconnectorhq.com is blocked to this
-   sandbox, so the widget never mounts. If it comes out taller in practice,
-   widening this further is the first thing to try. */
-.split .calendar-embed { margin-top: 0; }
-
-/* Wrapped in min-width, and that is not decoration. The base .split stacks
-   to one column inside @media (max-width: 860px) via `.split` (0,1,0).
-   `#apply .split` is (1,1,0) -- an id beats a class regardless of source
-   order or media query -- so unwrapped, this rule overrode the mobile
-   stacking and phones rendered a 137px copy column beside a 205px widget.
-   Caught by measuring at four widths instead of only desktop. */
-@media (min-width: 861px) {
-  #apply .split { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
-}
 .calendar-embed iframe { display: block; width: 100%; min-height: 420px; }
 
 /* --- Numbered deliverables on the ink ground -------------------------------

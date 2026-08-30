@@ -249,12 +249,14 @@ fbq('track', 'PageView');
        JS gate was "a UX convenience, not security" and had to be re-run
        server-side regardless.
 
-       Laid out horizontally, at your request: the description of the call
-       on the left, the widget on the right. .split is the existing
-       two-column primitive and it is what the original booking section
-       used before Revision 13 flattened it -- so this restores a layout
-       this codebase already had rather than inventing one. It collapses to
-       a single column at 860px, so phones still get the stacked version.
+       The band is now the widget and nothing else -- heading, lede and
+       guarantee note all removed at your request, and the two-column
+       .split with them. The widget runs the full width of .shell, which
+       centres it (the shell is margin-inline: auto) and is also the
+       SHORTEST it can render: GHL's calendar is responsive, so a wider
+       frame lays the date grid and time slots out in fewer rows. Width is
+       the only lever on its height, so full-width and centred are the same
+       decision here, not a compromise between them.
 
        The iframe keeps data-src rather than the plain src in your snippet.
        That is deliberate: the fbclid block in <head> rewrites data-src to
@@ -264,28 +266,15 @@ fbq('track', 'PageView');
        ==================================================================== -->
   <section class="band" id="apply">
     <div class="shell">
-      <div class="split">
-        <header class="rv">
-          <h2>Book your free audit</h2>
-          <p class="lede mt-4">
-            Twenty minutes with Dale, live in your account. He'll show you
-            <b>exactly where your money is going</b> and the number he thinks
-            he can cut.
-          </p>
-          <p class="cta-note">Note: The 25% guarantee is only offered after
-            the audit, once we've seen the account.</p>
-        </header>
-
-        <div class="rv calendar-embed">
-          <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE"
-                  allow="payment"
-                  style="width:100%;border:none;overflow:hidden"
-                  scrolling="no"
-                  id="rMTistvxT1FAUAfDRPzE_1788116097008"></iframe>
-          <noscript>
-            <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
-          </noscript>
-        </div>
+      <div class="rv calendar-embed">
+        <iframe data-src="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE"
+                allow="payment"
+                style="width:100%;border:none;overflow:hidden"
+                scrolling="no"
+                id="rMTistvxT1FAUAfDRPzE_1788116097008"></iframe>
+        <noscript>
+          <p class="cta-note"><a href="https://api.leadconnectorhq.com/widget/booking/rMTistvxT1FAUAfDRPzE">Open the booking calendar</a></p>
+        </noscript>
       </div>
     </div>
   </section>

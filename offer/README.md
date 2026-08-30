@@ -2881,3 +2881,80 @@ first thing to try, and it is one number.
 - Tag balance clean including `form` and `iframe`.
 - GHL build re-verified in the wrapper replica: edge-to-edge, `top0`, no
   overflow, no JS errors, split behaving correctly at both widths.
+
+---
+
+# Revision 37 — August 30, 2026
+
+## `audit.html`: booking copy removed, the widget centred
+
+Your call: the heading, the lede and the guarantee note come out, and the
+band is now the widget and nothing else.
+
+```
+Book your free audit                                  <- removed
+Twenty minutes with Dale, live in your account...     <- removed
+Note: The 25% guarantee is only offered after...      <- removed
+```
+
+## Centred means full-width here, and that is not a shortcut
+
+With the left column gone, the two-column `.split` had nothing to hold, so
+it came out too. The widget now sits directly in `.shell`, which centres it
+— `.shell` is `margin-inline: auto` at a 1120px cap.
+
+That is also the **shortest** it can render. Same responsive behaviour noted
+in Revision 36, applied in the opposite direction: GHL's calendar lays the
+date grid and time slots out in *fewer* rows as the frame gets wider, so
+full-width and centred are the same decision here rather than a trade-off
+between them. This is the one place where the thing that looks right and the
+thing that measures shortest agree.
+
+## One rule added, two removed
+
+`.calendar-embed` carries `margin-top: var(--s5)` so it clears copy stacked
+above it — which is exactly what `offer.html` still needs, since its audit
+list sits above the widget. On `audit.html` the widget is now the band's
+only child, so that margin would just pile onto the band's own
+`padding-block`.
+
+```css
+.calendar-embed:first-child { margin-top: 0; }
+```
+
+Keyed off `:first-child` rather than a page-scoped `#apply` override, so it
+stays correct on both pages without either one knowing about the other.
+Verified in the browser: `audit.html` reports `margin-top: 0px`,
+`offer.html` and `guide.html` still report `48px`.
+
+Removed as dead: `.split .calendar-embed` and the `@media (min-width: 861px)
+{ #apply .split }` block, both added last revision and both now unreachable.
+The base `.split` primitive stays — it predates Revision 36 and is not mine
+to delete.
+
+## Verified
+
+- **Centring measured, not assumed.** Left gap equals right gap exactly at
+  1440 / 1024 / 860 / 390px, both in the standalone page and inside the GHL
+  wrapper replica.
+- Contrast sweep: **0 failures** on `audit.html` and `thanks.html`, no
+  horizontal overflow at either width.
+- `margin-top` confirmed `0px` on `audit.html` and `48px` on `offer.html`
+  and `guide.html` — the `:first-child` rule fires only where intended.
+- No residue: `class="split"`, `#apply .split`, `Book your free audit` and
+  `Twenty minutes with Dale` all at zero occurrences in both `audit.html`
+  and the GHL build.
+- Tag balance clean; the only `<div>`/`<header>` imbalance in the GHL file
+  is inside a comment and predates this change.
+- GHL build re-verified in the wrapper replica: hero `L0 R0 top0`, no
+  overflow, Archivo resolving, no JS errors.
+
+## Note on the measurement
+
+The first replica run reported the embed off-centre and a heading still in
+the band. That was a stale `python3 -m http.server` from an earlier session
+holding port 8077 and serving an old copy — the new server never bound. Worth
+recording because the failure looked exactly like a real regression, and the
+fix was to regenerate `/tmp/replica/audit.html` from the authentic template
+rather than to change any code. Check what the port is actually serving
+before believing a measurement that contradicts the markup you just read.
