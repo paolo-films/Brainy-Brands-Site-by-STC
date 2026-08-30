@@ -217,7 +217,7 @@ main a { text-decoration-color: currentColor; }
 }
 .masthead .shell { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: var(--header-h); }
 .brandmark { display: inline-flex; align-items: center; text-decoration: none; }
-.brandmark img { height: 1.9rem; width: auto; }
+.brandmark img { height: 2.75rem; width: auto; }
 
 .navlinks { display: flex; flex-wrap: wrap; align-items: center; gap: 0; list-style: none; padding: 0; margin: 0 auto 0 var(--s5); }
 .navlinks a {
