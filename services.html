@@ -35,8 +35,8 @@
 
   <section class="band hero hero--ink">
     <div class="shell shell--tight">
-      <h1>An A-to-Z <span class="hl">Amazon agency</span></h1>
-      <p class="lede mt-4">
+      <h1 class="rv">An A-to-Z <span class="hl">Amazon agency</span></h1>
+      <p class="lede mt-4 rv" style="transition-delay:80ms">
         PPC is what we're known for and it's where the guarantee applies. It isn't
         the only thing we do. Whatever's holding the account back, we can usually
         take it on.
@@ -46,8 +46,8 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Why we do it ourselves</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Why we do it ourselves</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Most agencies claim expertise they've never used on their own money.
           We've private-labelled products, launched them, and built seven-figure
@@ -67,10 +67,10 @@
   <!-- ===== THE TEN SERVICES ============================================== -->
   <section class="band">
     <div class="shell shell--tight">
-      <h2>What we do</h2>
-      <p class="lede">Pricing is based on the number of SKUs we manage.</p>
+      <h2 class="rv">What we do</h2>
+      <p class="lede rv" style="transition-delay:80ms">Pricing is based on the number of SKUs we manage.</p>
 
-      <ol class="list-numbered">
+      <ol class="list-numbered rv" style="transition-delay:140ms">
         <li>
           <h3>Full PPC Build-Out &amp; Management</h3>
           <p>Building, expanding, tuning, and managing your campaigns daily.
@@ -136,13 +136,13 @@
        ==================================================================== -->
   <section class="band band--tint">
     <div class="shell">
-      <h2>Pricing</h2>
-      <p class="lede mt-3">
+      <h2 class="rv">Pricing</h2>
+      <p class="lede mt-3 rv" style="transition-delay:80ms">
         Starting points. Final pricing depends on account size, SKU count, and how
         much work the catalogue needs — we quote after we've looked.
       </p>
 
-      <div class="grid mt-5">
+      <div class="grid mt-5 rv" style="transition-delay:140ms">
 
         <div class="panel">
           <h3>Audit &amp; Product Vetting</h3>
@@ -205,12 +205,12 @@
   <!-- ===== WHO WE ACCEPT ================================================= -->
   <section class="band">
     <div class="shell">
-      <h2>Who we typically take on</h2>
-      <p class="lede">
+      <h2 class="rv">Who we typically take on</h2>
+      <p class="lede rv" style="transition-delay:80ms">
         We help existing brands find the gaps and the room to scale.
       </p>
 
-      <div class="grid mt-5">
+      <div class="grid mt-5 rv" style="transition-delay:140ms">
         <article>
           <h3>Original brands</h3>
           <p>Most of our clients already sell well on their own site and want to
@@ -236,8 +236,8 @@
   <!-- ===== SOLUTIONS SUITE =============================================== -->
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>The full toolkit</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">The full toolkit</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>Everything we can bring to an account:</p>
         <ul>
           <li>Comprehensive SEO enhancement</li>
@@ -258,8 +258,8 @@
   <!-- ===== REPORTING ===================================================== -->
   <section class="band">
     <div class="shell shell--tight">
-      <h2>Reporting you can actually read</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Reporting you can actually read</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Amazon's reporting is not built for the person paying for the ads. We
           build and connect data reporting tools so you have one place to check
@@ -272,12 +272,12 @@
 
   <section class="band band--ink">
     <div class="shell shell--tight">
-      <h2>Not sure which of these you need?</h2>
-      <p class="lede mt-3">
+      <h2 class="rv">Not sure which of these you need?</h2>
+      <p class="lede mt-3 rv" style="transition-delay:80ms">
         That's what the audit is for. Twenty minutes with Dale in your live
         account and you'll know what's worth fixing first.
       </p>
-      <div class="btn-row mt-4">
+      <div class="btn-row mt-4 rv" style="transition-delay:140ms">
         <a class="btn" href="audit.html">Get a free audit</a>
         <a class="btn btn--ghost" href="contact.html">Or send a question</a>
       </div>
@@ -316,6 +316,24 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced && 'IntersectionObserver' in window) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.setAttribute('data-in', '');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+})();
+</script>
 
 </body>
 </html>

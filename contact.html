@@ -35,8 +35,8 @@
 
   <section class="band hero hero--ink">
     <div class="shell shell--tight">
-      <h1><span class="hl">Ask a question</span></h1>
-      <p class="lede mt-4">
+      <h1 class="rv"><span class="hl">Ask a question</span></h1>
+      <p class="lede mt-4 rv" style="transition-delay:80ms">
         If you'd rather not book a call yet, this goes straight to Dale. You'll
         hear back within 24 hours.
       </p>
@@ -45,7 +45,7 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <div class="prose">
+      <div class="prose rv">
         <p>
           We aren't a large agency with a big workforce, and we don't shuffle
           brand managers around. We're selective about who we work with, because
@@ -67,7 +67,7 @@
            Storefront link, Monthly AD spend Budget, Annual Revenue, Message)
            so nothing Dale relied on for qualification is lost.
            ================================================================ -->
-      <form class="mt-5 gate" action="#" method="post" novalidate>
+      <form class="mt-5 gate rv" style="transition-delay:80ms" action="#" method="post" novalidate>
 
         <div class="field">
           <label for="name">Full name</label>
@@ -161,6 +161,24 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced && 'IntersectionObserver' in window) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.setAttribute('data-in', '');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+})();
+</script>
 
 </body>
 </html>

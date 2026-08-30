@@ -35,9 +35,9 @@
 
   <section class="band hero hero--ink">
     <div class="shell shell--tight">
-      <p class="audience">Dale has helped hundreds of brands scale on Amazon</p>
-      <h1>You'll be working with <span class="hl">Dale. Just Dale.</span></h1>
-      <p class="lede mt-4">
+      <p class="audience rv">Dale has helped hundreds of brands scale on Amazon</p>
+      <h1 class="rv" style="transition-delay:60ms">You'll be working with <span class="hl">Dale. Just Dale.</span></h1>
+      <p class="lede mt-4 rv" style="transition-delay:120ms">
         Not a team, not a pod, not an account executive who hands you off after
         onboarding. The person who audits your account is the person who manages
         it, for as long as you're a client.
@@ -47,12 +47,12 @@
 
   <section class="band band--tint">
     <div class="shell dale-hero">
-      <div class="frame" style="aspect-ratio:450/774;">
+      <div class="frame rv" style="aspect-ratio:450/774;">
         <img src="images/Dale.png" alt="Dale, founder of Brainy Brands">
       </div>
       <div>
-        <h2>About Dale</h2>
-        <div class="prose mt-3">
+        <h2 class="rv">About Dale</h2>
+        <div class="prose mt-3 rv" style="transition-delay:80ms">
           <p>
             Dale is an inventor and entrepreneur who scaled his own brands to seven
             figures on Amazon before he ever took on a client.
@@ -74,8 +74,8 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>Why the model matters more than the bio</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Why the model matters more than the bio</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Ever wonder why agencies that claim deep Amazon expertise have never run
           a product of their own? We've private-labelled, innovated products, and
@@ -105,8 +105,8 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Our mission</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Our mission</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Concrete, measurable results. Since 2013 we've worked alongside some
           very successful Amazon sellers, and we've kept learning new techniques
@@ -123,9 +123,9 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>What you're actually agreeing to</h2>
+      <h2 class="rv">What you're actually agreeing to</h2>
 
-      <ol class="list-numbered">
+      <ol class="list-numbered rv" style="transition-delay:80ms">
         <li>
           <h3>One manager, no rotation</h3>
           <p>Dale personally manages the account. If that ever needs to change,
@@ -153,8 +153,8 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Who this is a bad fit for</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Who this is a bad fit for</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>Worth saying plainly, because a mismatched client wastes everyone's time.</p>
         <ul>
           <li><strong>Under $10K/month in Amazon ad spend.</strong> There isn't
@@ -174,8 +174,8 @@
 
   <section class="band band--ink">
     <div class="shell shell--tight">
-      <h2>Start with the audit</h2>
-      <p class="lede mt-3">
+      <h2 class="rv">Start with the audit</h2>
+      <p class="lede mt-3 rv" style="transition-delay:80ms">
         Twenty minutes, live, on your actual account. You'll get a clear read on
         where the money's going whether or not you work with us.
       </p>
@@ -215,6 +215,24 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced && 'IntersectionObserver' in window) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.setAttribute('data-in', '');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+})();
+</script>
 
 </body>
 </html>

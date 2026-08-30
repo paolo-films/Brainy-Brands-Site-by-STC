@@ -35,8 +35,8 @@
 
   <section class="band hero hero--ink">
     <div class="shell shell--tight">
-      <h1>Amazon decides what you pay. <span class="hl">We take that back.</span></h1>
-      <p class="lede mt-4">
+      <h1 class="rv">Amazon decides what you pay. <span class="hl">We take that back.</span></h1>
+      <p class="lede mt-4 rv" style="transition-delay:80ms">
         Two settings are on by default in nearly every Amazon ad account. Both
         hand pricing control to Amazon. Most sellers have never turned them off,
         because most agencies never suggest it.
@@ -46,8 +46,8 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Setting one: dynamic bidding</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Setting one: dynamic bidding</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Your bid is supposed to be a ceiling. With dynamic bidding on, it isn't.
           Amazon raises your bid in real time when it decides a click is likely to
@@ -68,8 +68,8 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>Setting two: placement multipliers</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Setting two: placement multipliers</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           On top of the bid adjustment, you can add a percentage increase for
           specific placements — top of search, product pages. Agencies set these
@@ -85,9 +85,9 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>What we do instead</h2>
+      <h2 class="rv">What we do instead</h2>
 
-      <ol class="list-numbered">
+      <ol class="list-numbered rv" style="transition-delay:80ms">
         <li>
           <h3>Turn both off</h3>
           <p>Dynamic bidding down to fixed. Placement multipliers to zero. Your
@@ -116,8 +116,8 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>Why this is slower on purpose</h2>
-      <div class="prose mt-3">
+      <h2 class="rv">Why this is slower on purpose</h2>
+      <div class="prose mt-3 rv" style="transition-delay:80ms">
         <p>
           Automated bid management scales. One person can run fifty accounts
           if software makes the decisions. That's the model most agencies are
@@ -140,8 +140,8 @@
 
   <section class="band band--ink">
     <div class="shell shell--tight center">
-      <h2>What the method is backed by</h2>
-      <p class="guarantee-statement">25% ad spend reduction in 30 days, scaling
+      <h2 class="rv">What the method is backed by</h2>
+      <p class="guarantee-statement rv" style="transition-delay:80ms">25% ad spend reduction in 30 days, scaling
         toward <span class="hot">50% by day 60&ndash;90</span> &mdash; or you
         don't pay.</p>
       <p class="lede mt-4" style="max-width:56ch; margin-inline:auto;">
@@ -185,6 +185,24 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced && 'IntersectionObserver' in window) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.setAttribute('data-in', '');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+})();
+</script>
 
 </body>
 </html>

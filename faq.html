@@ -35,8 +35,8 @@
 
   <section class="band hero hero--ink">
     <div class="shell shell--tight">
-      <h1>Questions people <span class="hl">actually ask</span></h1>
-      <p class="lede mt-4">
+      <h1 class="rv">Questions people <span class="hl">actually ask</span></h1>
+      <p class="lede mt-4 rv" style="transition-delay:80ms">
         Straight answers, including the awkward ones. If your question isn't
         here, <a href="contact.html">send it over</a>.
       </p>
@@ -45,9 +45,9 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>The guarantee</h2>
+      <h2 class="rv">The guarantee</h2>
 
-      <div class="faq">
+      <div class="faq rv" style="transition-delay:80ms">
         <details>
           <summary>What exactly is the guarantee?</summary>
           <div class="a">
@@ -119,9 +119,9 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>Pricing and terms</h2>
+      <h2 class="rv">Pricing and terms</h2>
 
-      <div class="faq">
+      <div class="faq rv" style="transition-delay:80ms">
         <details>
           <summary>How does pricing work?</summary>
           <div class="a">
@@ -174,9 +174,9 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>Scope</h2>
+      <h2 class="rv">Scope</h2>
 
-      <div class="faq">
+      <div class="faq rv" style="transition-delay:80ms">
         <details>
           <summary>Do you handle Walmart, eBay, or Shopify?</summary>
           <div class="a">
@@ -214,9 +214,9 @@
 
   <section class="band band--tint">
     <div class="shell shell--tight">
-      <h2>The audit call</h2>
+      <h2 class="rv">The audit call</h2>
 
-      <div class="faq">
+      <div class="faq rv" style="transition-delay:80ms">
         <details>
           <summary>What happens on the call?</summary>
           <div class="a">
@@ -265,9 +265,9 @@
 
   <section class="band">
     <div class="shell shell--tight">
-      <h2>How the work runs</h2>
+      <h2 class="rv">How the work runs</h2>
 
-      <div class="faq">
+      <div class="faq rv" style="transition-delay:80ms">
         <!-- PAOLO: the live site had lorem ipsum sitting in this answer.
              This is a real answer now. -->
         <details>
@@ -323,12 +323,12 @@
 
   <section class="band band--ink">
     <div class="shell shell--tight">
-      <h2>Still deciding?</h2>
-      <p class="lede mt-3">
+      <h2 class="rv">Still deciding?</h2>
+      <p class="lede mt-3 rv" style="transition-delay:80ms">
         The guide covers the four most common ways an Amazon ad budget leaks. No
         call required.
       </p>
-      <div class="btn-row mt-4">
+      <div class="btn-row mt-4 rv" style="transition-delay:140ms">
         <a class="btn" href="audit.html">Get a free audit</a>
         <a class="btn btn--ghost" href="guide.html">Read the guide</a>
       </div>
@@ -367,6 +367,24 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced && 'IntersectionObserver' in window) {
+    document.documentElement.setAttribute('data-reveal', '');
+    var seen = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.setAttribute('data-in', '');
+        obs.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) { seen.observe(el); });
+  }
+})();
+</script>
 
 </body>
 </html>
