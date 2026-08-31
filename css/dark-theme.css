@@ -239,8 +239,13 @@
 
 /* --- Prose ------------------------------------------------------------------ */
 .dt-prose { color: var(--paper-dim); max-width: 68ch; }
-.dt-prose p + p { margin-top: 1rem; }
+.dt-prose > * + * { margin-top: 1rem; }
+.dt-prose ol { padding-left: 1.25em; }
+.dt-prose li + li { margin-top: 0.5em; }
+.dt-prose strong { color: var(--paper); font-weight: 700; }
 .dt-prose a, .dt-inline-link { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+.dt-prose h2 { font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.9rem); font-weight: 700; margin-top: 2.25rem; }
+.dt-prose h2:first-child { margin-top: 0; }
 
 /* --- Final CTA --------------------------------------------------------------- */
 .dt-final { text-align: center; }
@@ -297,4 +302,134 @@
   .dt-marquee-track { animation: none; }
   .dt-hero-bulb-rays { animation: none; }
   .dt [data-reveal] .rv { transition-duration: 0.01ms; }
+}
+
+/* ==========================================================================
+   Interior-page components — added when the dark theme rolled out past the
+   homepage. Same tokens, same glass/hairline language, sized for shorter
+   pages that don't need a full-viewport hero.
+   ========================================================================== */
+
+/* --- Page hero: shorter than the homepage's, same bulb-glow device ------- */
+.dt-page-hero { position: relative; overflow: hidden; padding-top: calc(var(--header-h) + 3rem); padding-bottom: 2.75rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.dt-page-hero h1 { font-size: clamp(2.1rem, 1.7rem + 2vw, 3.2rem); font-weight: 800; max-width: 22ch; }
+.dt-page-hero .hl { color: var(--accent); }
+.dt-header-row--center { justify-content: center; }
+.dt-back-link { display: inline-block; font-size: 0.85rem; color: var(--paper-mute); text-decoration: none; }
+.dt-back-link:hover { color: var(--paper-dim); }
+.dt-audience { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.4rem); color: var(--paper-mute); margin-bottom: 0.5rem; }
+
+/* --- Section tint / text utilities --------------------------------------- */
+.dt-section--tint { background: var(--ink-raised); }
+.dt-muted { color: var(--paper-mute); }
+.dt-sm { font-size: 0.9rem; }
+.dt-xs { font-size: 0.8rem; }
+.dt-center { text-align: center; }
+.dt-center .dt-lede { margin-inline: auto; }
+.dt-btn--wide { width: 100%; }
+
+/* --- Numbered / plain hairline lists (services, agreements) -------------- */
+.dt-list-numbered { list-style: none; margin: 1.75rem 0 0; padding: 0; counter-reset: n; }
+.dt-list-numbered > li { counter-increment: n; scroll-margin-top: 6rem; display: grid; grid-template-columns: 2.75rem minmax(0,1fr); gap: 0.25rem 1.25rem; padding-block: clamp(1.4rem, 1rem + 1.4vw, 2.1rem); border-top: 1px solid rgba(255,255,255,0.08); }
+.dt-list-numbered > li:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+.dt-list-numbered > li::before { content: counter(n, decimal-leading-zero); font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); padding-top: 0.15em; }
+.dt-list-numbered h3 { grid-column: 2; margin-bottom: 0; font-size: 1.05rem; font-weight: 600; }
+.dt-list-numbered p { grid-column: 2; margin-top: 0.5rem; color: var(--paper-dim); max-width: 60ch; }
+.dt-list-numbered--noindex > li { grid-template-columns: minmax(0,1fr); }
+.dt-list-numbered--noindex > li::before { content: none; }
+.dt-list-numbered--noindex h3, .dt-list-numbered--noindex p { grid-column: 1; }
+
+/* --- Prose lists / FAQ answer lists share the same dash-bullet ----------- */
+.dt-prose ul, .dt-faq .a ul { margin: 1rem 0 0; padding: 0; list-style: none; }
+.dt-prose li, .dt-faq .a li { position: relative; padding: 0.35rem 0 0.35rem 1.4rem; color: var(--paper-dim); }
+.dt-prose li::before, .dt-faq .a li::before { content: ""; position: absolute; left: 0; top: 1.15em; width: 0.65rem; height: 1px; background: var(--accent); }
+
+/* --- Frame: hairline-bordered media -------------------------------------- */
+.dt-frame { aspect-ratio: 16/9; border: 1px solid var(--glass-border-hi); border-radius: var(--radius); overflow: hidden; background: var(--ink-raised); }
+.dt-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dt-frame--square { aspect-ratio: 1/1; }
+.dt-frame--wide { aspect-ratio: 16/9; }
+
+/* --- Bio layout (about page) ---------------------------------------------- */
+.dt-bio { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 2rem; align-items: center; }
+
+/* --- Plain content grids (articles: who we take on, certifications) ------ */
+.dt-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 1.75rem; }
+.dt-grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.dt-grid > article { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; }
+.dt-grid > article h3 { font-size: 1.05rem; font-weight: 600; }
+.dt-grid > article p { margin-top: 0.5rem; color: var(--paper-dim); font-size: 0.92rem; }
+
+/* --- Generic glass panel (pricing tiers, case studies, disclaimers) ------- */
+.dt-panel { padding: 1.75rem; }
+.dt-panel h3 { font-size: 1.1rem; font-weight: 700; }
+.dt-metric { display: block; margin-bottom: 0.2rem; font-weight: 800; font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.7rem); color: var(--accent); font-variant-numeric: tabular-nums; }
+.dt-tag { font-size: 0.8rem; color: var(--paper-mute); text-transform: uppercase; letter-spacing: 0.03em; }
+.dt-price-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 2rem; }
+.dt-logo-chip { display: inline-flex; align-items: center; padding: 0.5rem 0.9rem; background: var(--paper); border-radius: 8px; margin-bottom: 0.85rem; }
+.dt-logo-chip img { display: block; height: 28px; width: auto; max-width: 180px; object-fit: contain; }
+
+/* --- Image grids (A+ content, 3D renders, PPC screenshots) ---------------- */
+.dt-img-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 1.75rem; }
+.dt-img-grid--wide { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+
+/* --- Case-study carousel (portfolio) --------------------------------------- */
+.dt-carousel-single { display: flex; align-items: center; gap: 1.5rem; }
+.dt-carousel-viewport { flex: 1 1 auto; min-width: 0; position: relative; }
+.dt-carousel-arrow { flex: none; width: 2.75rem; height: 2.75rem; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border-hi); border-radius: 999px; background: var(--glass-bg); color: var(--paper); cursor: pointer; transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease); }
+.dt-carousel-arrow svg { width: 1.15rem; height: 1.15rem; display: block; }
+.dt-carousel-arrow:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.dt-carousel-arrow:disabled { opacity: 0.3; cursor: default; }
+.dt-carousel-card { position: relative; transition: opacity 0.32s var(--ease), transform 0.32s var(--ease); }
+.dt-carousel-counter { margin-top: 1rem; font-size: 0.8rem; color: var(--paper-mute); font-variant-numeric: tabular-nums; text-align: center; }
+
+/* --- Forms ------------------------------------------------------------------ */
+.dt-field { max-width: 34rem; }
+.dt-field + .dt-field { margin-top: 1.25rem; }
+.dt-field label { display: block; font-size: 0.9rem; font-weight: 700; color: var(--paper); margin-bottom: 0.45rem; }
+.dt-field input, .dt-field select, .dt-field textarea {
+  width: 100%; padding: 0 0.9rem; min-height: 3.2rem;
+  font-family: inherit; font-size: 1.0625rem; color: var(--paper);
+  background: var(--glass-bg); border: 1px solid var(--glass-border-hi); border-radius: 8px;
+  appearance: none; -webkit-appearance: none;
+  transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
+}
+.dt-field textarea { min-height: 8rem; padding-block: 0.75rem; }
+.dt-field select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23F6F4EF' stroke-width='1.6'%3E%3Cpath d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 0.75rem; padding-right: 2.4rem;
+}
+.dt-field select option { background: var(--ink-raised); color: var(--paper); }
+.dt-field input::placeholder, .dt-field textarea::placeholder { color: var(--paper-mute); }
+.dt-field input:hover, .dt-field select:hover, .dt-field textarea:hover { border-color: var(--paper-mute); }
+.dt-field input:focus, .dt-field select:focus, .dt-field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); background: var(--glass-bg-hi); }
+.dt-field-hint { margin-top: 0.5rem; font-size: 0.8rem; color: var(--paper-mute); }
+.dt-form-error { margin-top: 1rem; padding: 0.8rem 1rem; border: 1px solid var(--no); background: rgba(251,113,133,0.1); color: var(--paper); font-size: 0.9rem; font-weight: 700; border-radius: 8px; }
+
+/* --- FAQ accordion (native <details>) --------------------------------------- */
+.dt-faq { margin-top: 2rem; border-top: 1px solid var(--glass-border); }
+.dt-faq details { border-bottom: 1px solid var(--glass-border); }
+.dt-faq summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  padding-block: clamp(1rem, 0.8rem + 0.7vw, 1.4rem);
+  font-family: var(--font-body); font-weight: 700; font-size: 1.05rem;
+  color: var(--paper); cursor: pointer; list-style: none;
+}
+.dt-faq summary::-webkit-details-marker { display: none; }
+.dt-faq summary::after { content: "+"; flex: none; font-size: 1.4rem; line-height: 1; color: var(--accent); }
+.dt-faq details[open] summary::after { content: "\2212"; }
+.dt-faq .a { padding-bottom: clamp(1rem, 0.8rem + 0.7vw, 1.4rem); color: var(--paper-dim); max-width: 62ch; }
+.dt-faq .a p + p { margin-top: 0.75rem; }
+
+/* --- GoHighLevel booking embeds --------------------------------------------- */
+.dt-ghl-embed { display: block; width: 100%; min-height: 750px; border: none; overflow: hidden; border-radius: var(--radius); }
+
+@media (max-width: 900px) {
+  .dt-bio { grid-template-columns: 1fr; }
+  .dt-price-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .dt-list-numbered > li { grid-template-columns: 2.25rem minmax(0,1fr); }
+  .dt-carousel-single { gap: 1rem; }
+  .dt-carousel-arrow { width: 2.25rem; height: 2.25rem; }
 }

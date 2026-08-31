@@ -8,41 +8,43 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/dark-theme.css?v=2">
 </head>
-<body>
+<body class="dt">
 
 <!-- =========================================================================
      FUNNEL PAGE — no nav, no footer links out. This is an ad destination.
      ISABELLA: please keep it that way. Every exit link costs a booking.
      ====================================================================== -->
 
-<header class="masthead">
-  <div class="shell">
-    <a class="brandmark" href="index.html"><img src="images/BrainyBrands_PrimaryLogo_White.png" alt="Brainy Brands"></a>
+<div class="dt-atmosphere" aria-hidden="true"></div>
+
+<header class="dt-header">
+  <div class="dt-shell dt-header-row">
+    <a class="dt-brand" href="index.html"><img src="images/BrainyBrands_PrimaryLogo_White.png" alt="Brainy Brands"></a>
   </div>
 </header>
 
 <main id="main">
 
-  <section class="band hero hero--ink">
-    <div class="shell shell--tight">
+  <section class="dt-page-hero">
+    <div class="dt-shell dt-shell--tight">
       <h1>Find out exactly where your Amazon ad budget <span class="hl">is going</span></h1>
-      <p class="lede mt-4">
+      <p class="dt-lede mt-4">
         Twenty minutes, live, inside your real account. Dale shows you what's
         costing you money and what he'd change. You keep the notes either way.
       </p>
     </div>
   </section>
 
-  <section class="band">
-    <div class="shell shell--tight">
+  <section class="dt-section">
+    <div class="dt-shell dt-shell--tight">
 
-      <div class="vsl">
+      <div class="dt-vsl">
         <iframe src="https://player.vimeo.com/video/1220603494?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Brainy Brands VSL"></iframe>
       </div>
 
-      <div class="panel mt-5">
+      <div class="dt-glass dt-panel mt-5">
         <p><strong>25% ad spend reduction in 30 days, scaling toward 50% by day
           60&ndash;90 &mdash; or you don't pay.</strong></p>
         <p class="mt-3">Available to accounts spending $10K+/month on Amazon ads, after this
@@ -50,8 +52,8 @@
           until we hit it.</p>
       </div>
 
-      <h2 class="mt-5">What you get on the call</h2>
-      <div class="prose mt-3">
+      <h2 class="dt-h2 mt-5">What you get on the call</h2>
+      <div class="dt-prose mt-3">
         <ul>
           <li>A read on your bid settings &mdash; dynamic bidding and placement
             multipliers, and what they're costing you right now</li>
@@ -61,8 +63,8 @@
         </ul>
       </div>
 
-      <h2 class="mt-5">Check if your account qualifies</h2>
-      <p class="mt-2">Five questions. Takes under a minute.</p>
+      <h2 class="dt-h2 mt-5">Check if your account qualifies</h2>
+      <p class="dt-lede mt-2">Five questions. Takes under a minute.</p>
 
       <!-- ===================================================================
            QUALIFICATION FORM
@@ -85,17 +87,17 @@
            ================================================================ -->
       <form id="qualForm" class="mt-3" action="#" method="post" novalidate>
 
-        <div class="field">
+        <div class="dt-field">
           <label for="name">Your name</label>
           <input type="text" id="name" name="name" autocomplete="name" required>
         </div>
 
-        <div class="field">
+        <div class="dt-field">
           <label for="email">Work email</label>
           <input type="email" id="email" name="email" autocomplete="email" required>
         </div>
 
-        <div class="field">
+        <div class="dt-field">
           <label for="ad_spend">How much do you spend on Amazon ads per month?</label>
           <select id="ad_spend" name="ad_spend" required>
             <option value="">Choose one</option>
@@ -107,7 +109,7 @@
           </select>
         </div>
 
-        <div class="field">
+        <div class="dt-field">
           <label for="revenue">Monthly Amazon revenue</label>
           <select id="revenue" name="revenue" required>
             <option value="">Choose one</option>
@@ -118,7 +120,7 @@
           </select>
         </div>
 
-        <div class="field">
+        <div class="dt-field">
           <label for="current_manager">Who manages your Amazon ads right now?</label>
           <select id="current_manager" name="current_manager" required>
             <option value="">Choose one</option>
@@ -129,21 +131,21 @@
           </select>
         </div>
 
-        <p id="formError" class="form-error" hidden>
+        <p id="formError" class="dt-form-error" hidden>
           Please answer all five questions.
         </p>
 
-        <button class="btn btn--wide mt-3" type="submit">See my audit times</button>
+        <button class="dt-btn dt-btn--primary dt-btn--wide mt-3" type="submit">See my audit times</button>
 
-        <p class="field-hint mt-3">
+        <p class="dt-field-hint mt-3">
           We use this to confirm the audit is worth your time and ours. We don't
-          sell or share it &mdash; see the <a href="privacy.html">privacy policy</a>.
+          sell or share it &mdash; see the <a class="dt-inline-link" href="privacy.html">privacy policy</a>.
         </p>
       </form>
 
-      <h2 class="mt-5">Common questions</h2>
+      <h2 class="dt-h2 mt-5">Common questions</h2>
 
-      <div class="faq">
+      <div class="dt-faq">
         <details>
           <summary>Is this really free?</summary>
           <div class="a">
@@ -175,9 +177,9 @@
 
 </main>
 
-<footer class="foot">
-  <div class="shell">
-    <div class="colophon">
+<footer class="dt-footer">
+  <div class="dt-shell">
+    <div class="dt-colophon">
       <p>Brainy Brands &middot; 1007 N Orange St. 4th Floor, Wilmington, Delaware 19801</p>
       <p>&copy; 2026 Brainy Brands &middot; <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></p>
     </div>
