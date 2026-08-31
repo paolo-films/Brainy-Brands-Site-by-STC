@@ -1,0 +1,300 @@
+/* ==========================================================================
+   Brainy Brands — dark theme (homepage proof of concept)
+   Reference: mcfconnect.com — near-black canvas, translucent glass panels
+   (no blur, just alpha + hairline + light bleeding through). Adapted with
+   Brainy Brands' own accent — a deep, confident blue rather than the
+   reference's orange, so the palette reads as its own — and its bulb mark
+   driving the ambient glow. Type matches the rest of the site: Archivo +
+   Public Sans.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Public+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+:root {
+  --ink:        #0A0D12;
+  --ink-raised: #12161D;
+  --paper:      #F6F4EF;
+  --paper-dim:  rgba(246, 244, 239, 0.68);
+  --paper-mute: rgba(246, 244, 239, 0.46);
+
+  --accent:      #4E8FFF;
+  --accent-dim:  #2F6FE0;
+  --accent-ink:  #071426;
+
+  --go:         #34D399;
+  --no:         #FB7185;
+
+  --glass-bg:      rgba(255, 255, 255, 0.05);
+  --glass-bg-hi:   rgba(255, 255, 255, 0.08);
+  --glass-border:  rgba(255, 255, 255, 0.12);
+  --glass-border-hi: rgba(255, 255, 255, 0.22);
+
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body:    "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --shell: 1200px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --radius: 14px;
+  --header-h: 4.5rem;
+}
+
+/* --- Reset / base ------------------------------------------------------- */
+
+.dt * , .dt *::before, .dt *::after { box-sizing: border-box; }
+.dt { background: var(--ink); color: var(--paper); font-family: var(--font-body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.dt h1, .dt h2, .dt h3, .dt h4 { font-family: var(--font-display); margin: 0; line-height: 1.05; letter-spacing: -0.02em; color: var(--paper); }
+.dt p { margin: 0; }
+.dt a { color: inherit; }
+.dt img, .dt svg { display: block; max-width: 100%; }
+.dt ::selection { background: var(--accent); color: var(--ink); }
+
+.dt-shell { max-width: var(--shell); margin-inline: auto; padding-inline: clamp(1.25rem, 1rem + 2vw, 2.5rem); position: relative; }
+.dt-shell--tight { max-width: 860px; }
+
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+.mt-5 { margin-top: 3rem; }
+
+/* --- Ambient glow atmosphere ---------------------------------------------
+   Fixed, full-bleed radial blobs behind everything — the signature move
+   borrowed from the reference, tuned to Brainy Brands' own bulb mark. */
+.dt-atmosphere {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.dt-atmosphere::before, .dt-atmosphere::after {
+  content: ""; position: absolute; border-radius: 50%; filter: blur(2px);
+}
+.dt-atmosphere::before {
+  width: 60vw; height: 60vw; top: -18vw; right: -12vw;
+  background: radial-gradient(circle, rgba(78,143,255,0.16) 0%, rgba(78,143,255,0) 70%);
+}
+.dt-atmosphere::after {
+  width: 50vw; height: 50vw; bottom: 8vw; left: -14vw;
+  background: radial-gradient(circle, rgba(78,143,255,0.10) 0%, rgba(78,143,255,0) 70%);
+}
+.dt main, .dt footer { position: relative; z-index: 1; }
+
+/* --- Glass component ------------------------------------------------------ */
+.dt-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+}
+.dt-glass--hi { background: var(--glass-bg-hi); border-color: var(--glass-border-hi); }
+
+/* --- Header ---------------------------------------------------------------- */
+.dt-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(10, 13, 18, 0.72);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--glass-border);
+}
+.dt-header-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; min-height: var(--header-h); padding-block: 0.75rem; }
+.dt-brand { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.dt-brand img { height: 2.5rem; width: auto; }
+.dt-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.1rem; list-style: none; margin: 0 auto 0 2.5rem; padding: 0; flex: 1; }
+.dt-nav > li { position: relative; }
+.dt-nav a {
+  display: inline-block; padding: 0.5rem 1rem; color: var(--paper-dim);
+  font-size: 0.9rem; font-weight: 500; text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+.dt-nav a:hover, .dt-nav a[aria-current="page"] { color: var(--paper); }
+.dt-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.7rem 1.3rem; border-radius: 999px; font-weight: 600; font-size: 0.9rem;
+  text-decoration: none; white-space: nowrap;
+  background: var(--accent); color: var(--accent-ink);
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.dt-cta:hover { background: #6FA3FF; transform: translateY(-1px); }
+.dt-cta--ghost { background: transparent; color: var(--paper); border: 1px solid var(--glass-border-hi); }
+.dt-cta--ghost:hover { background: var(--glass-bg); border-color: var(--paper-dim); }
+
+/* Services submenu, reusing nav.js's class hooks */
+.dt-nav .submenu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 1.4rem; height: 1.4rem; margin-left: -0.6rem; background: none; border: none; padding: 0; cursor: pointer; color: var(--paper-dim); }
+.dt-nav .submenu-caret { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor; transition: transform 0.2s var(--ease); }
+.dt-nav .has-submenu.is-open .submenu-caret, .dt-nav .has-submenu:hover .submenu-caret, .dt-nav .has-submenu:focus-within .submenu-caret { transform: rotate(180deg); }
+.dt-nav .submenu {
+  position: absolute; top: 100%; left: 0; margin: 0.5rem 0 0; padding: 0.5rem; list-style: none;
+  min-width: 280px; background: #12151C; border: 1px solid var(--glass-border-hi);
+  border-radius: 10px; box-shadow: 0 24px 48px -16px rgba(0,0,0,0.6);
+  opacity: 0; visibility: hidden; transform: translateY(4px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease), visibility 0.18s linear;
+}
+.dt-nav .has-submenu:hover .submenu, .dt-nav .has-submenu:focus-within .submenu, .dt-nav .has-submenu.is-open .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+.dt-nav .submenu li { margin: 0; }
+.dt-nav .submenu a { display: block; padding: 0.55rem 0.75rem; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; }
+.dt-nav .submenu a:hover { background: rgba(255,255,255,0.06); color: var(--paper); }
+
+/* --- Sections --------------------------------------------------------------
+   Deliberately tight: sections butt against each other, separated only by
+   a hairline or a change in surface tone. No large empty padding blocks. */
+.dt-section { padding-block: clamp(2.75rem, 2rem + 2.5vw, 4.5rem); border-top: 1px solid rgba(255,255,255,0.06); }
+.dt-section:first-of-type { border-top: none; }
+.dt-eyebrow { font-size: 0.8rem; letter-spacing: 0.04em; color: var(--accent); text-transform: uppercase; }
+.dt-h2 { font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.75rem); font-weight: 700; }
+.dt-lede { font-size: 1.1rem; color: var(--paper-dim); max-width: 62ch; margin-top: 0.85rem; }
+
+/* --- Hero -------------------------------------------------------------------
+   Asymmetric: copy + CTAs on the left, a glass proof panel on the right
+   carrying the trust numbers, instead of a centered slogan stack. */
+.dt-hero {
+  position: relative; overflow: hidden;
+  min-height: calc(100svh - var(--header-h));
+  padding-top: calc(var(--header-h) + 3rem); padding-bottom: 3rem;
+  display: flex; align-items: center;
+}
+
+/* Sized off the hero's own rendered height (not viewport width), so it can
+   never grow taller than the section that clips it — no cut-off at any
+   screen size, whatever the headline's line count does to that height. */
+.dt-hero-bulb {
+  position: absolute; top: 50%; right: -2%; transform: translateY(-50%);
+  height: 98%; aspect-ratio: 1 / 1; width: auto;
+  color: var(--accent); opacity: 0.16; filter: blur(6px);
+  pointer-events: none; z-index: 0;
+}
+.dt-hero-bulb-icon { display: block; height: 100%; width: auto; }
+.dt-hero-bulb-rays { transform-box: fill-box; transform-origin: center; animation: dt-bulb-pulse 3.4s ease-in-out infinite; }
+@keyframes dt-bulb-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.08); }
+}
+
+/* Pinned near the viewport's left edge (a small responsive margin, not the
+   1200px shell-centering used elsewhere) so it reads left-anchored even on
+   very wide windows, instead of drifting toward the middle. */
+.dt-hero-copy { position: relative; z-index: 1; max-width: 46rem; margin-left: clamp(1.5rem, 6vw, 6rem); padding-right: 2rem; }
+.dt-hero h1 { font-size: clamp(2.6rem, 1.9rem + 3.2vw, 4.2rem); font-weight: 800; }
+.dt-hero .hl { color: var(--accent); }
+.dt-hero-lede { font-size: 1.15rem; color: var(--paper-dim); margin-top: 1.25rem; max-width: 52ch; }
+.dt-hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 1.75rem; }
+.dt-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.95rem 1.6rem; border-radius: 999px; font-weight: 600; font-size: 1rem;
+  text-decoration: none; transition: transform 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+.dt-btn--primary { background: var(--accent); color: var(--accent-ink); }
+.dt-btn--primary:hover { background: #6FA3FF; transform: translateY(-1px); }
+.dt-btn--ghost { background: var(--glass-bg); border: 1px solid var(--glass-border-hi); color: var(--paper); }
+.dt-btn--ghost:hover { background: var(--glass-bg-hi); }
+.dt-hero-note { margin-top: 1.1rem; font-size: 0.85rem; color: var(--paper-mute); }
+
+/* --- Track record stat cards, their own section ---------------------------- */
+.dt-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+.dt-stat-card { padding: 2rem 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.dt-stat-num { font-weight: 800; font-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem); color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
+.dt-stat-label { font-size: 0.95rem; color: var(--paper-dim); }
+
+/* --- VSL ---------------------------------------------------------------- */
+.dt-vsl { position: relative; aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--glass-border-hi); }
+.dt-vsl iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* --- Brand marquee (dark) ------------------------------------------------ */
+.dt-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent); }
+.dt-marquee-track { display: flex; align-items: center; width: max-content; gap: 3rem; animation: dt-scroll 140s linear infinite; }
+.dt-marquee:hover .dt-marquee-track { animation-play-state: paused; }
+.dt-marquee-set { display: flex; align-items: center; gap: 3rem; flex: none; }
+.dt-marquee-logo { flex: none; display: flex; align-items: center; height: 1.5rem; }
+.dt-marquee-logo img { height: 100%; width: auto; max-width: 96px; object-fit: contain; filter: grayscale(1) brightness(2.4) opacity(0.55); transition: filter 0.25s var(--ease); }
+.dt-marquee:hover .dt-marquee-logo img { filter: grayscale(0) brightness(1) opacity(1); }
+@keyframes dt-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* --- Glass row list (pain points / differentiators / proof rows) -------- */
+.dt-rows { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.75rem; }
+.dt-row { padding: 1.5rem 1.75rem; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1.25rem; align-items: start; }
+.dt-row-icon { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.15rem; }
+.dt-row-icon svg { width: 100%; height: 100%; }
+.dt-row h3 { grid-column: 2; font-size: 1.05rem; font-weight: 600; }
+.dt-row p { grid-column: 2; color: var(--paper-dim); font-size: 0.95rem; }
+.dt-row--no .dt-row-icon { color: var(--no); }
+.dt-row--go .dt-row-icon { color: var(--go); }
+
+/* --- Two-column qualify grid --------------------------------------------- */
+.dt-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+.dt-split h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+.dt-split .dt-rows { margin-top: 0; }
+.dt-split .dt-row { padding: 1rem 1.25rem; }
+
+/* --- Case study proof rows ------------------------------------------------ */
+.dt-case-row { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1.5rem; align-items: baseline; padding: 1.35rem 1.75rem; }
+.dt-case-tag { font-size: 0.8rem; color: var(--paper-mute); text-transform: uppercase; letter-spacing: 0.03em; }
+.dt-case-metric { grid-column: 1; font-weight: 700; font-size: 1.4rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+.dt-case-line { grid-column: 1 / -1; font-size: 0.9rem; color: var(--paper-dim); }
+
+/* --- Guarantee ------------------------------------------------------------- */
+.dt-guarantee { text-align: center; padding: clamp(2.5rem, 2rem + 2vw, 4rem) clamp(1.5rem, 1rem + 2vw, 3rem); }
+.dt-guarantee-statement { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 1.2rem + 2vw, 2.5rem); line-height: 1.15; max-width: 34ch; margin-inline: auto; }
+.dt-guarantee-statement .hot { color: var(--accent); }
+.dt-guarantee-terms { margin-top: 1.25rem; font-size: 1.05rem; color: var(--paper-dim); max-width: 52ch; margin-inline: auto; }
+.dt-guarantee-fine { margin-top: 1rem; font-size: 0.85rem; color: var(--paper-mute); max-width: 52ch; margin-inline: auto; }
+
+/* --- Step cards ------------------------------------------------------------ */
+.dt-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+.dt-step { padding: 1.75rem; }
+.dt-step-num { font-weight: 700; font-size: 1rem; color: var(--accent); }
+.dt-step h3 { font-size: 1.1rem; margin-top: 0.75rem; }
+.dt-step p { margin-top: 0.6rem; color: var(--paper-dim); font-size: 0.92rem; }
+
+/* --- Prose ------------------------------------------------------------------ */
+.dt-prose { color: var(--paper-dim); max-width: 68ch; }
+.dt-prose p + p { margin-top: 1rem; }
+.dt-prose a, .dt-inline-link { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* --- Final CTA --------------------------------------------------------------- */
+.dt-final { text-align: center; }
+.dt-final .dt-h2 { max-width: 26ch; margin-inline: auto; }
+.dt-final .dt-lede { margin-inline: auto; }
+
+/* --- Footer ------------------------------------------------------------------ */
+.dt-footer { padding-block: 2.5rem 2rem; border-top: 1px solid var(--glass-border); }
+.dt-footer-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; padding-bottom: 1.5rem; }
+.dt-footer-row img { height: 2rem; opacity: 0.85; }
+.dt-footlinks { display: flex; flex-wrap: wrap; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+.dt-footlinks a { color: var(--paper-dim); text-decoration: none; font-size: 0.9rem; }
+.dt-footlinks a:hover { color: var(--paper); }
+.dt-foot-social { display: flex; gap: 0.85rem; list-style: none; margin: 0; padding: 0; }
+.dt-foot-social a { color: var(--paper-mute); display: inline-flex; }
+.dt-foot-social svg { width: 1.1rem; height: 1.1rem; }
+.dt-colophon { font-size: 0.8rem; color: var(--paper-mute); border-top: 1px solid var(--glass-border); padding-top: 1.5rem; }
+.dt-colophon p + p { margin-top: 0.3rem; }
+.dt-colophon a { color: var(--paper-dim); }
+
+/* --- Reveal (kept identical mechanism to the site's existing JS) --------- */
+[data-reveal] .rv { opacity: 0; transform: translateY(14px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+[data-reveal] .rv[data-in] { opacity: 1; transform: none; }
+
+/* --- Focus states (accessibility floor) ---------------------------------- */
+.dt a:focus-visible, .dt button:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+}
+
+/* --- Skip link ------------------------------------------------------------- */
+.dt-skip-link { position: absolute; left: -9999px; z-index: 100; }
+.dt-skip-link:focus { left: 1rem; top: 1rem; background: var(--ink); color: var(--paper); padding: 0.6rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; }
+
+/* --- Responsive ------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .dt-stat-grid { grid-template-columns: 1fr; }
+  .dt-split { grid-template-columns: 1fr; }
+  .dt-steps { grid-template-columns: 1fr; }
+  .dt-header-row { justify-content: center; text-align: center; }
+  .dt-nav { order: 3; flex-basis: 100%; justify-content: center; margin-left: 0; }
+  .dt-hero { padding-top: calc(var(--header-h) + 5.5rem); }
+}
+@media (max-width: 480px) {
+  .dt-nav a { padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+}
+@media (max-width: 640px) {
+  .dt-row { grid-template-columns: 1fr; }
+  .dt-row-icon { margin-bottom: 0.25rem; }
+  .dt-row h3, .dt-row p { grid-column: 1; }
+  .dt-case-row { grid-template-columns: 1fr; }
+  .dt-case-metric { grid-column: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dt-marquee-track { animation: none; }
+  .dt-hero-bulb-rays { animation: none; }
+  .dt [data-reveal] .rv { transition-duration: 0.01ms; }
+}
