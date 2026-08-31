@@ -132,7 +132,7 @@
    a hairline or a change in surface tone. No large empty padding blocks. */
 .dt-section { padding-block: clamp(2.75rem, 2rem + 2.5vw, 4.5rem); border-top: 1px solid rgba(255,255,255,0.06); }
 .dt-section:first-of-type { border-top: none; }
-.dt-eyebrow { font-size: 0.8rem; letter-spacing: 0.04em; color: var(--accent); text-transform: uppercase; }
+.dt-eyebrow { font-family: var(--font-display); font-size: clamp(1.3rem, 1rem + 1.3vw, 1.9rem); font-weight: 800; letter-spacing: 0.01em; color: var(--accent); text-transform: uppercase; }
 .dt-h2 { font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.75rem); font-weight: 700; }
 .dt-lede { font-size: 1.1rem; color: var(--paper-dim); max-width: 62ch; margin-top: 0.85rem; }
 
@@ -184,7 +184,7 @@
 .dt-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
 .dt-stat-card { padding: 2rem 1.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
 .dt-stat-num { font-weight: 800; font-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem); color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
-.dt-stat-label { font-size: 0.95rem; color: var(--paper-dim); }
+.dt-stat-label { font-size: 1.2rem; font-weight: 600; color: var(--paper); }
 
 /* --- VSL ---------------------------------------------------------------- */
 .dt-vsl { position: relative; aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--glass-border-hi); }
@@ -205,7 +205,7 @@
 .dt-row { padding: 1.5rem 1.75rem; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1.25rem; align-items: start; }
 .dt-row-icon { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.15rem; }
 .dt-row-icon svg { width: 100%; height: 100%; }
-.dt-row h3 { grid-column: 2; font-size: 1.05rem; font-weight: 600; }
+.dt-row h3 { grid-column: 2; font-size: 1.05rem; font-weight: 600; color: var(--accent); }
 .dt-row p { grid-column: 2; color: var(--paper-dim); font-size: 0.95rem; }
 .dt-row--no .dt-row-icon { color: var(--no); }
 .dt-row--go .dt-row-icon { color: var(--go); }
@@ -221,6 +221,8 @@
 .dt-case-tag { font-size: 0.8rem; color: var(--paper-mute); text-transform: uppercase; letter-spacing: 0.03em; }
 .dt-case-metric { grid-column: 1; font-weight: 700; font-size: 1.4rem; color: var(--accent); font-variant-numeric: tabular-nums; }
 .dt-case-line { grid-column: 1 / -1; font-size: 0.9rem; color: var(--paper-dim); }
+.dt-case-logo { grid-row: 1; grid-column: 2; justify-self: end; display: inline-flex; align-items: center; padding: 0.3rem 0.6rem; background: var(--paper); border-radius: 6px; }
+.dt-case-logo img { display: block; height: 18px; width: auto; max-width: 110px; object-fit: contain; }
 
 /* --- Guarantee ------------------------------------------------------------- */
 .dt-guarantee { text-align: center; padding: clamp(2.5rem, 2rem + 2vw, 4rem) clamp(1.5rem, 1rem + 2vw, 3rem); }
@@ -296,6 +298,7 @@
   .dt-row h3, .dt-row p { grid-column: 1; }
   .dt-case-row { grid-template-columns: 1fr; }
   .dt-case-metric { grid-column: 1; }
+  .dt-case-logo { grid-column: 1; grid-row: auto; justify-self: start; margin-bottom: 0.4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dt-marquee-track { animation: none; }
