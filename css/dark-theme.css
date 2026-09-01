@@ -150,8 +150,8 @@
    never grow taller than the section that clips it — no cut-off at any
    screen size, whatever the headline's line count does to that height. */
 .dt-hero-bulb {
-  position: absolute; top: 50%; right: -2%; transform: translateY(-50%);
-  height: 80%; aspect-ratio: 1 / 1; width: auto;
+  position: absolute; top: 54%; right: -2%; transform: translateY(-50%);
+  height: 92%; aspect-ratio: 1 / 1; width: auto;
   color: var(--accent); opacity: 0.16; filter: blur(6px);
   pointer-events: none; z-index: 0;
 }
