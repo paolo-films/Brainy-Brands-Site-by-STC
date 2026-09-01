@@ -214,6 +214,11 @@
 .dt-row--no .dt-row-icon { color: var(--no); }
 .dt-row--go .dt-row-icon { color: var(--go); }
 
+/* Two-column variant: a grid (not the default flex column) so each row's
+   pair of boxes shares a height and lines up across both columns. */
+.dt-rows--grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1.25rem; }
+.dt-rows--grid .dt-row { padding: 1.25rem 1.5rem; align-items: center; }
+
 /* --- Two-column qualify grid --------------------------------------------- */
 .dt-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
 .dt-split h3 { font-size: 1.2rem; margin-bottom: 1rem; }
@@ -303,6 +308,7 @@
   .dt-case-row { grid-template-columns: 1fr; }
   .dt-case-metric { grid-column: 1; }
   .dt-case-logo { grid-column: 1; grid-row: auto; justify-self: start; margin-bottom: 0.4rem; }
+  .dt-rows--grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dt-marquee-track { animation: none; }
@@ -349,8 +355,6 @@
 .dt-prose ul, .dt-faq .a ul { margin: 1rem 0 0; padding: 0; list-style: none; }
 .dt-prose li, .dt-faq .a li { position: relative; padding: 0.35rem 0 0.35rem 1.4rem; color: var(--paper-dim); }
 .dt-prose li::before, .dt-faq .a li::before { content: ""; position: absolute; left: 0; top: 1.15em; width: 0.65rem; height: 1px; background: var(--accent); }
-.dt-cols-2 { columns: 2; column-gap: 2.5rem; }
-.dt-cols-2 li { break-inside: avoid; }
 
 /* --- Frame: hairline-bordered media -------------------------------------- */
 .dt-frame { aspect-ratio: 16/9; border: 1px solid var(--glass-border-hi); border-radius: var(--radius); overflow: hidden; background: var(--ink-raised); }
@@ -444,5 +448,4 @@
   .dt-list-numbered > li { grid-template-columns: 2.25rem minmax(0,1fr); }
   .dt-carousel-single { gap: 1rem; }
   .dt-carousel-arrow { width: 2.25rem; height: 2.25rem; }
-  .dt-cols-2 { columns: 1; }
 }
