@@ -226,7 +226,7 @@
 .dt-split .dt-row { padding: 1rem 1.25rem; }
 
 /* --- Case study proof rows ------------------------------------------------ */
-.dt-case-row { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1.5rem; align-items: baseline; padding: 1.35rem 1.75rem; }
+.dt-case-row { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1.5rem; align-items: start; padding: 1.35rem 1.75rem; }
 .dt-case-tag { font-size: 0.8rem; color: var(--paper-mute); text-transform: uppercase; letter-spacing: 0.03em; }
 .dt-case-metric { grid-column: 1; font-weight: 700; font-size: 1.4rem; color: var(--accent); font-variant-numeric: tabular-nums; }
 .dt-case-line { grid-column: 1 / -1; font-size: 0.9rem; color: var(--paper-dim); }
